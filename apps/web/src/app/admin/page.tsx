@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function AdminPage() {
   const { user, accessToken, isAuthenticated, logout } = useAuthStore();
@@ -17,11 +18,6 @@ export default function AdminPage() {
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [notification, setNotification] = useState<{message: string, type: string} | null>(null);
   const [processingRoles, setProcessingRoles] = useState(new Set<string>());
-
-  const showNotification = (message: string, type: string = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
-  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -72,20 +68,20 @@ export default function AdminPage() {
       });
       
       if (response.status === 401) {
-        alert('Session expired. Please login again.');
+        toast.error('Session expired. Please login again.');
         router.push('/login');
         return;
       }
       
       if (response.ok) {
-        await fetchData(); // Wait for refresh
-        showNotification('Role assigned successfully!');
+        await fetchData();
+        toast.success('Role assigned successfully!');
       } else {
-        showNotification('Failed to assign role', 'error');
+        toast.error('Failed to assign role');
       }
     } catch (error) {
       console.error('Failed to assign role:', error);
-      showNotification('Failed to assign role', 'error');
+      toast.error('Failed to assign role');
     }
   };
 
@@ -100,20 +96,20 @@ export default function AdminPage() {
       });
       
       if (response.status === 401) {
-        showNotification('Session expired. Please login again.', 'error');
+        toast.error('Session expired. Please login again.');
         router.push('/login');
         return;
       }
       
       if (response.ok) {
-        await fetchData(); // Wait for refresh
-        showNotification(`Role ${roleName} removed successfully!`);
+        await fetchData();
+        toast.success(`Role ${roleName} removed successfully!`);
       } else {
-        showNotification('Failed to remove role', 'error');
+        toast.error('Failed to remove role');
       }
     } catch (error) {
       console.error('Failed to remove role:', error);
-      showNotification('Failed to remove role', 'error');
+      toast.error('Failed to remove role');
     }
   };
 
@@ -128,12 +124,12 @@ export default function AdminPage() {
         body: JSON.stringify({ emailVerified: !currentStatus }),
       });
       if (response.ok) {
-        fetchData(); // Refresh data
-        showNotification('User status updated successfully!');
+        fetchData();
+        toast.success('User status updated successfully!');
       }
     } catch (error) {
       console.error('Failed to update user status:', error);
-      showNotification('Failed to update user status', 'error');
+      toast.error('Failed to update user status');
     }
   };
 
@@ -147,13 +143,13 @@ export default function AdminPage() {
         body: JSON.stringify(userData),
       });
       if (response.ok) {
-        fetchData(); // Refresh data
+        fetchData();
         setShowCreateUser(false);
-        showNotification('User created successfully!');
+        toast.success('User created successfully!');
       }
     } catch (error) {
       console.error('Failed to create user:', error);
-      showNotification('Failed to create user', 'error');
+      toast.error('Failed to create user');
     }
   };
 
@@ -165,7 +161,7 @@ export default function AdminPage() {
 
   const bulkAssignRole = async (roleName: string) => {
     if (selectedUsers.length === 0) {
-      showNotification('Please select users first', 'error');
+      toast.error('Please select users first');
       return;
     }
     
@@ -174,9 +170,9 @@ export default function AdminPage() {
         selectedUsers.map(userId => assignRole(userId, roleName))
       );
       setSelectedUsers([]);
-      showNotification(`Role ${roleName} assigned to ${selectedUsers.length} users`);
+      toast.success(`Role ${roleName} assigned to ${selectedUsers.length} users`);
     } catch (error) {
-      showNotification('Failed to assign roles', 'error');
+      toast.error('Failed to assign roles');
     }
   };
 
@@ -341,7 +337,7 @@ export default function AdminPage() {
                       <div className="flex flex-wrap gap-2">
                         {roles.map((role: any) => {
                           const userRoles = user.roles || [];
-                          const hasRole = userRoles.some(userRole => userRole.name === role.name);
+                          const hasRole = userRoles.some((userRole: any) => userRole.name === role.name);
                           return (
                             <label key={role.id} className="flex items-center space-x-1 cursor-pointer">
                               <input
@@ -483,22 +479,6 @@ export default function AdminPage() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* Notification */}
-      {notification && (
-        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transition-all duration-300 ${
-          notification.type === 'error' 
-            ? 'bg-red-500 text-white' 
-            : 'bg-green-500 text-white'
-        }`}>
-          <div className="flex items-center">
-            <span className="mr-2">
-              {notification.type === 'error' ? '❌' : '✅'}
-            </span>
-            {notification.message}
           </div>
         </div>
       )}

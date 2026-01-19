@@ -48,6 +48,10 @@ export const useAuthStore = create<AuthState>()(
         }
 
         const data = await response.json();
+        
+        // Store token in localStorage for immediate use
+        localStorage.setItem('token', data.accessToken);
+        
         set({
           user: data.user,
           accessToken: data.accessToken,
@@ -71,12 +75,18 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        fetch(`${API_BASE}/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${get().accessToken}`,
-          },
-        }).catch(() => {});
+        const token = get().accessToken;
+        if (token) {
+          fetch(`${API_BASE}/auth/logout`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          }).catch(() => {});
+        }
+        
+        // Clear localStorage
+        localStorage.removeItem('token');
         
         set({
           user: null,
@@ -86,6 +96,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setAuth: (user: User, accessToken: string) => {
+        // Store token in localStorage
+        localStorage.setItem('token', accessToken);
+        
         set({
           user,
           accessToken,
