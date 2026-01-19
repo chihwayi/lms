@@ -71,7 +71,6 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        // Call logout API
         fetch(`${API_BASE}/auth/logout`, {
           method: 'POST',
           headers: {
@@ -95,12 +94,17 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'auth-storage',
-      partialize: (state) => ({
-        user: state.user,
-        accessToken: state.accessToken,
-        isAuthenticated: state.isAuthenticated,
-      }),
+      name: 'eduflow-auth',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          return str ? JSON.parse(str) : null;
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
     }
   )
 );

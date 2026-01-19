@@ -1,4 +1,5 @@
 import './globals.css'
+import AuthWrapper from '@/components/AuthWrapper';
 
 export const metadata = {
   title: 'EduFlow LMS',
@@ -12,7 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthWrapper>
+          {children}
+        </AuthWrapper>
+      </body>
     </html>
   )
 }

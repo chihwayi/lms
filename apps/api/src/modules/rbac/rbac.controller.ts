@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { RequirePermissions } from './decorators/permissions.decorator';
@@ -26,6 +26,13 @@ export class RbacController {
   async assignRole(@Param('userId') userId: string, @Body('roleName') roleName: string) {
     await this.rbacService.assignRoleToUser(userId, roleName);
     return { success: true, message: 'Role assigned successfully' };
+  }
+
+  @Delete('users/:userId/roles/:roleName')
+  @RequirePermissions('manage_users')
+  async removeRole(@Param('userId') userId: string, @Param('roleName') roleName: string) {
+    await this.rbacService.removeRoleFromUser(userId, roleName);
+    return { success: true, message: 'Role removed successfully' };
   }
 
   @Get('users/:userId/permissions')
