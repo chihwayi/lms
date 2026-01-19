@@ -8,17 +8,17 @@ import Link from 'next/link';
 export default function AdminPage() {
   const { user, accessToken, isAuthenticated, logout } = useAuthStore();
   const router = useRouter();
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [roles, setRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [editingUser, setEditingUser] = useState<any>(null);
   const [showCreateUser, setShowCreateUser] = useState(false);
-  const [notification, setNotification] = useState(null);
-  const [processingRoles, setProcessingRoles] = useState(new Set());
+  const [notification, setNotification] = useState<{message: string, type: string} | null>(null);
+  const [processingRoles, setProcessingRoles] = useState(new Set<string>());
 
-  const showNotification = (message, type = 'success') => {
+  const showNotification = (message: string, type: string = 'success') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000);
   };
@@ -60,7 +60,7 @@ export default function AdminPage() {
     }
   };
 
-  const assignRole = async (userId, roleName) => {
+  const assignRole = async (userId: string, roleName: string) => {
     try {
       const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles`, {
         method: 'POST',
@@ -89,7 +89,7 @@ export default function AdminPage() {
     }
   };
 
-  const removeRole = async (userId, roleName) => {
+  const removeRole = async (userId: string, roleName: string) => {
     try {
       const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles/${roleName}`, {
         method: 'DELETE',
@@ -117,7 +117,7 @@ export default function AdminPage() {
     }
   };
 
-  const toggleUserStatus = async (userId, currentStatus) => {
+  const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
       const response = await fetch(`http://localhost:3001/api/v1/admin/users/${userId}/status`, {
         method: 'PUT',
@@ -137,7 +137,7 @@ export default function AdminPage() {
     }
   };
 
-  const createUser = async (userData) => {
+  const createUser = async (userData: any) => {
     try {
       const response = await fetch('http://localhost:3001/api/v1/auth/register', {
         method: 'POST',
@@ -163,7 +163,7 @@ export default function AdminPage() {
     u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const bulkAssignRole = async (roleName) => {
+  const bulkAssignRole = async (roleName: string) => {
     if (selectedUsers.length === 0) {
       showNotification('Please select users first', 'error');
       return;
@@ -307,7 +307,7 @@ export default function AdminPage() {
           {/* Users List */}
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
             <div className="divide-y divide-gray-200/50">
-              {filteredUsers.map((user) => (
+              {filteredUsers.map((user: any) => (
                 <div key={user.id} className="px-6 py-4 hover:bg-white/50 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -339,7 +339,7 @@ export default function AdminPage() {
                     <div className="flex items-center space-x-3">
                       {/* Role Checkboxes */}
                       <div className="flex flex-wrap gap-2">
-                        {roles.map((role) => {
+                        {roles.map((role: any) => {
                           const userRoles = user.roles || [];
                           const hasRole = userRoles.some(userRole => userRole.name === role.name);
                           return (
@@ -397,7 +397,7 @@ export default function AdminPage() {
         <div>
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Roles & Permissions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {roles.map((role) => (
+            {roles.map((role: any) => (
               <div key={role.id} className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-gray-900 capitalize">{role.name}</h3>
@@ -409,7 +409,7 @@ export default function AdminPage() {
                 <div>
                   <p className="text-sm font-semibold text-gray-900 mb-2">Permissions ({role.permissions.length}):</p>
                   <div className="flex flex-wrap gap-1">
-                    {role.permissions.map((permission, index) => (
+                    {role.permissions.map((permission: any, index: number) => (
                       <span key={index} className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                         {permission.name}
                       </span>
@@ -427,9 +427,9 @@ export default function AdminPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
             <h3 className="text-2xl font-bold mb-6">Create New User</h3>
-            <form onSubmit={(e) => {
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              const formData = new FormData(e.target);
+              const formData = new FormData(e.target as HTMLFormElement);
               createUser({
                 firstName: formData.get('firstName'),
                 lastName: formData.get('lastName'),
