@@ -1,0 +1,54 @@
+{
+  "name": "eduflow-lms",
+  "version": "1.0.0",
+  "description": "Next-Generation Learning Management System with AI-powered features, innovation hub, and intelligent mentorship",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean",
+    "db:migrate": "cd apps/api && npm run db:migrate",
+    "db:seed": "cd apps/api && npm run db:seed",
+    "db:reset": "cd apps/api && npm run db:reset"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.10.12",
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.0",
+    "turbo": "^1.10.12",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chihwayi/lms.git"
+  },
+  "keywords": [
+    "lms",
+    "learning-management-system",
+    "education",
+    "ai-powered",
+    "innovation-hub",
+    "mentorship",
+    "nextjs",
+    "nestjs",
+    "typescript"
+  ],
+  "author": "Chihwayi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chihwayi/lms/issues"
+  },
+  "homepage": "https://github.com/chihwayi/lms#readme"
+}
