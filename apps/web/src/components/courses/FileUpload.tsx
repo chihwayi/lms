@@ -239,13 +239,19 @@ export function FileUpload({
                       {formatFileSize(uploadFile.file.size)}
                     </p>
                     
-                    {uploadFile.status === 'uploading' && (
+                    {(uploadFile.status === 'uploading' || uploadFile.progress > 0) && (
                       <div className="mt-2">
                         <Progress value={uploadFile.progress} className="h-2" />
                         <p className="text-xs text-gray-500 mt-1">
                           {Math.round(uploadFile.progress)}% uploaded
                         </p>
                       </div>
+                    )}
+                    
+                    {uploadFile.status === 'completed' && (
+                      <p className="text-xs text-green-500 mt-1">
+                        ✅ Upload completed
+                      </p>
                     )}
                     
                     {uploadFile.status === 'error' && (

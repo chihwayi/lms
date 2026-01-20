@@ -176,6 +176,59 @@ export class CoursesService {
     await this.moduleRepository.remove(module);
   }
 
+  async reorderModules(courseId: string, moduleIds: string[], userId: string): Promise<CourseModule[]> {
+    const course = await this.findOne(courseId);
+    
+    if (course.created_by !== userId) {
+      throw new ForbiddenException('You can only reorder modules in your own courses');
+    }
+
+    const modules = await this.moduleRepository.find({ where: { course_id: courseId } });
+    
+    for (let i = 0; i < moduleIds.length; i++) {
+      const module = modules.find(m => m.id === moduleIds[i]);
+      if (module) {
+        module.order_index = i + 1;
+        await this.moduleRepository.save(module);
+      }
+    }
+
+    return this.moduleRepository.find({ 
+      where: { course_id: courseId }, 
+      order: { order_index: 'ASC' } 
+    });
+  }
+
+  async reorderLessons(moduleId: string, lessonIds: string[], userId: string): Promise<CourseLesson[]> {
+    const module = await this.moduleRepository.findOne({
+      where: { id: moduleId },
+      relations: ['course'],
+    });
+
+    if (!module) {
+      throw new NotFoundException('Module not found');
+    }
+
+    if (module.course.created_by !== userId) {
+      throw new ForbiddenException('You can only reorder lessons in your own courses');
+    }
+
+    const lessons = await this.lessonRepository.find({ where: { module_id: moduleId } });
+    
+    for (let i = 0; i < lessonIds.length; i++) {
+      const lesson = lessons.find(l => l.id === lessonIds[i]);
+      if (lesson) {
+        lesson.order_index = i + 1;
+        await this.lessonRepository.save(lesson);
+      }
+    }
+
+    return this.lessonRepository.find({ 
+      where: { module_id: moduleId }, 
+      order: { order_index: 'ASC' } 
+    });
+  }
+
   async createLesson(moduleId: string, createLessonDto: CreateLessonDto, userId: string): Promise<CourseLesson> {
     const module = await this.moduleRepository.findOne({
       where: { id: moduleId },
@@ -351,79 +404,70 @@ export class CoursesService {
 
   // Enhanced search
   async searchCourses(query: any): Promise<{ courses: Course[]; total: number; filters: any }> {
-    const { 
-      q = '', 
-      categories = [], 
-      levels = [], 
-      minPrice = 0, 
-      maxPrice = 1000000, 
-      language = '', 
-      featured = false,
-      page = 1, 
-      limit = 12,
-      sortBy = 'created_at',
-      sortOrder = 'DESC'
-    } = query;
+    try {
+      const { 
+        q = '', 
+        categories = [], 
+        levels = [], 
+        minPrice = 0, 
+        maxPrice = 1000000, 
+        language = '', 
+        featured = false,
+        page = 1, 
+        limit = 12,
+        sortBy = 'created_at',
+        sortOrder = 'DESC'
+      } = query;
 
-    const queryBuilder = this.courseRepository
-      .createQueryBuilder('course')
-      .leftJoinAndSelect('course.instructor', 'instructor')
-      .leftJoinAndSelect('course.category', 'category')
-      .where('course.status = :status', { status: 'published' });
+      const queryBuilder = this.courseRepository
+        .createQueryBuilder('course')
+        .leftJoinAndSelect('course.instructor', 'instructor')
+        .leftJoinAndSelect('course.category', 'category')
+        .where('course.status = :status', { status: 'published' });
 
-    if (q) {
-      queryBuilder.andWhere(
-        '(course.title ILIKE :search OR course.description ILIKE :search OR course.short_description ILIKE :search)',
-        { search: `%${q}%` }
-      );
-    }
-
-    if (categories.length > 0) {
-      queryBuilder.andWhere('course.category_id IN (:...categories)', { categories });
-    }
-
-    if (levels.length > 0) {
-      queryBuilder.andWhere('course.level IN (:...levels)', { levels });
-    }
-
-    if (minPrice > 0 || maxPrice < 1000000) {
-      queryBuilder.andWhere('course.price BETWEEN :minPrice AND :maxPrice', { minPrice, maxPrice });
-    }
-
-    if (language) {
-      queryBuilder.andWhere('course.language = :language', { language });
-    }
-
-    if (featured) {
-      queryBuilder.andWhere('course.is_featured = true');
-    }
-
-    queryBuilder.orderBy(`course.${sortBy}`, sortOrder as 'ASC' | 'DESC');
-
-    const total = await queryBuilder.getCount();
-    const courses = await queryBuilder
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getMany();
-
-    return { 
-      courses, 
-      total,
-      filters: {
-        availableCategories: await this.getCategories(),
-        availableLevels: ['beginner', 'intermediate', 'advanced'],
-        priceRange: { min: minPrice, max: maxPrice }
+      if (q) {
+        queryBuilder.andWhere(
+          '(course.title ILIKE :search OR course.description ILIKE :search OR course.short_description ILIKE :search)',
+          { search: `%${q}%` }
+        );
       }
-    };
+
+      const total = await queryBuilder.getCount();
+      const courses = await queryBuilder
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getMany();
+
+      return { 
+        courses, 
+        total,
+        filters: {
+          availableCategories: await this.getCategories(),
+          availableLevels: ['beginner', 'intermediate', 'advanced'],
+          priceRange: { min: minPrice, max: maxPrice }
+        }
+      };
+    } catch (error) {
+      console.error('Search error:', error);
+      return { courses: [], total: 0, filters: {} };
+    }
   }
 
-  async getFeaturedCourses(): Promise<Course[]> {
-    return this.courseRepository.find({
-      where: { is_featured: true, status: CourseStatus.PUBLISHED },
-      relations: ['instructor', 'category'],
-      order: { created_at: 'DESC' },
-      take: 6,
-    });
+  async getFeaturedCourses(): Promise<any[]> {
+    try {
+      const result = await this.courseRepository.query(
+        `SELECT id, title, description, short_description, level, price, 
+                thumbnail_url, language, duration_minutes, created_at
+         FROM courses 
+         WHERE is_featured = true 
+         ORDER BY created_at DESC 
+         LIMIT 6`
+      );
+      return result;
+    } catch (error) {
+      console.error('Featured courses error:', error);
+      return [];
+    }
   }
 
   async getCategories(): Promise<Category[]> {
@@ -431,5 +475,71 @@ export class CoursesService {
       where: { is_active: true },
       order: { name: 'ASC' },
     });
+  }
+
+  async getCoursePreview(id: string): Promise<any> {
+    const course = await this.courseRepository.findOne({
+      where: { id, status: CourseStatus.PUBLISHED },
+      relations: ['instructor', 'category', 'modules', 'modules.lessons'],
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        short_description: true,
+        level: true,
+        price: true,
+        thumbnail_url: true,
+        trailer_url: true,
+        language: true,
+        duration_minutes: true,
+        is_featured: true,
+        created_at: true,
+        instructor: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+        category: {
+          id: true,
+          name: true,
+        },
+        modules: {
+          id: true,
+          title: true,
+          description: true,
+          order_index: true,
+          lessons: {
+            id: true,
+            title: true,
+            duration_minutes: true,
+            is_preview: true,
+            content_type: true,
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found or not published');
+    }
+
+    // Calculate totals
+    const totalLessons = course.modules?.reduce((total, m) => total + (m.lessons?.length || 0), 0) || 0;
+    const totalDuration = course.modules?.reduce((total, m) => 
+      total + (m.lessons?.reduce((lessonTotal, l) => lessonTotal + (l.duration_minutes || 0), 0) || 0), 0
+    ) || 0;
+    const previewLessons = course.modules?.reduce((total, m) => 
+      total + (m.lessons?.filter(l => l.is_preview).length || 0), 0
+    ) || 0;
+
+    return {
+      ...course,
+      stats: {
+        totalModules: course.modules?.length || 0,
+        totalLessons,
+        totalDuration,
+        previewLessons,
+      },
+    };
   }
 }

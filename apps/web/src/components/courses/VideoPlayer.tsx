@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 
 interface VideoPlayerProps {
-  src: string;
+  fileId: string;
   poster?: string;
   title?: string;
   onProgress?: (currentTime: number, duration: number) => void;
 }
 
-export function VideoPlayer({ src, poster, title, onProgress }: VideoPlayerProps) {
+export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerProps) {
+  const streamUrl = `/api/files/${fileId}/stream`;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -122,7 +123,7 @@ export function VideoPlayer({ src, poster, title, onProgress }: VideoPlayerProps
     >
       <video
         ref={videoRef}
-        src={src}
+        src={streamUrl}
         poster={poster}
         className="w-full h-auto"
         onClick={togglePlay}

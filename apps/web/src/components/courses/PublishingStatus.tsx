@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, AlertCircle, Clock, Rocket, Eye } from 'lucide-react';
+import { CheckCircle, AlertCircle, Clock, Rocket, Eye, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
+import { SchedulePublishing } from './SchedulePublishing';
 
 interface PublishingStatusProps {
   courseId: string;
@@ -158,6 +159,10 @@ export function PublishingStatus({ courseId, currentStatus, onStatusUpdate }: Pu
             </div>
             
             <div className="flex gap-4">
+              <SchedulePublishing 
+                courseId={courseId} 
+                onScheduled={() => fetchPublishingStatus()}
+              />
               {currentStatus === 'published' ? (
                 <Button
                   onClick={unpublishCourse}

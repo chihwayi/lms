@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { FeaturedCourses } from '@/components/courses/FeaturedCourses';
 
 interface Course {
   id: string;
@@ -268,6 +269,11 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
+
+        {/* Featured Courses Section */}
+        <div className="mb-12">
+          <FeaturedCourses />
+        </div>
 
         {/* Recent Courses */}
         <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-3xl border border-white/30 shadow-2xl">

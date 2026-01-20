@@ -1,10 +1,11 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseFile } from '../courses/entities/course-file.entity';
+import { Response } from 'express';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { createReadStream } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 
 @Injectable()
 export class FilesService {
@@ -115,23 +116,43 @@ export class FilesService {
     await this.fileRepository.remove(file);
   }
 
-  async streamFile(id: string, req: any): Promise<any> {
+  async streamFile(id: string, res: Response): Promise<void> {
     const file = await this.getFile(id);
     
     if (!file) {
-      throw new BadRequestException('File not found');
+      throw new NotFoundException('File not found');
     }
 
-    const stream = createReadStream(file.file_path);
+    if (!existsSync(file.file_path)) {
+      throw new NotFoundException('File not found on disk');
+    }
+
+    res.setHeader('Content-Type', file.mime_type);
+    res.setHeader('Content-Length', file.file_size);
+    res.setHeader('Content-Disposition', `inline; filename="${file.original_name}"`);
+    res.setHeader('Accept-Ranges', 'bytes');
     
-    return {
-      stream,
-      headers: {
-        'Content-Type': file.mime_type,
-        'Content-Length': file.file_size,
-        'Content-Disposition': `inline; filename="${file.original_name}"`,
-      },
-    };
+    const stream = createReadStream(file.file_path);
+    stream.pipe(res);
+  }
+
+  async downloadFile(id: string, res: Response): Promise<void> {
+    const file = await this.getFile(id);
+    
+    if (!file) {
+      throw new NotFoundException('File not found');
+    }
+
+    if (!existsSync(file.file_path)) {
+      throw new NotFoundException('File not found on disk');
+    }
+
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${file.original_name}"`);
+    res.setHeader('Content-Length', file.file_size);
+    
+    const stream = createReadStream(file.file_path);
+    stream.pipe(res);
   }
 
   async getCourseFiles(courseId: string, userId: string): Promise<CourseFile[]> {

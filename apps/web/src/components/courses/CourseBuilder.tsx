@@ -10,7 +10,9 @@ import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload } from 'lucid
 import { toast } from 'sonner';
 import { FileUpload } from './FileUpload';
 import { ContentAssignment } from './ContentAssignment';
+import { ContentPreview } from './ContentPreview';
 import { PublishingStatus } from './PublishingStatus';
+import { ChunkedUpload } from './ChunkedUpload';
 
 interface CourseBuilderProps {
   course: any;
@@ -22,6 +24,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
   const [showLessonForm, setShowLessonForm] = useState(null);
   const [editingModule, setEditingModule] = useState(null);
   const [editingLesson, setEditingLesson] = useState(null);
+  const [previewContentData, setPreviewContentData] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
   const [moduleForm, setModuleForm] = useState({ title: '', description: '' });
   const [lessonForm, setLessonForm] = useState({
     title: '',
@@ -256,6 +260,20 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     setShowLessonForm(null);
   };
 
+  const previewContent = (lesson) => {
+    if (lesson.content_url) {
+      setPreviewContentData({
+        id: lesson.id,
+        fileName: lesson.title,
+        fileType: lesson.content_type === 'video' ? 'video/mp4' : 'application/pdf',
+        title: lesson.title
+      });
+      setShowPreview(true);
+    } else {
+      toast.error('No content available for preview');
+    }
+  };
+
   const getContentTypeIcon = (type) => {
     switch (type) {
       case 'video': return <Video className="w-5 h-5" />;
@@ -486,6 +504,7 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
+                                onClick={() => previewContent(lesson)}
                                 className="bg-green-100/70 hover:bg-green-200/90 backdrop-blur-sm border-green-300/40 text-green-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                               >
                                 <Upload className="w-4 h-4" />
@@ -566,8 +585,19 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
             </div>
           </div>
           <FileUpload courseId={course?.id} />
+          <div className="mt-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Large File Upload</h3>
+            <ChunkedUpload courseId={course?.id} />
+          </div>
         </div>
       </div>
+
+      {/* Content Preview Modal */}
+      <ContentPreview
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        content={previewContentData}
+      />
     </div>
   );
 }

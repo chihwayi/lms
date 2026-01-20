@@ -2,14 +2,18 @@ import {
   Controller,
   Post,
   Delete,
+  Get,
   Param,
   UseInterceptors,
   UploadedFile,
   UseGuards,
   Request,
   Body,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 import { FilesService } from './files.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
@@ -44,8 +48,13 @@ export class FilesController {
   }
 
   @Get(':id/stream')
-  async streamFile(@Param('id') id: string, @Request() req) {
-    return this.filesService.streamFile(id, req);
+  async streamFile(@Param('id') id: string, @Res() res: Response) {
+    return this.filesService.streamFile(id, res);
+  }
+
+  @Get(':id/download')
+  async downloadFile(@Param('id') id: string, @Res() res: Response) {
+    return this.filesService.downloadFile(id, res);
   }
 
   @Get('course/:courseId')

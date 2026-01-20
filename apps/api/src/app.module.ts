@@ -8,6 +8,7 @@ import { RbacModule } from './modules/rbac/rbac.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { FilesModule } from './modules/files/files.module';
+import { ContentModule } from './modules/content/content.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FilesModule } from './modules/files/files.module';
     AdminModule,
     CoursesModule,
     FilesModule,
+    ContentModule,
   ],
 })
 export class AppModule {}

@@ -40,15 +40,28 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
 
       if (response.ok) {
         const courseFiles = await response.json();
-        setFiles(courseFiles);
+        console.log('Fetched files:', courseFiles);
+        setFiles(courseFiles || []);
+        // Auto-select first file if only one exists
+        if (courseFiles && courseFiles.length === 1) {
+          setSelectedFileId(courseFiles[0].id);
+          console.log('Auto-selected file:', courseFiles[0].id);
+        }
+      } else {
+        console.error('Failed to fetch files:', response.status);
+        setFiles([]);
       }
     } catch (error) {
       console.error('Error fetching files:', error);
+      setFiles([]);
     }
   };
 
   const assignContent = async () => {
-    if (!selectedFileId) return;
+    if (!selectedFileId) {
+      console.log('No file selected, selectedFileId:', selectedFileId);
+      return;
+    }
     
     setLoading(true);
     try {
@@ -197,22 +210,25 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
             <div className="space-y-6">
               <div>
                 <label className="block text-lg font-semibold text-gray-800 mb-3">Select File</label>
-                <Select value={selectedFileId} onValueChange={setSelectedFileId}>
+                <Select value={selectedFileId} onValueChange={(value) => {
+                  console.log('Select changed to:', value);
+                  setSelectedFileId(value);
+                }} defaultValue={files.length === 1 ? files[0]?.id : undefined}>
                   <SelectTrigger className="bg-white/80 backdrop-blur-sm border-white/40 shadow-lg text-lg py-4 px-6 rounded-xl focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50">
                     <SelectValue placeholder="Choose a file from your course files..." />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/40 shadow-2xl rounded-xl max-h-60">
-                    {files.map((file: any) => (
-                      <SelectItem key={file.id} value={file.id} className="text-lg py-4">
-                        <div className="flex items-center space-x-3">
-                          {getFileIcon(file.file_type)}
-                          <div>
-                            <p className="font-medium">{file.original_name}</p>
-                            <p className="text-sm text-gray-500">{file.file_type} • {formatFileSize(file.file_size)}</p>
-                          </div>
-                        </div>
+                    {files.length === 0 ? (
+                      <SelectItem value="no-files" disabled>
+                        No files available
                       </SelectItem>
-                    ))}
+                    ) : (
+                      files.map((file: any) => (
+                        <SelectItem key={file.id} value={file.id} className="text-lg py-4">
+                          {file.original_name} ({file.file_type} • {formatFileSize(file.file_size)})
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -230,7 +246,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
               <div className="flex gap-4 pt-4">
                 <Button
                   onClick={assignContent}
-                  disabled={!selectedFileId || loading}
+                  disabled={loading}
                   className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50"
                 >
                   {loading ? (
@@ -240,7 +256,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <span>📎 Assign Content</span>
+                      <span>📎 Assign Content (Selected: {selectedFileId || 'None'})</span>
                     </div>
                   )}
                 </Button>
