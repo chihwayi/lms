@@ -37,6 +37,11 @@ export class CoursesController {
     return this.coursesService.findAll(query);
   }
 
+  @Get('search')
+  searchCourses(@Query() query: any) {
+    return this.coursesService.searchCourses(query);
+  }
+
   @Get('categories')
   getCategories() {
     return [
@@ -45,6 +50,11 @@ export class CoursesController {
       { id: '3', name: 'Business', is_active: true },
       { id: '4', name: 'Marketing', is_active: true }
     ];
+  }
+
+  @Get('featured')
+  getFeaturedCourses() {
+    return this.coursesService.getFeaturedCourses();
   }
 
   @Get(':id')
@@ -152,43 +162,7 @@ export class CoursesController {
     return this.coursesService.getPublishingStatus(id);
   }
 
-  @Get('search')
-  searchCourses(@Query() query: any) {
-    return {
-      courses: [],
-      total: 0,
-      filters: {
-        availableCategories: [
-          { id: '1', name: 'Programming' },
-          { id: '2', name: 'Design' }
-        ],
-        availableLevels: ['beginner', 'intermediate', 'advanced'],
-        priceRange: { min: 0, max: 1000 }
-      }
-    };
-  }
 
-  @Get('test')
-  test() {
-    return { message: 'test works' };
-  }
-
-  @Get('featured')
-  getFeaturedCourses() {
-    return [{
-      id: 'afa416a2-5dee-4011-a5bc-d3586ac5cb77',
-      title: 'Complete JavaScript Mastery',
-      description: 'Master JavaScript from fundamentals to advanced concepts',
-      short_description: 'Complete JavaScript course from beginner to advanced',
-      level: 'intermediate',
-      price: 99.99,
-      is_featured: true,
-      instructor: {
-        firstName: 'John',
-        lastName: 'Instructor'
-      }
-    }];
-  }
 
   @Get(':id/preview')
   getCoursePreview(@Param('id') id: string) {

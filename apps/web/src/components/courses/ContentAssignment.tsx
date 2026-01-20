@@ -24,6 +24,14 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
     fetchCourseFiles();
   }, [courseId]);
 
+  useEffect(() => {
+    // Auto-select first file if only one exists and no file is currently selected
+    if (files.length === 1 && !selectedFileId) {
+      setSelectedFileId(files[0].id);
+      console.log('Auto-selected file:', files[0].id);
+    }
+  }, [files, selectedFileId]);
+
   const fetchCourseFiles = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -42,11 +50,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
         const courseFiles = await response.json();
         console.log('Fetched files:', courseFiles);
         setFiles(courseFiles || []);
-        // Auto-select first file if only one exists
-        if (courseFiles && courseFiles.length === 1) {
-          setSelectedFileId(courseFiles[0].id);
-          console.log('Auto-selected file:', courseFiles[0].id);
-        }
+        // Don't auto-select any file - start with empty selection
       } else {
         console.error('Failed to fetch files:', response.status);
         setFiles([]);
@@ -213,11 +217,14 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
                 <Select value={selectedFileId} onValueChange={(value) => {
                   console.log('Select changed to:', value);
                   setSelectedFileId(value);
-                }} defaultValue={files.length === 1 ? files[0]?.id : undefined}>
+                }}>
                   <SelectTrigger className="bg-white/80 backdrop-blur-sm border-white/40 shadow-lg text-lg py-4 px-6 rounded-xl focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50">
                     <SelectValue placeholder="Choose a file from your course files..." />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/40 shadow-2xl rounded-xl max-h-60">
+                    <SelectItem value="" disabled>
+                      Choose a file from your course files...
+                    </SelectItem>
                     {files.length === 0 ? (
                       <SelectItem value="no-files" disabled>
                         No files available
@@ -246,7 +253,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
               <div className="flex gap-4 pt-4">
                 <Button
                   onClick={assignContent}
-                  disabled={loading}
+                  disabled={!selectedFileId || loading}
                   className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50"
                 >
                   {loading ? (
@@ -256,7 +263,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <span>📎 Assign Content (Selected: {selectedFileId || 'None'})</span>
+                      <span>📎 Assign Content</span>
                     </div>
                   )}
                 </Button>
