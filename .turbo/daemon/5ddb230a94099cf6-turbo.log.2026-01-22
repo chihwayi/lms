@@ -1069,3 +1069,5 @@
 2026-01-22T21:50:05.256498Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
 2026-01-22T21:50:34.656661Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/ai/ai.service.ts")}
 2026-01-22T21:50:34.656668Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-22T22:27:43.273975Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SPRINT_PLAN.md")}
+2026-01-22T22:27:43.274450Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
