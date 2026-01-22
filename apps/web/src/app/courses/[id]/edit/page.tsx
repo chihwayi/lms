@@ -174,9 +174,23 @@ export default function CourseEditPage() {
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Edit Course</h1>
-            <p className="text-xl text-gray-600">Update your course information</p>
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">Edit Course</h1>
+              <p className="text-xl text-gray-600">Update your course information</p>
+            </div>
+            <div className="flex gap-4 mt-4 md:mt-0">
+                <Link href={`/courses/${params.id}/builder`}>
+                    <Button variant="outline" className="bg-white/50 border-white/50 hover:bg-white/80">
+                        Go to Builder
+                    </Button>
+                </Link>
+                <Link href={`/courses/${params.id}`}>
+                    <Button variant="outline" className="bg-white/50 border-white/50 hover:bg-white/80">
+                        View Course
+                    </Button>
+                </Link>
+            </div>
           </div>
 
           {/* Edit Form */}

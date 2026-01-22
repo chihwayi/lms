@@ -2,22 +2,27 @@ import { Injectable, NotFoundException, BadRequestException, OnModuleInit } from
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Enrollment, EnrollmentStatus } from './entities/enrollment.entity';
+import { QuizSubmission } from './entities/quiz-submission.entity';
 import { Course } from '../courses/entities/course.entity';
 import { CourseLesson } from '../courses/entities/course-lesson.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
+import { GamificationService } from '../gamification/gamification.service';
 
 @Injectable()
 export class EnrollmentService implements OnModuleInit {
   constructor(
     @InjectRepository(Enrollment)
     private enrollmentRepository: Repository<Enrollment>,
+    @InjectRepository(QuizSubmission)
+    private quizSubmissionRepository: Repository<QuizSubmission>,
     @InjectRepository(Course)
     private courseRepository: Repository<Course>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private dataSource: DataSource,
+    private gamificationService: GamificationService,
   ) {}
 
   async onModuleInit() {
@@ -116,68 +121,109 @@ export class EnrollmentService implements OnModuleInit {
     };
   }
 
-  async updateProgress(userId: string, courseId: string, updateProgressDto: UpdateProgressDto): Promise<Enrollment> {
+  async updateProgress(userId: string, updateProgressDto: UpdateProgressDto): Promise<Enrollment> {
+    const { courseId, lessonId, completed } = updateProgressDto;
+
     const enrollment = await this.enrollmentRepository.findOne({
       where: { userId, courseId },
+      relations: ['course', 'course.modules', 'course.modules.lessons'],
     });
 
     if (!enrollment) {
       throw new NotFoundException('Enrollment not found');
     }
 
-    // Update last accessed time
     enrollment.lastAccessedAt = new Date();
+    enrollment.lastLessonId = lessonId;
 
-    if (updateProgressDto.currentLessonId) {
-        enrollment.lastLessonId = updateProgressDto.currentLessonId;
+    if (completed) {
+      if (!enrollment.completedLessons) {
+        enrollment.completedLessons = [];
+      }
+      
+      if (!enrollment.completedLessons.includes(lessonId)) {
+        enrollment.completedLessons.push(lessonId);
+        
+        // Award XP for completing a lesson
+        await this.gamificationService.awardXP(userId, 5, 'lesson_completed', lessonId);
+      }
     }
 
-    if (updateProgressDto.completedLessonId) {
-        if (!enrollment.completedLessons) {
-            enrollment.completedLessons = [];
-        }
-        if (!enrollment.completedLessons.includes(updateProgressDto.completedLessonId)) {
-            enrollment.completedLessons.push(updateProgressDto.completedLessonId);
-        }
-        
-        // Recalculate progress based on actual completed lessons vs total published lessons
-        const courseLessonRepo = this.dataSource.getRepository(CourseLesson);
-        
-        const totalLessons = await courseLessonRepo
-            .createQueryBuilder('lesson')
-            .innerJoin('lesson.module', 'module')
-            .where('module.course_id = :courseId', { courseId })
-            .andWhere('lesson.is_published = :isPublished', { isPublished: true })
-            .getCount();
+    // Calculate progress
+    const allLessons = enrollment.course.modules.flatMap(m => m.lessons);
+    const totalLessons = allLessons.length;
+    const completedCount = enrollment.completedLessons.length;
+    
+    enrollment.progress = totalLessons > 0 ? (completedCount / totalLessons) * 100 : 0;
 
-        let completedCount = 0;
-        if (enrollment.completedLessons.length > 0) {
-             completedCount = await courseLessonRepo
-                .createQueryBuilder('lesson')
-                .innerJoin('lesson.module', 'module')
-                .where('module.course_id = :courseId', { courseId })
-                .andWhere('lesson.is_published = :isPublished', { isPublished: true })
-                .andWhere('lesson.id IN (:...ids)', { ids: enrollment.completedLessons })
-                .getCount();
-        }
-
-        if (totalLessons > 0) {
-            enrollment.progress = (completedCount / totalLessons) * 100;
-        } else {
-            enrollment.progress = (completedCount > 0) ? 100 : 0;
-        }
-
-        // If we just completed a lesson, it's also the last accessed one
-        enrollment.lastLessonId = updateProgressDto.completedLessonId;
-    }
-
-    if (enrollment.progress >= 100) {
-      enrollment.progress = 100;
+    if (enrollment.progress === 100 && enrollment.status !== EnrollmentStatus.COMPLETED) {
       enrollment.status = EnrollmentStatus.COMPLETED;
       enrollment.completedAt = new Date();
+      
+      // Award XP for course completion
+      await this.gamificationService.awardXP(userId, 100, 'course_completed', courseId);
+      // Unlock achievement
+      await this.gamificationService.checkAndUnlockAchievement(userId, 'first-course-completed');
     }
 
     return this.enrollmentRepository.save(enrollment);
+  }
+
+  async submitQuiz(userId: string, enrollmentId: string, lessonId: string, answers: any): Promise<QuizSubmission> {
+    const enrollment = await this.enrollmentRepository.findOne({
+      where: { id: enrollmentId, userId },
+      relations: ['course', 'course.modules', 'course.modules.lessons'],
+    });
+
+    if (!enrollment) throw new NotFoundException('Enrollment not found');
+
+    const lesson = enrollment.course.modules
+      .flatMap(m => m.lessons)
+      .find(l => l.id === lessonId);
+
+    if (!lesson) throw new NotFoundException('Lesson not found');
+    if (lesson.content_type !== 'quiz') throw new BadRequestException('Lesson is not a quiz');
+
+    // Calculate Score
+    let correctCount = 0;
+    const questions = lesson.content_data?.questions || [];
+    
+    questions.forEach(q => {
+      if (answers[q.id] === q.correctAnswer) {
+        correctCount++;
+      }
+    });
+
+    const score = questions.length > 0 ? (correctCount / questions.length) * 100 : 0;
+    const passed = score >= (lesson.content_data?.passingScore || 70);
+
+    const submission = this.quizSubmissionRepository.create({
+      enrollment_id: enrollmentId,
+      lesson_id: lessonId,
+      answers,
+      score,
+      passed,
+    });
+
+    const saved = await this.quizSubmissionRepository.save(submission);
+
+    // If passed, mark lesson as completed
+    if (passed) {
+      await this.updateProgress(userId, {
+        courseId: enrollment.courseId,
+        lessonId,
+        completed: true,
+      });
+
+      // Award extra XP for passing a quiz
+      await this.gamificationService.awardXP(userId, 20, 'quiz_passed', saved.id);
+      
+      if (score === 100) {
+        await this.gamificationService.awardXP(userId, 10, 'quiz_perfect_score', saved.id);
+      }
+    }
+
+    return saved;
   }
 
   async getMyCourses(userId: string): Promise<Enrollment[]> {

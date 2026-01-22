@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload, Eye, CheckCircle, Settings, Users } from 'lucide-react';
+import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload, Eye, CheckCircle, Settings, Users, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { FileUpload } from './FileUpload';
 import { ContentAssignment } from './ContentAssignment';
@@ -53,6 +53,7 @@ interface PreviewContent {
   fileName: string;
   fileType: string;
   title: string;
+  data?: any;
 }
 
 interface Course {
@@ -181,6 +182,19 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     setShowModuleForm(false);
   };
 
+  const startAddLesson = (moduleId: string, type: 'video' | 'document' | 'text' | 'quiz' = 'video') => {
+    setLessonForm({
+      title: '',
+      description: '',
+      content_type: type,
+      duration_minutes: 0,
+      is_preview: false,
+      content_data: null
+    });
+    setEditingLesson(null);
+    setShowLessonForm(moduleId);
+  };
+
   const createLesson = async (moduleId: string) => {
     try {
       const token = localStorage.getItem('token');
@@ -212,7 +226,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
           description: '',
           content_type: 'video',
           duration_minutes: 0,
-          is_preview: false
+          is_preview: false,
+          content_data: null
         });
         setShowLessonForm(null);
         toast.success('Lesson created successfully!');
@@ -250,7 +265,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
           description: '',
           content_type: 'video',
           duration_minutes: 0,
-          is_preview: false
+          is_preview: false,
+          content_data: null
         });
         setEditingLesson(null);
         setShowLessonForm(null);
@@ -353,6 +369,33 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
   };
 
   const previewContent = (lesson: Lesson) => {
+    // Handle Quiz Preview
+    if (lesson.content_type === 'quiz' && lesson.content_data) {
+      setPreviewContentData({
+        id: lesson.id,
+        fileName: lesson.title,
+        fileType: 'quiz',
+        title: lesson.title,
+        data: lesson.content_data
+      });
+      setShowPreview(true);
+      return;
+    }
+
+    // Handle Text/HTML Preview
+    if (lesson.content_type === 'text' && lesson.content_data) {
+      setPreviewContentData({
+        id: lesson.id,
+        fileName: lesson.title,
+        fileType: 'text',
+        title: lesson.title,
+        data: lesson.content_data
+      });
+      setShowPreview(true);
+      return;
+    }
+
+    // Handle File Content (Video/Document)
     if (lesson.content_url) {
       setPreviewContentData({
         id: lesson.content_data?.fileId || lesson.id,
@@ -492,7 +535,16 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setShowLessonForm(module.id)}
+                        onClick={() => startAddLesson(module.id, 'quiz')}
+                        className="flex-1 sm:flex-none bg-purple-100/70 hover:bg-purple-200/90 backdrop-blur-sm border-purple-300/40 text-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <HelpCircle className="w-4 h-4 mr-1" />
+                        Add Quiz
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => startAddLesson(module.id)}
                         className="flex-1 sm:flex-none bg-white/70 hover:bg-white/90 backdrop-blur-sm border-white/40 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                       >
                         <Plus className="w-4 h-4 mr-1" />
@@ -580,21 +632,34 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                           </div>
                         )}
                         {lessonForm.content_type === 'quiz' && (
-                          <div className="mt-4">
+                          <div className="mt-6 p-4 bg-purple-50/50 rounded-xl border border-purple-100">
+                            <div className="flex items-center justify-between mb-3">
+                              <label className="text-sm font-semibold text-purple-900">Quiz Configuration</label>
+                              {lessonForm.content_data && (
+                                <span className="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-full flex items-center">
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  {lessonForm.content_data.questions?.length} Questions Configured
+                                </span>
+                              )}
+                            </div>
                             <Button
                               type="button"
                               onClick={() => setShowQuizBuilder(true)}
                               variant="outline"
-                              className="w-full bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200"
+                              className="w-full h-auto py-4 bg-white hover:bg-purple-50 border-2 border-dashed border-purple-200 hover:border-purple-300 text-purple-600 hover:text-purple-700 transition-all duration-300 group"
                             >
-                              {lessonForm.content_data ? '✏️ Edit Quiz Content' : '✨ Configure Quiz Content'}
+                              <div className="flex flex-col items-center gap-1">
+                                <div className="p-2 bg-purple-100 text-purple-600 rounded-lg group-hover:scale-110 transition-transform duration-300">
+                                  {lessonForm.content_data ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                                </div>
+                                <span className="font-bold text-base mt-1">
+                                  {lessonForm.content_data ? 'Edit Quiz Content' : 'Configure Quiz Questions'}
+                                </span>
+                                <span className="text-xs text-purple-400 font-normal">
+                                  {lessonForm.content_data ? 'Modify questions, scoring, and settings' : 'Set up questions, options, and passing score'}
+                                </span>
+                              </div>
                             </Button>
-                            {lessonForm.content_data && (
-                              <p className="text-xs text-green-600 mt-2 flex items-center font-medium">
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                Quiz configured ({lessonForm.content_data.questions?.length} questions)
-                              </p>
-                            )}
                           </div>
                         )}
                         
@@ -782,8 +847,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
 
       {/* Quiz Builder Overlay */}
       {showQuizBuilder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8">
             <QuizBuilder
               initialData={lessonForm.content_data}
               onSave={handleQuizSave}

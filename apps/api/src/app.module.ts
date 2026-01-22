@@ -14,6 +14,9 @@ import { ContentModule } from './modules/content/content.module';
 import { EnrollmentModule } from './modules/enrollment/enrollment.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { InnovationsModule } from './modules/innovations/innovations.module';
+import { GamificationModule } from './modules/gamification/gamification.module';
+import { MentorshipModule } from './modules/mentorship/mentorship.module';
+import { AiModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -45,6 +48,8 @@ import { InnovationsModule } from './modules/innovations/innovations.module';
     EnrollmentModule,
     ReviewsModule,
     InnovationsModule,
+    GamificationModule,
+    MentorshipModule,
   ],
 })
 export class AppModule {}

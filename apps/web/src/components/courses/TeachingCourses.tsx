@@ -88,7 +88,7 @@ export function TeachingCourses() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map((course: any) => (
-          <Link key={course.id} href={`/courses/${course.id}/edit`}>
+          <div key={course.id}>
             <Card className="group bg-white/40 backdrop-blur-xl border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
               <CardContent className="p-6">
                 <div className="space-y-4">
@@ -124,15 +124,17 @@ export function TeachingCourses() {
                   </div>
 
                   <div className="flex items-center justify-between mt-4">
-                    <Button size="sm" variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Manage Course
-                    </Button>
+                    <Link href={`/courses/${course.id}/builder`} className="w-full">
+                        <Button size="sm" variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
+                            <Edit className="w-4 h-4 mr-2" />
+                            Manage Course
+                        </Button>
+                    </Link>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          </Link>
+          </div>
         ))}
         
         {courses.length === 0 && (

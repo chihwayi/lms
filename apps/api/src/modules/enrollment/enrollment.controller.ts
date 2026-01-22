@@ -29,13 +29,22 @@ export class EnrollmentController {
     return this.enrollmentService.checkEnrollment(req.user.id, courseId);
   }
 
-  @Patch(':courseId/progress')
+  @Patch('progress')
   updateProgress(
     @Request() req,
-    @Param('courseId') courseId: string,
     @Body() updateProgressDto: UpdateProgressDto,
   ) {
-    return this.enrollmentService.updateProgress(req.user.id, courseId, updateProgressDto);
+    return this.enrollmentService.updateProgress(req.user.id, updateProgressDto);
+  }
+
+  @Post(':enrollmentId/quiz/:lessonId')
+  submitQuiz(
+    @Request() req,
+    @Param('enrollmentId') enrollmentId: string,
+    @Param('lessonId') lessonId: string,
+    @Body() answers: any,
+  ) {
+    return this.enrollmentService.submitQuiz(req.user.id, enrollmentId, lessonId, answers);
   }
 
   @Get(':courseId/students')

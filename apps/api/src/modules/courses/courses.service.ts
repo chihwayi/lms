@@ -38,6 +38,7 @@ export class CoursesService {
       .leftJoinAndSelect('course.instructor', 'instructor')
       .leftJoinAndSelect('course.category', 'category')
       .leftJoinAndSelect('course.modules', 'modules')
+      .loadRelationCountAndMap('course.enrollments_count', 'course.enrollments')
       .orderBy('course.created_at', 'DESC');
 
     if (search) {

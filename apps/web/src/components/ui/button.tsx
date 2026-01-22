@@ -1,4 +1,5 @@
 import * as React from "react"
+import { cn } from "@/lib/utils"
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'outline' | 'ghost' | 'destructive'
@@ -11,8 +12,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     const variantClasses = {
       default: "bg-blue-600 text-white hover:bg-blue-700",
-      outline: "border border-gray-300 bg-white hover:bg-gray-50",
-      ghost: "hover:bg-gray-100",
+      outline: "border border-slate-200 bg-white hover:bg-slate-100 text-slate-900",
+      ghost: "hover:bg-slate-100 text-slate-900",
       destructive: "bg-red-600 text-white hover:bg-red-700"
     }
     
@@ -26,7 +27,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button 
         ref={ref}
-        className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`} 
+        className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)} 
         {...props} 
       />
     )

@@ -1,17 +1,15 @@
-import { IsNotEmpty, IsNumber, Min, Max, IsUUID, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, Min, Max, IsUUID, IsOptional, IsBoolean } from 'class-validator';
 
 export class UpdateProgressDto {
   @IsNotEmpty()
-  @IsNumber()
-  @Min(0)
-  @Max(100)
-  progress: number;
+  @IsUUID()
+  courseId: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  lessonId: string;
 
   @IsOptional()
-  @IsUUID()
-  completedLessonId?: string;
-
-  @IsOptional()
-  @IsUUID()
-  currentLessonId?: string;
+  @IsBoolean()
+  completed?: boolean;
 }

@@ -5,9 +5,10 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { Menu } from 'lucide-react';
+import { Menu, LayoutDashboard, BookOpen, Lightbulb, Users, Shield, FileCheck, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 export function TopNav() {
   const { user, logout } = useAuthStore();
@@ -43,41 +44,90 @@ export function TopNav() {
                     <Menu className="h-6 w-6" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[300px] sm:w-[400px]">
-                  <SheetTitle className="text-left mb-4">Navigation Menu</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Main navigation menu for mobile devices
-                  </SheetDescription>
-                  <div className="flex flex-col space-y-4 mt-6">
+                <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
+                  <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                    <SheetTitle className="text-white text-xl font-bold">EduFlow</SheetTitle>
+                    <SheetDescription className="text-blue-100 mt-1">
+                      Next-Gen Learning Platform
+                    </SheetDescription>
+                  </div>
+                  
+                  <div className="flex flex-col py-4">
                     <SheetClose asChild>
-                      <Link href="/dashboard" className="text-lg font-medium hover:text-blue-600">
+                      <Link href="/dashboard" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                        <LayoutDashboard className="w-5 h-5" />
                         Dashboard
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
-                      <Link href="/courses" className="text-lg font-medium hover:text-blue-600">
+                      <Link href="/courses" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                        <BookOpen className="w-5 h-5" />
                         Courses
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
-                      <Link href="/innovations" className="text-lg font-medium hover:text-blue-600">
+                      <Link href="/innovations" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                        <Lightbulb className="w-5 h-5" />
                         Innovations
                       </Link>
                     </SheetClose>
+                    <SheetClose asChild>
+                      <Link href="/mentorship" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                        <Users className="w-5 h-5" />
+                        Mentorship
+                      </Link>
+                    </SheetClose>
+
                     {isInstructor && (
-                      <SheetClose asChild>
-                        <Link href="/innovations/review" className="text-lg font-medium hover:text-blue-600 pl-4 border-l-2 border-blue-100">
-                          Review Innovations
-                        </Link>
-                      </SheetClose>
+                      <>
+                        <Separator className="my-2" />
+                        <div className="px-6 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                          Instructor
+                        </div>
+                        <SheetClose asChild>
+                          <Link href="/innovations/review" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                            <FileCheck className="w-5 h-5" />
+                            Review Innovations
+                          </Link>
+                        </SheetClose>
+                      </>
                     )}
+
                     {isAdmin && (
-                      <SheetClose asChild>
-                        <Link href="/admin" className="text-lg font-medium hover:text-blue-600">
+                      <>
+                        <Separator className="my-2" />
+                        <div className="px-6 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
                           Admin
-                        </Link>
-                      </SheetClose>
+                        </div>
+                        <SheetClose asChild>
+                          <Link href="/admin" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                            <Shield className="w-5 h-5" />
+                            Admin Dashboard
+                          </Link>
+                        </SheetClose>
+                      </>
                     )}
+
+                    <Separator className="my-2" />
+                    
+                    <div className="px-6 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                      Account
+                    </div>
+                    
+                    <SheetClose asChild>
+                      <Link href="/profile" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                        <User className="w-5 h-5" />
+                        Profile
+                      </Link>
+                    </SheetClose>
+                    
+                    <button 
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-red-50 text-red-600 transition-colors text-left"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Logout
+                    </button>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -104,6 +154,12 @@ export function TopNav() {
                 className={`${isActive('/innovations') ? 'text-blue-600 font-medium border-b-2 border-blue-600' : 'text-gray-700 hover:text-blue-600'} transition-colors py-5`}
               >
                 Innovations
+              </Link>
+              <Link 
+                href="/mentorship" 
+                className={`${isActive('/mentorship') ? 'text-blue-600 font-medium border-b-2 border-blue-600' : 'text-gray-700 hover:text-blue-600'} transition-colors py-5`}
+              >
+                Mentorship
               </Link>
               {isAdmin && (
                 <Link 

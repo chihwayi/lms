@@ -3,24 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { useAuthStore } from '@/lib/auth-store';
+import { TopNav } from '@/components/layout/TopNav';
 import { toast } from 'sonner';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CourseBuilder } from '@/components/courses/CourseBuilder';
+import Link from 'next/link';
 
 export default function CourseBuilderPage() {
-  const { user, logout } = useAuthStore();
   const params = useParams();
   const router = useRouter();
   const [course, setCourse] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  const handleLogout = () => {
-    logout();
-    toast.success('Logged out successfully');
-    router.push('/login');
-  };
 
   useEffect(() => {
     const fetchCourse = async (courseId: string) => {
@@ -68,31 +61,8 @@ export default function CourseBuilderPage() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
         </div>
-        <nav className="relative bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center space-x-8">
-                <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  EduFlow
-                </Link>
-                <div className="hidden md:flex space-x-6">
-                  <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">Dashboard</Link>
-                  <Link href="/courses" className="text-gray-700 hover:text-blue-600 transition-colors">Courses</Link>
-                  <span className="text-gray-700 font-medium border-b-2 border-blue-600">Course Builder</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
-                  </div>
-                  <span className="text-gray-700 font-medium">{user?.firstName || 'User'}</span>
-                </div>
-                <Button onClick={handleLogout} variant="outline" className="bg-white/50 hover:bg-white/80">Logout</Button>
-              </div>
-            </div>
-          </div>
-        </nav>
+        
+        <TopNav />
 
         <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}

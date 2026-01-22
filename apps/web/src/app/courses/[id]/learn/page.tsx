@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, PlayCircle, CheckCircle, FileText, Lock, Circle, Menu, Check } from 'lucide-react';
 import { VideoPlayer } from '@/components/courses/VideoPlayer';
 import { QuizRunner, QuizData } from '@/components/courses/QuizRunner';
+import { AiAssistantButton } from '@/components/ai/AiAssistantButton';
 import { ScrollArea } from '../../../../components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '../../../../components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
@@ -129,7 +130,7 @@ export default function CourseLearnPage() {
         },
         body: JSON.stringify({
             courseId: course?.id,
-            completedLessonId: lessonId,
+            lessonId: lessonId,
             // Calculate total progress
             progress: calculateTotalProgress(lessonId)
         })
@@ -153,9 +154,48 @@ export default function CourseLearnPage() {
     return (completedSet.size / allLessons.length) * 100;
   };
 
-  const handleQuizComplete = async (_score: number, passed: boolean) => {
-    if (passed && currentLesson) {
-      await handleLessonComplete(currentLesson.id);
+  const handleQuizComplete = async (score: number, passed: boolean, answers: Record<string, string>) => {
+    if (!currentLesson || !enrollment) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3001/api/v1/enrollments/${enrollment.id}/quiz/${currentLesson.id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(answers)
+      });
+
+      if (response.ok) {
+        if (passed) {
+             toast.success(`Quiz passed with score: ${Math.round(score)}%`);
+             
+             // Update local state to show completion
+             const newCompletedLessons = [...(enrollment.completedLessons || [])];
+             if (!newCompletedLessons.includes(currentLesson.id)) {
+                 newCompletedLessons.push(currentLesson.id);
+                 
+                 // Recalculate progress
+                 const allLessons = course?.modules.flatMap(m => m.lessons) || [];
+                 const newProgress = (newCompletedLessons.length / allLessons.length) * 100;
+                 
+                 setEnrollment({
+                     ...enrollment,
+                     completedLessons: newCompletedLessons,
+                     progress: newProgress
+                 });
+             }
+        } else {
+             toast.error(`Quiz failed. Score: ${Math.round(score)}%. Try again!`);
+        }
+      } else {
+        toast.error('Failed to submit quiz results');
+      }
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      toast.error('Error submitting quiz');
     }
   };
 
@@ -288,7 +328,15 @@ export default function CourseLearnPage() {
             <div className="max-w-4xl mx-auto space-y-6">
               <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">{currentLesson.title}</h1>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
+                    <AiAssistantButton 
+                      title={currentLesson.title}
+                      context={
+                        currentLesson.content_type === 'text' && currentLesson.content_data?.html 
+                          ? currentLesson.content_data.html.replace(/<[^>]*>/g, '') 
+                          : currentLesson.description || "No text content available."
+                      } 
+                    />
                     {isLessonCompleted(currentLesson.id) && (
                         <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">
                             <Check className="w-3 h-3 mr-1" /> Completed

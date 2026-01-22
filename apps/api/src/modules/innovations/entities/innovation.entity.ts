@@ -10,6 +10,9 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { InnovationReview } from './innovation-review.entity';
+import { InnovationMilestone } from './innovation-milestone.entity';
+import { InnovationMember } from './innovation-member.entity';
+import { InnovationComment } from './innovation-comment.entity';
 
 export enum InnovationStatus {
   DRAFT = 'draft',
@@ -62,4 +65,13 @@ export class Innovation {
 
   @OneToMany(() => InnovationReview, (review) => review.innovation)
   reviews: InnovationReview[];
+
+  @OneToMany(() => InnovationMilestone, (milestone) => milestone.innovation)
+  milestones: InnovationMilestone[];
+
+  @OneToMany(() => InnovationMember, (member) => member.innovation)
+  members: InnovationMember[];
+
+  @OneToMany(() => InnovationComment, (comment) => comment.innovation)
+  comments: InnovationComment[];
 }

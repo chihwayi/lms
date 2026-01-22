@@ -5,7 +5,7 @@ import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Menu } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
 export default function AdminPage() {
@@ -266,9 +272,11 @@ export default function AdminPage() {
               <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 EduFlow
               </Link>
-              <span className="ml-4 text-gray-600">Admin Panel</span>
+              <span className="ml-4 text-gray-600 hidden sm:inline-block">Admin Panel</span>
             </div>
-            <div className="flex items-center space-x-4">
+
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-4">
               <span className="text-gray-700">Welcome, {user.firstName}!</span>
               <Link href="/dashboard" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200">
                 Dashboard
@@ -279,6 +287,39 @@ export default function AdminPage() {
               >
                 Logout
               </button>
+            </div>
+
+            {/* Mobile Menu */}
+            <div className="flex md:hidden items-center">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <div className="mb-6">
+                    <SheetTitle>Admin Menu</SheetTitle>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="text-gray-700 font-medium">
+                      Welcome, {user.firstName}!
+                    </div>
+                    <Link href="/dashboard" className="w-full">
+                      <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600">
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Button
+                      onClick={logout}
+                      variant="destructive"
+                      className="w-full"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>

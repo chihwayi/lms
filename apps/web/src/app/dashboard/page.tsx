@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { EnrolledCourses } from '@/components/courses/EnrolledCourses';
 import { TeachingCourses } from '@/components/courses/TeachingCourses';
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning';
+import { XPDisplay } from '@/components/gamification/XPDisplay';
 import { BookOpen, Presentation, LayoutDashboard } from 'lucide-react';
 import { TopNav } from '@/components/layout/TopNav';
 
@@ -17,12 +18,26 @@ export default function DashboardPage() {
   const { user, isAuthenticated, logout } = useAuthStore();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'learning' | 'teaching'>('learning');
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, router]);
+
+  // Set default tab based on role once user is loaded
+  useEffect(() => {
+    if (user && !initialized) {
+      const isInstructor = user?.roles?.some(r => ['instructor', 'educator', 'admin', 'super_admin'].includes(r.name)) || 
+                          ['instructor', 'educator', 'admin', 'super_admin'].includes(user?.role || '');
+      
+      if (isInstructor) {
+        setActiveTab('teaching');
+      }
+      setInitialized(true);
+    }
+  }, [user, initialized]);
 
   const handleLogout = () => {
     logout();
@@ -61,9 +76,6 @@ export default function DashboardPage() {
       <TopNav />
       
       <main className="relative max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {/* Continue Learning Widget */}
-        <ContinueLearning />
-
         {/* Header */}
         <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
@@ -102,6 +114,18 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
+
+        {/* Widgets Grid */}
+        {activeTab === 'learning' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2">
+              <ContinueLearning />
+            </div>
+            <div>
+              <XPDisplay />
+            </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="min-h-[500px]">

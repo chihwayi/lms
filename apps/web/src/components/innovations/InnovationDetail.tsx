@@ -7,6 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { useAuthStore } from '@/lib/auth-store';
 import { ReviewForm } from './ReviewForm';
+import { MilestoneList } from './MilestoneList';
+import { TeamList } from './TeamList';
+import { CommentSection } from './CommentSection';
 import { toast } from 'sonner';
 import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -99,6 +102,34 @@ export default function InnovationDetail({ id }: InnovationDetailProps) {
 
   const isInstructorOrAdmin = user?.role === 'instructor' || user?.role === 'admin' || user?.role === 'educator';
   const canReview = isInstructorOrAdmin && innovation.status === 'submitted';
+  const isOwner = user?.id === innovation.student?.id;
+  const canManageMilestones = isOwner || isInstructorOrAdmin;
+
+  // Build comment tree from flat list to support infinite nesting
+  const buildCommentTree = (comments: any[]) => {
+    const commentMap = new Map();
+    // Deep clone to avoid mutating state directly if needed, though here we just process the array
+    // Initialize map and children arrays
+    const processedComments = comments.map(c => ({ ...c, children: [] }));
+    
+    processedComments.forEach(c => {
+      commentMap.set(c.id, c);
+    });
+
+    const roots: any[] = [];
+
+    processedComments.forEach(c => {
+      if (c.parent_id && commentMap.has(c.parent_id)) {
+        commentMap.get(c.parent_id).children.push(c);
+      } else if (!c.parent_id) {
+        roots.push(c);
+      }
+    });
+
+    return roots;
+  };
+
+  const rootComments = innovation.comments ? buildCommentTree(innovation.comments) : [];
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -137,6 +168,27 @@ export default function InnovationDetail({ id }: InnovationDetailProps) {
             <h2 className="text-xl font-semibold mb-4">Proposed Solution</h2>
             <p className="text-slate-700 whitespace-pre-wrap">{innovation.solution_description}</p>
           </Card>
+
+          <MilestoneList 
+            innovationId={id}
+            milestones={innovation.milestones || []}
+            canManage={canManageMilestones}
+            onUpdate={fetchInnovation}
+          />
+
+          <TeamList 
+            innovationId={id}
+            members={innovation.members || []}
+            ownerId={innovation.student?.id}
+            isOwner={canManageMilestones}
+            onUpdate={fetchInnovation}
+          />
+
+          <CommentSection 
+            innovationId={id}
+            comments={rootComments}
+            onUpdate={fetchInnovation}
+          />
 
           {innovation.reviews && innovation.reviews.length > 0 && (
             <Card className="p-6">

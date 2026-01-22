@@ -5,12 +5,47 @@ import { format } from "date-fns";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 
+export interface InnovationMilestone {
+  id: string;
+  title: string;
+  description: string;
+  due_date: string;
+  status: 'pending' | 'in_progress' | 'completed';
+}
+
+export interface InnovationMember {
+  id: string;
+  role: 'leader' | 'member' | 'advisor';
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string;
+  };
+}
+
+export interface InnovationComment {
+  id: string;
+  content: string;
+  created_at: string;
+  parent_id?: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+  };
+  children?: InnovationComment[];
+}
+
 export interface Innovation {
   id: string;
   title: string;
   problem_statement: string;
   solution_description: string;
   budget_estimate: number;
+  allocated_budget?: number;
   status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected';
   created_at: string;
   student?: {
@@ -18,6 +53,9 @@ export interface Innovation {
     firstName: string;
     lastName: string;
   };
+  reviews?: any[]; // Keep as any or define proper type if needed
+  milestones?: InnovationMilestone[];
+  members?: InnovationMember[];
 }
 
 interface InnovationCardProps {

@@ -24,6 +24,14 @@ function CardTitle({ className = '', ...props }: CardTitleProps) {
   )
 }
 
+interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+function CardDescription({ className = '', ...props }: CardDescriptionProps) {
+  return (
+    <p className={`text-sm text-slate-500 ${className}`} {...props} />
+  )
+}
+
 interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function CardContent({ className = '', ...props }: CardContentProps) {
@@ -40,4 +48,4 @@ function CardFooter({ className = '', ...props }: CardFooterProps) {
   )
 }
 
-export { Card, CardHeader, CardTitle, CardContent, CardFooter }
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
