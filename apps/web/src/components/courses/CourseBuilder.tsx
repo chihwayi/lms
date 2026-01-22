@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload, Eye, CheckCircle, Settings } from 'lucide-react';
+import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload, Eye, CheckCircle, Settings, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { FileUpload } from './FileUpload';
 import { ContentAssignment } from './ContentAssignment';
@@ -16,6 +16,17 @@ import { ChunkedUpload } from './ChunkedUpload';
 import { QuizBuilder } from './QuizBuilder';
 import { CourseSettings } from './CourseSettings';
 import { QuizData } from './QuizRunner';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { LessonAttachments } from './LessonAttachments';
+import { CourseEnrollments } from './CourseEnrollments';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Lesson {
   id: string;
@@ -66,6 +77,7 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [showQuizBuilder, setShowQuizBuilder] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showEnrollments, setShowEnrollments] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
   const [moduleForm, setModuleForm] = useState({ title: '', description: '' });
   const [lessonForm, setLessonForm] = useState<{
@@ -84,6 +96,11 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     content_data: null
   });
   const [filesRefreshTrigger, setFilesRefreshTrigger] = useState(0);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    type: 'module' | 'lesson';
+    id: string;
+    moduleId?: string;
+  } | null>(null);
 
   const createModule = async () => {
     try {
@@ -148,26 +165,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     }
   };
 
-  const deleteModule = async (moduleId: string) => {
-    if (!confirm('Are you sure you want to delete this module? This will also delete all lessons in it.')) return;
-    
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${course.id}/modules/${moduleId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const updatedModules = course.modules.filter(m => m.id !== moduleId);
-        onCourseUpdate({ ...course, modules: updatedModules });
-        toast.success('Module deleted successfully!');
-      } else {
-        toast.error('Failed to delete module');
-      }
-    } catch (error) {
-      toast.error('Failed to delete module');
-    }
+  const deleteModule = (moduleId: string) => {
+    setDeleteConfirmation({ type: 'module', id: moduleId });
   };
 
   const editModule = (module: Module) => {
@@ -264,30 +263,58 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     }
   };
 
-  const deleteLesson = async (moduleId: string, lessonId: string) => {
-    if (!confirm('Are you sure you want to delete this lesson?')) return;
-    
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/modules/${moduleId}/lessons/${lessonId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  const deleteLesson = (moduleId: string, lessonId: string) => {
+    setDeleteConfirmation({ type: 'lesson', id: lessonId, moduleId });
+  };
 
-      if (response.ok) {
-        const updatedModules = course.modules.map(m => 
-          m.id === moduleId 
-            ? { ...m, lessons: m.lessons.filter(l => l.id !== lessonId) }
-            : m
-        );
-        onCourseUpdate({ ...course, modules: updatedModules });
-        toast.success('Lesson deleted successfully!');
-      } else {
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirmation) return;
+
+    if (deleteConfirmation.type === 'module') {
+      const moduleId = deleteConfirmation.id;
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/v1/courses/${course.id}/modules/${moduleId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const updatedModules = course.modules.filter(m => m.id !== moduleId);
+          onCourseUpdate({ ...course, modules: updatedModules });
+          toast.success('Module deleted successfully!');
+        } else {
+          toast.error('Failed to delete module');
+        }
+      } catch (error) {
+        toast.error('Failed to delete module');
+      }
+    } else if (deleteConfirmation.type === 'lesson') {
+      const { id: lessonId, moduleId } = deleteConfirmation;
+      if (!moduleId) return;
+       try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/v1/courses/modules/${moduleId}/lessons/${lessonId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const updatedModules = course.modules.map(m => 
+            m.id === moduleId 
+              ? { ...m, lessons: m.lessons.filter(l => l.id !== lessonId) }
+              : m
+          );
+          onCourseUpdate({ ...course, modules: updatedModules });
+          toast.success('Lesson deleted successfully!');
+        } else {
+          toast.error('Failed to delete lesson');
+        }
+      } catch (error) {
         toast.error('Failed to delete lesson');
       }
-    } catch (error) {
-      toast.error('Failed to delete lesson');
     }
+    setDeleteConfirmation(null);
   };
 
   const editLesson = (lesson: Lesson, moduleId: string) => {
@@ -374,6 +401,14 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <Button
+                onClick={() => setShowEnrollments(true)}
+                variant="outline"
+                className="w-full sm:w-auto bg-white/70 hover:bg-white/90 backdrop-blur-sm border-white/40 text-gray-700 text-lg md:text-xl font-bold px-6 md:px-8 py-3 md:py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              >
+                <Users className="w-5 h-5 md:w-6 md:h-6 mr-3" />
+                Students
+              </Button>
               <Button
                 onClick={() => setShowSettings(true)}
                 variant="outline"
@@ -531,6 +566,19 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                           onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })}
                           className="bg-white/70 mt-4"
                         />
+                        {lessonForm.content_type === 'text' && (
+                          <div className="mt-4">
+                            <label className="text-sm font-medium mb-2 block">Lesson Content</label>
+                            <RichTextEditor
+                              content={lessonForm.content_data?.html || ''}
+                              onChange={(html) => setLessonForm({ 
+                                ...lessonForm, 
+                                content_data: { ...lessonForm.content_data, html }
+                              })}
+                              className="bg-white/70"
+                            />
+                          </div>
+                        )}
                         {lessonForm.content_type === 'quiz' && (
                           <div className="mt-4">
                             <Button
@@ -549,6 +597,14 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                             )}
                           </div>
                         )}
+                        
+                        {editingLesson && (
+                          <LessonAttachments 
+                            courseId={course.id}
+                            lessonId={editingLesson.id}
+                          />
+                        )}
+
                         <div className="flex flex-col sm:flex-row gap-4 mt-4">
                           <Button 
                             onClick={() => editingLesson ? updateLesson(module.id) : createLesson(module.id)} 
@@ -717,6 +773,13 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
         }}
       />
 
+      {/* Course Enrollments Modal */}
+      <CourseEnrollments
+        courseId={course?.id}
+        isOpen={showEnrollments}
+        onClose={() => setShowEnrollments(false)}
+      />
+
       {/* Quiz Builder Overlay */}
       {showQuizBuilder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -729,6 +792,29 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
           </div>
         </div>
       )}
+
+      <Dialog open={!!deleteConfirmation} onOpenChange={(open) => !open && setDeleteConfirmation(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {deleteConfirmation?.type === 'module' ? 'Delete Module' : 'Delete Lesson'}
+            </DialogTitle>
+            <DialogDescription>
+              {deleteConfirmation?.type === 'module' 
+                ? 'Are you sure you want to delete this module? This will also delete all lessons in it. This action cannot be undone.'
+                : 'Are you sure you want to delete this lesson? This action cannot be undone.'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteConfirmation(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

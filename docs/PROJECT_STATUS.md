@@ -20,13 +20,16 @@
 ### 3. Course Management (The "Moodle" Foundation)
 - [x] **Course Creation**: Multi-step wizard with metadata (price, level, category)
 - [x] **Curriculum Builder**: Drag-and-drop module/lesson organization
-- [x] **Rich Content**: Support for Video, Text/PDF, and Quiz lessons
+- [x] **Rich Content**: Support for Video, Text/PDF (via Tiptap RTE), and Quiz lessons
 - [x] **Publishing Workflow**: Validation checks before publishing (e.g., "Must have 1 module")
 - [x] **Search & Discovery**: Faceted search, filtering, and categorization
+- [x] **Lesson Attachments**: Support for downloadable resources in lessons
+- [x] **Course Reviews**: Rating and review system for courses
 
 ### 4. Learning Experience
 - [x] **Course Player**: Distraction-free learning interface
 - [x] **Progress Tracking**: Real-time lesson completion and progress bars
+- [x] **Continue Learning**: Dashboard widget to resume progress
 - [x] **Quizzes**: Basic quiz engine with scoring and pass/fail logic
 - [x] **Mobile Responsiveness**: Optimized for mobile devices (PWA-ready layout)
 

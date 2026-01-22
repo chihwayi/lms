@@ -11,6 +11,14 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import Image from 'next/image';
 import { User, Upload, Trash2, Save, ArrowLeft, Loader2, Lock, ShieldCheck, Mail } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ProfilePage() {
   const { user, logout, setUser } = useAuthStore();
@@ -30,6 +38,7 @@ export default function ProfilePage() {
     newPassword: '',
     confirmPassword: '',
   });
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -175,11 +184,11 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      return;
-    }
+  const handleDeleteAccount = () => {
+    setShowDeleteConfirmation(true);
+  };
 
+  const confirmDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3001/api/v1/users/account', {
@@ -440,6 +449,25 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
+
+        <Dialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Account</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete your account? This action cannot be undone and will permanently remove all your data.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDeleteConfirmation(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDeleteAccount}>
+                Delete My Account
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </ProtectedRoute>
   );

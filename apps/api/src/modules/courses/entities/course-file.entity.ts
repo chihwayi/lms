@@ -21,28 +21,28 @@ export class CourseFile {
   @Column('uuid', { nullable: true })
   lesson_id: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   original_name: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   file_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   file_path: string;
 
-  @Column('bigint')
+  @Column('bigint', { nullable: true })
   file_size: number;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   mime_type: string;
 
-  @Column({ length: 50 })
+  @Column({ length: 50, nullable: true })
   file_type: string;
 
   @Column({ length: 50, default: 'pending' })
   processing_status: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   uploaded_by: string;
 
   @CreateDateColumn()
@@ -57,7 +57,7 @@ export class CourseFile {
   @JoinColumn({ name: 'lesson_id' })
   lesson: CourseLesson;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'uploaded_by' })
   uploader: User;
 }

@@ -9,7 +9,9 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { EnrolledCourses } from '@/components/courses/EnrolledCourses';
 import { TeachingCourses } from '@/components/courses/TeachingCourses';
+import { ContinueLearning } from '@/components/dashboard/ContinueLearning';
 import { BookOpen, Presentation, LayoutDashboard } from 'lucide-react';
+import { TopNav } from '@/components/layout/TopNav';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -56,47 +58,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                EduFlow
-              </Link>
-              <div className="hidden md:flex space-x-6">
-                <Link href="/dashboard" className="text-blue-600 font-medium border-b-2 border-blue-600">
-                  Dashboard
-                </Link>
-                <Link href="/courses" className="text-gray-700 hover:text-blue-600 transition-colors">
-                  Courses
-                </Link>
-                {isAdmin && (
-                  <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">
-                    Admin
-                  </Link>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/profile" className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2 hover:bg-white/80 transition-colors cursor-pointer">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden relative">
-                  {user?.avatar ? (
-                    <Image src={`http://localhost:3001/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
-                  ) : (
-                    <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
-                  )}
-                </div>
-                <span className="text-gray-700 font-medium">{user?.firstName || 'User'}</span>
-              </Link>
-              <div onClick={handleLogout} className="bg-white/50 hover:bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-                <span className="text-gray-700 font-semibold">Logout</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TopNav />
       
       <main className="relative max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        {/* Continue Learning Widget */}
+        <ContinueLearning />
+
         {/* Header */}
         <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>

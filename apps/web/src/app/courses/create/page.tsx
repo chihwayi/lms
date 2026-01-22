@@ -46,6 +46,19 @@ export default function CreateCoursePage() {
 
   const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
 
+  const hasRole = (roleName: string) => {
+    return user?.roles?.some(r => r.name === roleName) || user?.role === roleName;
+  };
+
+  const isInstructor = hasRole('instructor') || hasRole('educator') || hasRole('admin') || hasRole('super_admin');
+
+  useEffect(() => {
+    if (user && !isInstructor) {
+      toast.error('You do not have permission to create courses');
+      router.push('/courses');
+    }
+  }, [user, isInstructor, router]);
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">

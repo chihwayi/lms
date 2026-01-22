@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Video, FileText, Image as ImageIcon, Music, X, Upload, Play } from 'lucide-react';
+import { Video, FileText, Image as ImageIcon, Music, X, Upload, Play, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ContentAssignmentProps {
@@ -28,6 +29,7 @@ export function ContentAssignment({
   const [selectedFileId, setSelectedFileId] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAssignment, setShowAssignment] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchCourseFiles = async () => {
@@ -61,12 +63,20 @@ export function ContentAssignment({
     fetchCourseFiles();
   }, [courseId, filesRefreshTrigger]);
 
+  const filteredFiles = useMemo(() => {
+    if (!searchQuery) return files;
+    return files.filter(file => 
+      file.original_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [files, searchQuery]);
+
   useEffect(() => {
     // Auto-select first file if only one exists and no file is currently selected
-    if (files.length === 1 && !selectedFileId) {
+    // Only apply this when NOT searching, to avoid jumping selection
+    if (!searchQuery && files.length === 1 && !selectedFileId) {
       setSelectedFileId(files[0].id);
     }
-  }, [files, selectedFileId]);
+  }, [files, selectedFileId, searchQuery]);
 
   const assignContent = async () => {
     if (!selectedFileId) {
@@ -222,23 +232,36 @@ export function ContentAssignment({
             <div className="space-y-6">
               <div>
                 <label className="block text-lg font-semibold text-gray-800 mb-3">Select File</label>
+                
+                <div className="relative mb-3">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input 
+                    placeholder="Search files..." 
+                    value={searchQuery}
+                    onChange={(e: any) => setSearchQuery(e.target.value)}
+                    className="pl-10 bg-white/50"
+                  />
+                </div>
+
                 <Select value={selectedFileId} onValueChange={(value) => {
                   console.log('Select changed to:', value);
                   setSelectedFileId(value);
                 }}>
                   <SelectTrigger className="bg-white/80 backdrop-blur-sm border-white/40 shadow-lg text-lg py-4 px-6 rounded-xl focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50">
-                    <SelectValue placeholder="Choose a file from your course files..." />
+                    <SelectValue placeholder={files.length === 0 ? "No files available" : "Choose a file from your course files..."} />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/40 shadow-2xl rounded-xl max-h-60">
-                    <SelectItem value="" disabled>
-                      Choose a file from your course files...
-                    </SelectItem>
-                    {files.length === 0 ? (
+                    {files.length > 0 && (
+                      <SelectItem value="" disabled>
+                        Choose a file from your course files...
+                      </SelectItem>
+                    )}
+                    {filteredFiles.length === 0 ? (
                       <SelectItem value="no-files" disabled>
-                        No files available
+                        {files.length === 0 ? "No files uploaded yet" : "No files match your search"}
                       </SelectItem>
                     ) : (
-                      files.map((file: any) => (
+                      filteredFiles.map((file: any) => (
                         <SelectItem key={file.id} value={file.id} className="text-lg py-4">
                           {file.original_name} ({file.file_type} • {formatFileSize(file.file_size)})
                         </SelectItem>
@@ -246,6 +269,11 @@ export function ContentAssignment({
                     )}
                   </SelectContent>
                 </Select>
+                {files.length > 0 && (
+                   <p className="text-sm text-gray-500 mt-2 text-right">
+                     Showing {filteredFiles.length} of {files.length} files
+                   </p>
+                )}
               </div>
 
               {files.length === 0 && (

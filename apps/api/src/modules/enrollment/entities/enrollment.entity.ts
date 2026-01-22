@@ -39,6 +39,12 @@ export class Enrollment {
   @CreateDateColumn({ name: 'enrolled_at' })
   enrolledAt: Date;
 
+  @Column({ name: 'last_accessed_at', nullable: true })
+  lastAccessedAt: Date;
+
+  @Column({ name: 'last_lesson_id', nullable: true })
+  lastLessonId: string;
+
   @Column({ name: 'completed_at', nullable: true })
   completedAt: Date;
 }

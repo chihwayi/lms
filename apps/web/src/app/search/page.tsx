@@ -41,6 +41,7 @@ export default function SearchPage() {
                 <div className="hidden md:flex space-x-6">
                   <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">Dashboard</Link>
                   <Link href="/courses" className="text-gray-700 hover:text-blue-600 transition-colors">Courses</Link>
+                  <Link href="/innovations" className="text-gray-700 hover:text-blue-600 transition-colors">Innovations</Link>
                   <span className="text-gray-700 font-medium border-b-2 border-blue-600">Search</span>
                   {isAdmin && (
                     <Link href="/admin" className="text-gray-700 hover:text-blue-600 transition-colors">Admin</Link>

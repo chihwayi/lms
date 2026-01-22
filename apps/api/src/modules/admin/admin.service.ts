@@ -74,4 +74,9 @@ export class AdminService {
     await this.userRepository.update(userId, { emailVerified });
     return { success: true, message: 'User status updated' };
   }
+
+  async deleteUser(userId: string) {
+    await this.userRepository.delete(userId);
+    return { success: true, message: 'User deleted successfully' };
+  }
 }

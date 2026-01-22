@@ -6,13 +6,13 @@ export class PasswordReset {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'user_id' })
+  @Column({ name: 'user_id', nullable: true })
   userId: string;
 
-  @Column()
+  @Column({ nullable: true })
   token: string;
 
-  @Column({ name: 'expires_at' })
+  @Column({ name: 'expires_at', nullable: true })
   expiresAt: Date;
 
   @Column({ default: false })

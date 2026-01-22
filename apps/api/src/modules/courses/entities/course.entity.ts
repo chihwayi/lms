@@ -107,7 +107,7 @@ export class Course {
   updated_at: Date;
 
   // Relations
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   instructor: User;
 

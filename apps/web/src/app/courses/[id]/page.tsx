@@ -10,7 +10,9 @@ import { useAuthStore } from '@/lib/auth-store';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { ContentPreview } from '@/components/courses/ContentPreview';
+import { CourseReviews } from '@/components/courses/CourseReviews';
 import { Play } from 'lucide-react';
+import { TopNav } from '@/components/layout/TopNav';
 
 interface Lesson {
   id: string;
@@ -32,6 +34,7 @@ interface Module {
 interface Course {
   id: string;
   title: string;
+  created_by: string;
   short_description?: string;
   description?: string;
   status: string;
@@ -199,90 +202,65 @@ export default function CourseDetailPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="relative bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex items-center space-x-8">
-                <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  EduFlow
-                </Link>
-                <div className="hidden md:flex space-x-6">
-                  <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-                    Dashboard
-                  </Link>
-                  <Link href="/courses" className="text-gray-700 hover:text-blue-600 transition-colors">
-                    Courses
-                  </Link>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
-                  </div>
-                  <span className="text-gray-700 font-medium">{user?.firstName || 'User'}</span>
-                </div>
-                <div onClick={handleLogout} className="bg-white/50 hover:bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-                  <span className="text-gray-700 font-semibold">Logout</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
+        <TopNav />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
           {/* Course Header */}
           <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-3xl border border-white/30 shadow-2xl mb-8">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-            <div className="relative z-10 p-8">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h1 className="text-5xl font-bold text-gray-900 mb-4">{course.title}</h1>
-                  <p className="text-xl text-gray-600 mb-6 leading-relaxed max-w-3xl">{course.short_description}</p>
-                  <div className="flex gap-4 mb-6">
-                    <span className={`px-6 py-3 rounded-2xl text-sm font-bold shadow-lg ${
+            <div className="relative z-10 p-6 md:p-8">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                <div className="flex-1 w-full">
+                  <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">{course.title}</h1>
+                  <p className="text-lg md:text-xl text-gray-600 mb-6 leading-relaxed max-w-3xl">{course.short_description}</p>
+                  <div className="flex flex-wrap gap-2 md:gap-4 mb-6">
+                    <span className={`px-4 py-2 md:px-6 md:py-3 rounded-2xl text-xs md:text-sm font-bold shadow-lg ${
                       course.status === 'published' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
                     }`}>
                       {course.status}
                     </span>
-                    <span className="px-6 py-3 rounded-2xl text-sm font-bold bg-blue-100 text-blue-800 border border-blue-200 shadow-lg">
+                    <span className="px-4 py-2 md:px-6 md:py-3 rounded-2xl text-xs md:text-sm font-bold bg-blue-100 text-blue-800 border border-blue-200 shadow-lg">
                       {course.level}
                     </span>
                     {course.category && (
-                      <span className="px-6 py-3 rounded-2xl text-sm font-bold bg-purple-100 text-purple-800 border border-purple-200 shadow-lg">
+                      <span className="px-4 py-2 md:px-6 md:py-3 rounded-2xl text-xs md:text-sm font-bold bg-purple-100 text-purple-800 border border-purple-200 shadow-lg">
                         {course.category.name}
                       </span>
                     )}
                   </div>
 
-                  <div className="mt-8 flex items-center gap-4">
+                  <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                     {isEnrolled ? (
-                        <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={() => router.push(`/courses/${course.id}/learn`)}>
+                        <Button size="lg" className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={() => router.push(`/courses/${course.id}/learn`)}>
                             <Play className="w-5 h-5 mr-2" /> Continue Learning
                         </Button>
                     ) : (
-                        <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={handleEnroll}>
+                        <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={handleEnroll}>
                             Enroll Now {course.price > 0 ? `($${course.price})` : '(Free)'}
                         </Button>
                     )}
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <Link href="/courses">
-                    <div className="bg-white/70 hover:bg-white backdrop-blur-sm px-6 py-3 rounded-xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                      <span className="text-gray-700 font-semibold">← Back to Courses</span>
+                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                  <Link href="/courses" className="w-full md:w-auto">
+                    <div className="bg-white/70 hover:bg-white backdrop-blur-sm px-6 py-3 rounded-xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
+                      <span className="text-gray-700 font-semibold">← Back</span>
                     </div>
                   </Link>
-                  <Link href={`/courses/${course.id}/builder`}>
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                      <span className="text-white font-semibold">🏗️ Build Course</span>
-                    </div>
-                  </Link>
-                  <Link href={`/courses/${course.id}/edit`}>
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                      <span className="text-white font-semibold">Edit Course</span>
-                    </div>
-                  </Link>
+                  {(user?.id === course.created_by || user?.role === 'admin') && (
+                    <>
+                      <Link href={`/courses/${course.id}/builder`} className="w-full md:w-auto">
+                        <div className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
+                          <span className="text-white font-semibold">🏗️ Build</span>
+                        </div>
+                      </Link>
+                      <Link href={`/courses/${course.id}/edit`} className="w-full md:w-auto">
+                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
+                          <span className="text-white font-semibold">Edit</span>
+                        </div>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -363,6 +341,14 @@ export default function CourseDetailPage() {
                       <p className="text-xl text-gray-600">Start building your course by adding modules</p>
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Course Reviews */}
+              <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                <div className="relative z-10 p-8">
+                  <CourseReviews courseId={course.id} isEnrolled={isEnrolled} />
                 </div>
               </div>
             </div>

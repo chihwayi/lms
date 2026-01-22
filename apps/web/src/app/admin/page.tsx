@@ -5,6 +5,16 @@ import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function AdminPage() {
   const { user, accessToken, isAuthenticated, logout } = useAuthStore();
@@ -16,6 +26,7 @@ export default function AdminPage() {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [editingUser, setEditingUser] = useState<any>(null);
   const [showCreateUser, setShowCreateUser] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const [notification, setNotification] = useState<{message: string, type: string} | null>(null);
   const [processingRoles, setProcessingRoles] = useState(new Set<string>());
 
@@ -182,10 +193,38 @@ export default function AdminPage() {
     }
   };
 
+  const initiateDelete = (userId: string) => {
+    setUserToDelete(userId);
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/v1/admin/users/${userToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (response.ok) {
+        setUsers(users.filter(u => u.id !== userToDelete));
+        toast.success('User deleted successfully');
+        setUserToDelete(null);
+      } else {
+        throw new Error('Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      toast.error('Failed to delete user');
+    }
+  };
+
   const filteredUsers = users.filter(u => 
-    u.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (u.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (u.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (u.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const bulkAssignRole = async (roleName: string) => {
@@ -350,7 +389,7 @@ export default function AdminPage() {
                       />
                       <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                         <span className="text-white font-semibold">
-                          {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                          {(user.firstName || '').charAt(0)}{(user.lastName || '').charAt(0)}
                         </span>
                       </div>
                       <div className="ml-4">
@@ -408,6 +447,14 @@ export default function AdminPage() {
                         }`}
                       >
                         {user.emailVerified ? '✅ Active' : '⏳ Activate'}
+                      </button>
+                      
+                      <button
+                        onClick={() => initiateDelete(user.id)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                        title="Delete User"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -510,6 +557,24 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+      <Dialog open={!!userToDelete} onOpenChange={(open) => !open && setUserToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm User Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this user? This action cannot be undone and will permanently remove the user from the system.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setUserToDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDeleteUser}>
+              Delete User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

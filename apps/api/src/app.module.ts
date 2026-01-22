@@ -12,6 +12,8 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { FilesModule } from './modules/files/files.module';
 import { ContentModule } from './modules/content/content.module';
 import { EnrollmentModule } from './modules/enrollment/enrollment.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { InnovationsModule } from './modules/innovations/innovations.module';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { EnrollmentModule } from './modules/enrollment/enrollment.module';
       password: process.env.DATABASE_PASSWORD || 'password',
       database: process.env.DATABASE_NAME || 'eduflow_dev',
       autoLoadEntities: true,
-      synchronize: false, // process.env.NODE_ENV === 'development',
+      synchronize: true, // process.env.NODE_ENV === 'development',
     }),
     HealthModule,
     AuthModule,
@@ -41,6 +43,8 @@ import { EnrollmentModule } from './modules/enrollment/enrollment.module';
     FilesModule,
     ContentModule,
     EnrollmentModule,
+    ReviewsModule,
+    InnovationsModule,
   ],
 })
 export class AppModule {}

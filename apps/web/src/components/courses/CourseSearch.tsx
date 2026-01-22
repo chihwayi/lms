@@ -14,7 +14,14 @@ interface CourseSearchProps {
 
 export function CourseSearch({ onResults }: CourseSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<{
+    categories: string[];
+    levels: string[];
+    minPrice: number;
+    maxPrice: number;
+    language: string;
+    featured: boolean;
+  }>({
     categories: [],
     levels: [],
     minPrice: 0,
@@ -60,9 +67,13 @@ export function CourseSearch({ onResults }: CourseSearchProps) {
     try {
       const params = new URLSearchParams({
         q: searchQuery,
-        ...filters,
         categories: filters.categories.join(','),
         levels: filters.levels.join(','),
+        minPrice: filters.minPrice.toString(),
+        maxPrice: filters.maxPrice.toString(),
+        language: filters.language,
+        featured: filters.featured.toString(),
+        status: 'published',
       });
 
       const token = localStorage.getItem('token');

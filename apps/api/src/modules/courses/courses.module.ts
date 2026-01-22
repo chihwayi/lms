@@ -9,6 +9,7 @@ import { CourseLesson } from './entities/course-lesson.entity';
 import { CourseFile } from './entities/course-file.entity';
 import { UsersModule } from '../users/users.module';
 import { RbacModule } from '../rbac/rbac.module';
+import { CategoriesSeeder } from './categories.seeder';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { RbacModule } from '../rbac/rbac.module';
     RbacModule,
   ],
   controllers: [CoursesController],
-  providers: [CoursesService],
+  providers: [CoursesService, CategoriesSeeder],
   exports: [CoursesService],
 })
 export class CoursesModule {}

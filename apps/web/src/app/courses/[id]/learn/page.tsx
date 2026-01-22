@@ -308,7 +308,7 @@ export default function CourseLearnPage() {
                              />
                         </div>
                     ) : currentLesson.content_type === 'quiz' && currentLesson.content_data ? (
-                        <div className="p-6">
+                        <div className="p-4 md:p-6">
                             <QuizRunner 
                                 data={currentLesson.content_data} 
                                 onComplete={handleQuizComplete}
@@ -319,21 +319,35 @@ export default function CourseLearnPage() {
                             {currentLesson.content_url?.toLowerCase().endsWith('.pdf') ? (
                                 <iframe 
                                     src={`${currentLesson.content_url}#toolbar=0`} 
-                                    className="w-full h-[600px] border-0"
+                                    className="w-full h-[400px] md:h-[600px] border-0"
                                     title={currentLesson.title}
                                 />
+                            ) : currentLesson.content_type === 'text' && currentLesson.content_data?.html ? (
+                                <div className="p-4 md:p-8 prose max-w-none">
+                                    <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">{currentLesson.title}</h1>
+                                    <div dangerouslySetInnerHTML={{ __html: currentLesson.content_data.html }} />
+                                    
+                                    {currentLesson.description && (
+                                        <div className="mt-6 md:mt-8 p-4 md:p-6 bg-blue-50 rounded-xl border border-blue-100 not-prose">
+                                            <h4 className="font-semibold text-blue-900 mb-2">Lesson Notes</h4>
+                                            <p className="text-blue-800/80 leading-relaxed">
+                                                {currentLesson.description}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             ) : (
-                                <div className="p-8 prose max-w-none">
-                                    <div className="mb-6 flex flex-col items-center justify-center p-12 bg-gray-50 rounded-lg border border-dashed">
-                                        <FileText className="w-16 h-16 text-gray-400 mb-4" />
-                                        <h3 className="text-xl font-medium text-gray-900 mb-2">{currentLesson.title}</h3>
-                                        <p className="text-gray-500 text-center max-w-md mb-6">
+                                <div className="p-4 md:p-8 prose max-w-none">
+                                    <div className="mb-6 flex flex-col items-center justify-center p-8 md:p-12 bg-gray-50 rounded-lg border border-dashed">
+                                        <FileText className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mb-4" />
+                                        <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-2 text-center">{currentLesson.title}</h3>
+                                        <p className="text-gray-500 text-center max-w-md mb-6 text-sm md:text-base">
                                             {currentLesson.description || "This lesson contains reading material or external resources."}
                                         </p>
                                         
                                         {currentLesson.content_url && (
                                             <Button 
-                                                className="gap-2" 
+                                                className="gap-2 w-full sm:w-auto" 
                                                 onClick={() => window.open(currentLesson.content_url, '_blank')}
                                             >
                                                 <FileText className="w-4 h-4" />
@@ -343,7 +357,7 @@ export default function CourseLearnPage() {
                                     </div>
                                     
                                     {currentLesson.description && (
-                                        <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
+                                        <div className="mt-6 md:mt-8 p-4 md:p-6 bg-blue-50 rounded-xl border border-blue-100">
                                             <h4 className="font-semibold text-blue-900 mb-2">Lesson Notes</h4>
                                             <p className="text-blue-800/80 leading-relaxed">
                                                 {currentLesson.description}
@@ -357,12 +371,12 @@ export default function CourseLearnPage() {
                 </CardContent>
               </Card>
 
-              <div className="flex items-center justify-between pt-6 border-t mt-8">
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between pt-6 border-t mt-8 gap-4 sm:gap-0">
                  <Button
                     variant="outline"
                     onClick={handlePrevLesson}
                     disabled={!prevLesson}
-                    className="gap-2"
+                    className="gap-2 w-full sm:w-auto"
                  >
                     <ChevronLeft className="w-4 h-4" /> Previous
                  </Button>
@@ -371,7 +385,7 @@ export default function CourseLearnPage() {
                     onClick={() => handleLessonComplete(currentLesson.id)}
                     disabled={isLessonCompleted(currentLesson.id)}
                     variant={isLessonCompleted(currentLesson.id) ? "outline" : "default"}
-                    className={`min-w-[140px] ${isLessonCompleted(currentLesson.id) ? 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800' : ''}`}
+                    className={`w-full sm:min-w-[140px] sm:w-auto ${isLessonCompleted(currentLesson.id) ? 'bg-green-100 hover:bg-green-200 border-green-200 text-green-800' : ''}`}
                  >
                     {isLessonCompleted(currentLesson.id) ? (
                         <>
@@ -386,7 +400,7 @@ export default function CourseLearnPage() {
                     variant="outline"
                     onClick={handleNextLesson}
                     disabled={!nextLesson}
-                    className="gap-2"
+                    className="gap-2 w-full sm:w-auto"
                  >
                     Next <ChevronRight className="w-4 h-4" />
                  </Button>

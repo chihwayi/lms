@@ -10,4 +10,8 @@ export class UpdateProgressDto {
   @IsOptional()
   @IsUUID()
   completedLessonId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  currentLessonId?: string;
 }

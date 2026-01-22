@@ -22,7 +22,7 @@
 - **Database**: PostgreSQL 15+
 - **ORM**: TypeORM (Entity definitions, Relations, Migrations)
 - **Caching**: Redis (Planned for sessions and high-read data)
-- **File Storage**: Local Driver (Dev) / S3-compatible Object Storage (Prod)
+- **File Storage**: S3-compatible Object Storage (MinIO for Dev/Test, AWS S3 for Prod)
 
 ### DevOps & Infrastructure
 - **Monorepo Tool**: TurboRepo (Manages build pipeline)

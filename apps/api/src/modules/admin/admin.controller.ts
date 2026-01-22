@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Query, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Query, Param, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { RequirePermissions } from '../rbac/decorators/permissions.decorator';
@@ -32,5 +32,11 @@ export class AdminController {
     @Body('emailVerified') emailVerified: boolean
   ) {
     return this.adminService.updateUserStatus(userId, emailVerified);
+  }
+
+  @Delete('users/:userId')
+  @RequirePermissions('manage_users')
+  async deleteUser(@Param('userId') userId: string) {
+    return this.adminService.deleteUser(userId);
   }
 }

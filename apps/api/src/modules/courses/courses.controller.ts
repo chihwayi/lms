@@ -44,12 +44,7 @@ export class CoursesController {
 
   @Get('categories')
   getCategories() {
-    return [
-      { id: '1', name: 'Programming', is_active: true },
-      { id: '2', name: 'Design', is_active: true },
-      { id: '3', name: 'Business', is_active: true },
-      { id: '4', name: 'Marketing', is_active: true }
-    ];
+    return this.coursesService.getCategories();
   }
 
   @Get('featured')

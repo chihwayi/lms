@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { TopNav } from '@/components/layout/TopNav';
 
 interface Category {
   id: string;
@@ -19,6 +20,12 @@ interface Course {
   status: string;
   level: string;
   price: number;
+  instructor?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  created_by: string;
 }
 
 export function CourseList() {
@@ -46,6 +53,9 @@ export function CourseList() {
     try {
       const token = localStorage.getItem('token');
       const params = new URLSearchParams();
+      // Always filter by published status for the public course list
+      params.append('status', 'published');
+
       if (search) params.append('search', search);
       if (selectedCategory) params.append('category', selectedCategory);
       if (selectedLevel) params.append('level', selectedLevel);
@@ -81,39 +91,16 @@ export function CourseList() {
     }
   };
 
+  const hasRole = (roleName: string) => {
+    return user?.roles?.some(r => r.name === roleName) || user?.role === roleName;
+  };
+
+  const isInstructor = hasRole('instructor') || hasRole('educator') || hasRole('admin') || hasRole('super_admin');
+
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="relative bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                EduFlow
-              </Link>
-              <div className="hidden md:flex space-x-6">
-                <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-                  Dashboard
-                </Link>
-                <Link href="/courses" className="text-gray-700 hover:text-blue-600 transition-colors font-medium border-b-2 border-blue-600">
-                  Courses
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
-                </div>
-                <span className="text-gray-700 font-medium">{user?.firstName || 'User'}</span>
-              </div>
-              <div onClick={handleLogout} className="bg-white/50 hover:bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-                <span className="text-gray-700 font-semibold">Logout</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TopNav />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
@@ -123,11 +110,13 @@ export function CourseList() {
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Course Library</h1>
               <p className="text-lg md:text-xl text-gray-600 mt-2">Discover and manage educational content</p>
             </div>
-            <Link href="/courses/create" className="w-full md:w-auto">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
-                <span className="font-semibold">+ Create Course</span>
-              </div>
-            </Link>
+            {isInstructor && (
+              <Link href="/courses/create" className="w-full md:w-auto">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
+                  <span className="font-semibold">+ Create Course</span>
+                </div>
+              </Link>
+            )}
           </div>
 
           {/* Filters */}
@@ -212,11 +201,13 @@ export function CourseList() {
                           <span className="text-gray-700 font-semibold">View</span>
                         </div>
                       </Link>
-                      <Link href={`/courses/${course.id}/edit`} className="flex-1">
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center">
-                          <span className="text-white font-semibold">Edit</span>
-                        </div>
-                      </Link>
+                      {(user?.role === 'admin' || user?.id === course.instructor?.id || user?.id === course.created_by) && (
+                        <Link href={`/courses/${course.id}/edit`} className="flex-1">
+                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center">
+                            <span className="text-white font-semibold">Edit</span>
+                          </div>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -235,11 +226,13 @@ export function CourseList() {
                   ? 'Try adjusting your filters'
                   : 'Get started by creating your first course'}
               </p>
-              <Link href="/courses/create">
-                <div className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-xl font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                  Create Your First Course 🚀
-                </div>
-              </Link>
+              {isInstructor && (
+                <Link href="/courses/create">
+                  <div className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-xl font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                    Create Your First Course 🚀
+                  </div>
+                </Link>
+              )}
             </div>
           )}
         </div>

@@ -11,6 +11,8 @@ export function TeachingCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useAuthStore((state) => state.user);
+  const isInstructor = user?.roles?.some((r) => ['instructor', 'educator', 'admin', 'super_admin'].includes(r.name)) || 
+                      ['instructor', 'educator', 'admin', 'super_admin'].includes(user?.role || '');
 
   useEffect(() => {
     if (user?.id) {
