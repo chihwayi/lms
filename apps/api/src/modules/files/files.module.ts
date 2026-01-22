@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
@@ -15,7 +15,7 @@ import { RbacModule } from '../rbac/rbac.module';
         fileSize: 2 * 1024 * 1024 * 1024, // 2GB
       },
     }),
-    UsersModule,
+    forwardRef(() => UsersModule),
     RbacModule,
   ],
   controllers: [FilesController],

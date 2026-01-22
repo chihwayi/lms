@@ -42,17 +42,28 @@ export function CreateCourseForm({ categories }: CreateCourseFormProps) {
       const { accessToken } = useAuthStore.getState();
       const token = accessToken || localStorage.getItem('token');
       
+      // Prepare payload: remove empty strings for optional fields and ensure price is number
+      const payload: any = { ...formData };
+      if (!payload.category_id) delete payload.category_id;
+      if (!payload.short_description) delete payload.short_description;
+      if (!payload.description) delete payload.description;
+      
+      // Ensure price is a number, defaulting to 0 if invalid
+      payload.price = Number(payload.price) || 0;
+
       const response = await fetch('/api/v1/courses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create course');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Create course error details:', errorData);
+        throw new Error(errorData.message || 'Failed to create course');
       }
 
       const course = await response.json();

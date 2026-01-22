@@ -2,18 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  short_description?: string;
+  status: string;
+  level: string;
+  price: number;
+}
+
 export function CourseList() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
-  const [courses, setCourses] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -106,13 +118,13 @@ export function CourseList() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
           {/* Header */}
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">Course Library</h1>
-              <p className="text-xl text-gray-600 mt-2">Discover and manage educational content</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Course Library</h1>
+              <p className="text-lg md:text-xl text-gray-600 mt-2">Discover and manage educational content</p>
             </div>
-            <Link href="/courses/create">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <Link href="/courses/create" className="w-full md:w-auto">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-center">
                 <span className="font-semibold">+ Create Course</span>
               </div>
             </Link>
@@ -120,8 +132,8 @@ export function CourseList() {
 
           {/* Filters */}
           <div className="bg-white/40 backdrop-blur-xl rounded-2xl p-6 border border-white/30 shadow-xl">
-            <div className="flex gap-4 items-center">
-              <div className="relative flex-1 max-w-md">
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div className="relative flex-1 w-full md:w-auto max-w-md">
                 <input
                   placeholder="Search courses..."
                   value={search}

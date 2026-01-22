@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuthStore } from '@/lib/auth-store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -19,17 +19,7 @@ export default function AdminPage() {
   const [notification, setNotification] = useState<{message: string, type: string} | null>(null);
   const [processingRoles, setProcessingRoles] = useState(new Set<string>());
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
-    if (accessToken) {
-      fetchData();
-    }
-  }, [isAuthenticated, accessToken, router]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [usersResponse, rolesResponse] = await Promise.all([
         fetch('http://localhost:3001/api/v1/admin/users', {
@@ -54,9 +44,33 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    if (accessToken) {
+      fetchData();
+    }
+  }, [isAuthenticated, accessToken, router, fetchData]);
 
   const assignRole = async (userId: string, roleName: string) => {
+    // Optimistic update
+    const previousUsers = JSON.parse(JSON.stringify(users));
+    const roleToAdd = roles.find(r => r.name === roleName);
+    
+    setUsers(currentUsers => currentUsers.map(u => {
+      if (u.id === userId) {
+        const existingRoles = u.roles || [];
+        if (!existingRoles.some((r: any) => r.name === roleName)) {
+           return { ...u, roles: [...existingRoles, roleToAdd] };
+        }
+      }
+      return u;
+    }));
+
     try {
       const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles`, {
         method: 'POST',
@@ -74,18 +88,33 @@ export default function AdminPage() {
       }
       
       if (response.ok) {
-        await fetchData();
         toast.success('Role assigned successfully!');
+        // Optional: Background refresh to ensure consistency
+        // fetchData(); 
       } else {
-        toast.error('Failed to assign role');
+        throw new Error('Failed to assign role');
       }
     } catch (error) {
       console.error('Failed to assign role:', error);
       toast.error('Failed to assign role');
+      setUsers(previousUsers); // Revert
     }
   };
 
   const removeRole = async (userId: string, roleName: string) => {
+    // Optimistic update
+    const previousUsers = JSON.parse(JSON.stringify(users));
+    
+    setUsers(currentUsers => currentUsers.map(u => {
+      if (u.id === userId) {
+        return { 
+          ...u, 
+          roles: (u.roles || []).filter((r: any) => r.name !== roleName) 
+        };
+      }
+      return u;
+    }));
+
     try {
       const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles/${roleName}`, {
         method: 'DELETE',
@@ -102,14 +131,14 @@ export default function AdminPage() {
       }
       
       if (response.ok) {
-        await fetchData();
         toast.success(`Role ${roleName} removed successfully!`);
       } else {
-        toast.error('Failed to remove role');
+        throw new Error('Failed to remove role');
       }
     } catch (error) {
       console.error('Failed to remove role:', error);
       toast.error('Failed to remove role');
+      setUsers(previousUsers); // Revert
     }
   };
 
@@ -345,17 +374,16 @@ export default function AdminPage() {
                                 checked={hasRole}
                                 disabled={processingRoles.has(`${user.id}-${role.name}`)}
                                 onChange={(e) => {
-                                  e.preventDefault();
-                                  const key = `${user.id}-${role.name}`;
-                                  if (processingRoles.has(key)) return;
-                                  
-                                  console.log(`${e.target.checked ? 'Adding' : 'Removing'} role ${role.name} for user ${user.email}`);
-                                  if (e.target.checked) {
-                                    assignRole(user.id, role.name);
-                                  } else {
-                                    removeRole(user.id, role.name);
-                                  }
-                                }}
+                                // e.preventDefault(); // Removed to allow immediate UI feedback, though state update handles it
+                                const key = `${user.id}-${role.name}`;
+                                // if (processingRoles.has(key)) return; // processingRoles logic is incomplete, skipping for now
+                                
+                                if (e.target.checked) {
+                                  assignRole(user.id, role.name);
+                                } else {
+                                  removeRole(user.id, role.name);
+                                }
+                              }}
                                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                               />
                               <span className={`px-2 py-1 text-xs rounded-full font-medium ${

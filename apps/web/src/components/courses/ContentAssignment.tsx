@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Video, FileText, Image, Music, X, Upload, Play } from 'lucide-react';
+import { Video, FileText, Image as ImageIcon, Music, X, Upload, Play } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ContentAssignmentProps {
@@ -12,54 +12,61 @@ interface ContentAssignmentProps {
   courseId: string;
   currentContent?: any;
   onContentAssigned?: (content: any) => void;
+  onPreview?: (content: any) => void;
+  filesRefreshTrigger?: number;
 }
 
-export function ContentAssignment({ lessonId, courseId, currentContent, onContentAssigned }: ContentAssignmentProps) {
-  const [files, setFiles] = useState([]);
+export function ContentAssignment({ 
+  lessonId, 
+  courseId, 
+  currentContent, 
+  onContentAssigned,
+  onPreview,
+  filesRefreshTrigger = 0
+}: ContentAssignmentProps) {
+  const [files, setFiles] = useState<any[]>([]);
   const [selectedFileId, setSelectedFileId] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAssignment, setShowAssignment] = useState(false);
 
   useEffect(() => {
+    const fetchCourseFiles = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token || !courseId) return;
+        
+        const response = await fetch(`/api/v1/files/course/${courseId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (response.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+  
+        if (response.ok) {
+          const courseFiles = await response.json();
+          setFiles(courseFiles || []);
+          // Don't auto-select any file - start with empty selection
+        } else {
+          console.error('Failed to fetch files:', response.status);
+          setFiles([]);
+        }
+      } catch (error) {
+        console.error('Error fetching files:', error);
+        setFiles([]);
+      }
+    };
+
     fetchCourseFiles();
-  }, [courseId]);
+  }, [courseId, filesRefreshTrigger]);
 
   useEffect(() => {
     // Auto-select first file if only one exists and no file is currently selected
     if (files.length === 1 && !selectedFileId) {
       setSelectedFileId(files[0].id);
-      console.log('Auto-selected file:', files[0].id);
     }
   }, [files, selectedFileId]);
-
-  const fetchCourseFiles = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token || !courseId) return;
-      
-      const response = await fetch(`/api/v1/files/course/${courseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 401) {
-        window.location.href = '/login';
-        return;
-      }
-
-      if (response.ok) {
-        const courseFiles = await response.json();
-        console.log('Fetched files:', courseFiles);
-        setFiles(courseFiles || []);
-        // Don't auto-select any file - start with empty selection
-      } else {
-        console.error('Failed to fetch files:', response.status);
-        setFiles([]);
-      }
-    } catch (error) {
-      console.error('Error fetching files:', error);
-      setFiles([]);
-    }
-  };
 
   const assignContent = async () => {
     if (!selectedFileId) {
@@ -120,7 +127,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
     switch (fileType) {
       case 'video': return <Video className="w-5 h-5 text-blue-500" />;
       case 'document': return <FileText className="w-5 h-5 text-green-500" />;
-      case 'image': return <Image className="w-5 h-5 text-purple-500" />;
+      case 'image': return <ImageIcon className="w-5 h-5 text-purple-500" />;
       case 'audio': return <Music className="w-5 h-5 text-orange-500" />;
       default: return <FileText className="w-5 h-5 text-gray-500" />;
     }
@@ -140,22 +147,23 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
       {currentContent?.content_data ? (
         <Card className="bg-gradient-to-r from-green-50/80 to-emerald-50/80 backdrop-blur-sm border-green-200/40 shadow-lg">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center space-x-4 w-full sm:w-auto">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
                   {getFileIcon(currentContent.content_data.fileType)}
                 </div>
-                <div>
-                  <h4 className="text-lg font-bold text-gray-900">📎 Content Assigned</h4>
-                  <p className="text-green-700 font-medium">{currentContent.content_data.fileName}</p>
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-lg font-bold text-gray-900 truncate">📎 Content Assigned</h4>
+                  <p className="text-green-700 font-medium truncate">{currentContent.content_data.fileName}</p>
                   <p className="text-sm text-gray-600">{currentContent.content_data.fileType}</p>
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="flex gap-3 w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-blue-100/70 hover:bg-blue-200/90 backdrop-blur-sm border-blue-300/40 text-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  onClick={() => onPreview?.(currentContent)}
+                  className="flex-1 sm:flex-none bg-blue-100/70 hover:bg-blue-200/90 backdrop-blur-sm border-blue-300/40 text-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   <Play className="w-4 h-4 mr-2" />
                   Preview
@@ -175,9 +183,9 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
       ) : (
         <Card className="bg-gradient-to-r from-gray-50/80 to-blue-50/80 backdrop-blur-sm border-gray-200/40 shadow-lg">
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-500 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
                   <Upload className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -187,7 +195,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
               </div>
               <Button
                 onClick={() => setShowAssignment(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Assign Content
@@ -200,14 +208,14 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
       {/* Content Assignment Modal */}
       {showAssignment && (
         <Card className="bg-white/90 backdrop-blur-xl border-white/40 shadow-2xl rounded-2xl overflow-hidden">
-          <CardContent className="p-8">
+          <CardContent className="p-4 md:p-8">
             <div className="flex items-center space-x-4 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
                 <span className="text-white text-2xl">📎</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-purple-700 bg-clip-text text-transparent">Assign Content</h3>
-                <p className="text-gray-600">Choose a file to assign to this lesson</p>
+                <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-purple-700 bg-clip-text text-transparent">Assign Content</h3>
+                <p className="text-gray-600 text-sm md:text-base">Choose a file to assign to this lesson</p>
               </div>
             </div>
 
@@ -250,11 +258,11 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
                 </div>
               )}
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button
                   onClick={assignContent}
                   disabled={!selectedFileId || loading}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                  className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50"
                 >
                   {loading ? (
                     <div className="flex items-center space-x-2">
@@ -270,7 +278,7 @@ export function ContentAssignment({ lessonId, courseId, currentContent, onConten
                 <Button
                   variant="outline"
                   onClick={() => setShowAssignment(false)}
-                  className="bg-white/70 hover:bg-white/90 backdrop-blur-sm border-white/40 text-gray-700 text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="w-full sm:w-auto bg-white/70 hover:bg-white/90 backdrop-blur-sm border-white/40 text-gray-700 text-lg font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   Cancel
                 </Button>

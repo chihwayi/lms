@@ -43,6 +43,7 @@ export class AdminService {
         'user.lastName',
         'user.emailVerified',
         'user.createdAt',
+        'roles.id',
         'roles.name'
       ]);
 

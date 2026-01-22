@@ -10,7 +10,6 @@ import {
   Request,
   Body,
   Res,
-  StreamableFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -58,7 +57,7 @@ export class FilesController {
   }
 
   @Get('course/:courseId')
-  async getCourseFiles(@Param('courseId') courseId: string, @Request() req) {
-    return this.filesService.getCourseFiles(courseId, req.user.id);
+  async getCourseFiles(@Param('courseId') courseId: string) {
+    return this.filesService.getCourseFiles(courseId);
   }
 }

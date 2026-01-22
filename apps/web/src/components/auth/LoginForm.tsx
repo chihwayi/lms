@@ -20,6 +20,12 @@ export default function LoginForm() {
 
     try {
       await login(email, password);
+      
+      // Get the current user from the store after login
+      const user = useAuthStore.getState().user;
+      
+      // Redirect everyone to the dashboard by default.
+      // Admins and Instructors can access their respective areas from the dashboard navigation.
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Invalid email or password');
@@ -96,7 +102,7 @@ export default function LoginForm() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/register" className="text-blue-600 hover:text-purple-600 font-semibold transition-colors">
                 Sign up here
               </Link>

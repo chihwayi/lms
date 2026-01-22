@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { VideoPlayer } from './VideoPlayer';
@@ -17,13 +18,17 @@ interface ContentPreviewProps {
 }
 
 export function ContentPreview({ isOpen, onClose, content }: ContentPreviewProps) {
+  const [token, setToken] = useState<string>('');
+
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    if (t) setToken(t);
+  }, []);
+
   if (!isOpen || !content) return null;
 
-  const isVideo = content.fileType.startsWith('video/');
-  const isDocument = content.fileType === 'application/pdf' || 
-                    content.fileType.startsWith('application/') || 
-                    content.fileType.startsWith('text/') ||
-                    content.fileType.startsWith('image/');
+  const isVideo = content.fileType.startsWith('video/') || content.fileType === 'video';
+  const isDocument = !isVideo;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -62,25 +67,6 @@ export function ContentPreview({ isOpen, onClose, content }: ContentPreviewProps
               fileType={content.fileType}
               title={content.title}
             />
-          )}
-          
-          {!isVideo && !isDocument && (
-            <div className="text-center py-12">
-              <p className="text-gray-600">Preview not available for this file type.</p>
-              <Button 
-                className="mt-4 bg-gradient-to-r from-blue-500 to-purple-500"
-                onClick={() => {
-                  const link = document.createElement('a');
-                  link.href = `/api/files/${content.id}/download`;
-                  link.download = content.fileName;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
-              >
-                Download File
-              </Button>
-            </div>
           )}
         </div>
       </div>

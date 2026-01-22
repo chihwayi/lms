@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,56 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthStore } from '@/lib/auth-store';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { ContentPreview } from '@/components/courses/ContentPreview';
+import { Play } from 'lucide-react';
+
+interface Lesson {
+  id: string;
+  title: string;
+  content_type: string;
+  duration_minutes: number;
+  is_preview: boolean;
+  content_url?: string;
+  content_data?: any;
+}
+
+interface Module {
+  id: string;
+  title: string;
+  description: string;
+  lessons: Lesson[];
+}
+
+interface Course {
+  id: string;
+  title: string;
+  short_description?: string;
+  description?: string;
+  status: string;
+  level: string;
+  category?: {
+    name: string;
+  };
+  price: number;
+  duration_minutes: number;
+  instructor?: {
+    firstName: string;
+    lastName: string;
+  };
+  created_at: string;
+  modules: Module[];
+}
 
 export default function CourseDetailPage() {
   const { user, logout } = useAuthStore();
   const params = useParams();
   const router = useRouter();
-  const [course, setCourse] = useState(null);
+  const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
+  const [previewContent, setPreviewContent] = useState<any>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentLoading, setEnrollmentLoading] = useState(true);
 
   const handleLogout = () => {
     logout();
@@ -23,13 +66,73 @@ export default function CourseDetailPage() {
     router.push('/login');
   };
 
-  useEffect(() => {
-    if (params.id) {
-      fetchCourse(params.id);
+  const checkEnrollment = useCallback(async (courseId: string) => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const response = await fetch(`http://localhost:3001/api/v1/enrollments/${courseId}/check`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            setIsEnrolled(data.isEnrolled);
+        }
+    } catch (error) {
+        console.error('Error checking enrollment:', error);
+    } finally {
+        setEnrollmentLoading(false);
     }
-  }, [params.id]);
+  }, []);
 
-  const fetchCourse = async (courseId) => {
+  const handleEnroll = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Please login to enroll');
+            router.push('/login');
+            return;
+        }
+
+        const response = await fetch('http://localhost:3001/api/v1/enrollments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ courseId: course?.id })
+        });
+
+        if (response.ok) {
+            toast.success('Successfully enrolled!');
+            setIsEnrolled(true);
+            router.push(`/courses/${course?.id}/learn`);
+        } else {
+            toast.error('Failed to enroll');
+        }
+    } catch (error) {
+        toast.error('Error enrolling in course');
+    }
+  };
+
+  const handlePreview = (lesson: Lesson) => {
+    if (!lesson.is_preview) return;
+
+    if (lesson.content_url) {
+      setPreviewContent({
+        id: lesson.content_data?.fileId || lesson.id,
+        fileName: lesson.content_data?.fileName || lesson.title,
+        fileType: lesson.content_data?.fileType || (lesson.content_type === 'video' ? 'video/mp4' : 'application/pdf'),
+        title: lesson.title
+      });
+      setShowPreview(true);
+    } else {
+      toast.error('No content available for preview');
+    }
+  };
+
+  const fetchCourse = useCallback(async (courseId: string) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`/api/v1/courses/${courseId}`, {
@@ -51,7 +154,14 @@ export default function CourseDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    if (params.id) {
+      fetchCourse(params.id as string);
+      checkEnrollment(params.id as string);
+    }
+  }, [params.id, fetchCourse, checkEnrollment]);
 
   if (loading) {
     return (
@@ -144,6 +254,18 @@ export default function CourseDetailPage() {
                       </span>
                     )}
                   </div>
+
+                  <div className="mt-8 flex items-center gap-4">
+                    {isEnrolled ? (
+                        <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={() => router.push(`/courses/${course.id}/learn`)}>
+                            <Play className="w-5 h-5 mr-2" /> Continue Learning
+                        </Button>
+                    ) : (
+                        <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1" onClick={handleEnroll}>
+                            Enroll Now {course.price > 0 ? `($${course.price})` : '(Free)'}
+                        </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-4">
                   <Link href="/courses">
@@ -196,9 +318,25 @@ export default function CourseDetailPage() {
                           {module.lessons && module.lessons.length > 0 && (
                             <div className="space-y-3">
                               {module.lessons.map((lesson, lessonIndex) => (
-                                <div key={lesson.id} className="group flex items-center p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                    <span className="text-white text-xl">🎥</span>
+                                <div 
+                                  key={lesson.id} 
+                                  className={`group flex items-center p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-white/30 shadow-lg transition-all duration-300 ${
+                                    lesson.is_preview 
+                                      ? 'hover:shadow-xl hover:scale-[1.02] cursor-pointer' 
+                                      : 'opacity-75 cursor-not-allowed'
+                                  }`}
+                                  onClick={() => handlePreview(lesson)}
+                                >
+                                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-transform duration-300 ${
+                                    lesson.is_preview 
+                                      ? 'bg-gradient-to-br from-green-500 to-emerald-500 group-hover:scale-110' 
+                                      : 'bg-gradient-to-br from-gray-400 to-gray-500'
+                                  }`}>
+                                    {lesson.is_preview ? (
+                                      <Play className="w-5 h-5 text-white fill-current" />
+                                    ) : (
+                                      <span className="text-white text-xl">🔒</span>
+                                    )}
                                   </div>
                                   <div className="ml-4 flex-1">
                                     <p className="font-bold text-gray-900 text-lg">
@@ -206,7 +344,7 @@ export default function CourseDetailPage() {
                                     </p>
                                     <p className="text-gray-600">
                                       {lesson.content_type} • {lesson.duration_minutes} min
-                                      {lesson.is_preview && ' • Preview Available'}
+                                      {lesson.is_preview && <span className="ml-2 text-green-600 font-bold">• Preview Available</span>}
                                     </p>
                                   </div>
                                 </div>
@@ -298,6 +436,12 @@ export default function CourseDetailPage() {
             </div>
           </div>
         </div>
+
+        <ContentPreview
+          isOpen={showPreview}
+          onClose={() => setShowPreview(false)}
+          content={previewContent}
+        />
       </div>
     </ProtectedRoute>
   );

@@ -12,8 +12,6 @@ describe('AuthService', () => {
   let service: AuthService;
   let userRepository: any;
   let refreshTokenRepository: any;
-  let passwordResetRepository: any;
-  let jwtService: any;
 
   beforeEach(async () => {
     const mockRepository = {
@@ -51,8 +49,6 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     userRepository = module.get(getRepositoryToken(User));
     refreshTokenRepository = module.get(getRepositoryToken(RefreshToken));
-    passwordResetRepository = module.get(getRepositoryToken(PasswordReset));
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe('register', () => {
@@ -119,6 +115,86 @@ describe('AuthService', () => {
       userRepository.findOne.mockResolvedValue(null);
 
       await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should change password successfully', async () => {
+      const userId = 'user-id';
+      const changePasswordDto = {
+        currentPassword: 'OldPassword123!',
+        newPassword: 'NewPassword123!',
+      };
+      const user = {
+        id: userId,
+        passwordHash: await bcrypt.hash('OldPassword123!', 12),
+      };
+
+      userRepository.findOne.mockResolvedValue(user);
+      userRepository.update.mockResolvedValue({});
+
+      const result = await service.changePassword(userId, changePasswordDto);
+
+      expect(result.success).toBe(true);
+      expect(userRepository.update).toHaveBeenCalled();
+    });
+
+    it('should throw UnauthorizedException for invalid current password', async () => {
+      const userId = 'user-id';
+      const changePasswordDto = {
+        currentPassword: 'WrongPassword',
+        newPassword: 'NewPassword123!',
+      };
+      const user = {
+        id: userId,
+        passwordHash: await bcrypt.hash('OldPassword123!', 12),
+      };
+
+      userRepository.findOne.mockResolvedValue(user);
+
+      await expect(service.changePassword(userId, changePasswordDto)).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('verifyEmail', () => {
+    it('should verify email successfully', async () => {
+      const token = 'valid-token';
+      const user = { id: 'user-id', emailVerificationToken: token };
+
+      userRepository.findOne.mockResolvedValue(user);
+      userRepository.update.mockResolvedValue({});
+
+      const result = await service.verifyEmail(token);
+
+      expect(result.success).toBe(true);
+      expect(userRepository.update).toHaveBeenCalledWith('user-id', {
+        emailVerified: true,
+        emailVerificationToken: null,
+      });
+    });
+  });
+
+  describe('resendVerificationEmail', () => {
+    it('should resend verification email', async () => {
+      const userId = 'user-id';
+      const user = { id: userId, email: 'test@example.com', emailVerified: false };
+
+      userRepository.findOne.mockResolvedValue(user);
+      userRepository.update.mockResolvedValue({});
+
+      const result = await service.resendVerificationEmail(userId);
+
+      expect(result.success).toBe(true);
+      expect(userRepository.update).toHaveBeenCalled();
+    });
+
+    it('should throw ConflictException if already verified', async () => {
+      const userId = 'user-id';
+      const user = { id: userId, email: 'test@example.com', emailVerified: true };
+
+      userRepository.findOne.mockResolvedValue(user);
+
+      await expect(service.resendVerificationEmail(userId)).rejects.toThrow(ConflictException);
     });
   });
 });

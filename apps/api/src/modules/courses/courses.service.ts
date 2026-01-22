@@ -32,7 +32,7 @@ export class CoursesService {
   }
 
   async findAll(query: any = {}): Promise<{ courses: Course[]; total: number }> {
-    const { page = 1, limit = 10, search, category, level, status } = query;
+    const { page = 1, limit = 10, search, category, level, status, instructorId } = query;
     const queryBuilder = this.courseRepository
       .createQueryBuilder('course')
       .leftJoinAndSelect('course.instructor', 'instructor')
@@ -57,6 +57,10 @@ export class CoursesService {
 
     if (status) {
       queryBuilder.andWhere('course.status = :status', { status });
+    }
+
+    if (instructorId) {
+      queryBuilder.andWhere('course.created_by = :instructorId', { instructorId });
     }
 
     const total = await queryBuilder.getCount();
@@ -324,7 +328,7 @@ export class CoursesService {
     }
 
     lesson.content_url = `/api/v1/files/${fileId}/stream`;
-    lesson.content_data = { fileId, fileName: file.original_name, fileType: file.file_type };
+    lesson.content_data = { fileId, fileName: file.original_name, fileType: file.mime_type };
     
     return this.lessonRepository.save(lesson);
   }
@@ -429,6 +433,30 @@ export class CoursesService {
         paramIndex++;
       }
 
+      if (categories && categories.length > 0) {
+        whereClause += ` AND c.category_id = ANY($${paramIndex})`;
+        params.push(categories);
+        paramIndex++;
+      }
+
+      if (levels && levels.length > 0) {
+        whereClause += ` AND c.level = ANY($${paramIndex})`;
+        params.push(levels);
+        paramIndex++;
+      }
+
+      if (language) {
+        whereClause += ` AND c.language = $${paramIndex}`;
+        params.push(language);
+        paramIndex++;
+      }
+
+      if (featured) {
+        whereClause += ` AND c.is_featured = $${paramIndex}`;
+        params.push(featured === 'true' || featured === true);
+        paramIndex++;
+      }
+
       const countQuery = `
         SELECT COUNT(*) as total
         FROM courses c
@@ -438,7 +466,7 @@ export class CoursesService {
       const coursesQuery = `
         SELECT c.id, c.title, c.description, c.short_description, c.level, c.price, 
                c.thumbnail_url, c.language, c.duration_minutes, c.created_at,
-               u."firstName" as instructor_first_name, u."lastName" as instructor_last_name
+               u.first_name as instructor_first_name, u.last_name as instructor_last_name
         FROM courses c
         LEFT JOIN users u ON c.created_by = u.id
         ${whereClause}
@@ -484,7 +512,7 @@ export class CoursesService {
       const result = await this.courseRepository.query(
         `SELECT c.id, c.title, c.description, c.short_description, c.level, c.price, 
                 c.thumbnail_url, c.language, c.duration_minutes, c.created_at,
-                u."firstName" as instructor_first_name, u."lastName" as instructor_last_name
+                u.first_name as instructor_first_name, u.last_name as instructor_last_name
          FROM courses c
          LEFT JOIN users u ON c.created_by = u.id
          WHERE c.is_featured = true AND c.status = 'published'

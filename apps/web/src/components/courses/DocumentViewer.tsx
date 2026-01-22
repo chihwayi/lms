@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Download, ExternalLink, FileText, Image, File } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Download, ExternalLink, FileText, Image as ImageIcon, File } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface DocumentViewerProps {
   fileId: string;
@@ -13,16 +14,23 @@ interface DocumentViewerProps {
 
 export function DocumentViewer({ fileId, fileName, fileType, title }: DocumentViewerProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const streamUrl = `/api/files/${fileId}/stream`;
-  const downloadUrl = `/api/files/${fileId}/download`;
+  const [token, setToken] = useState<string>('');
+
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    if (t) setToken(t);
+  }, []);
+
+  const streamUrl = token ? `/api/v1/files/${fileId}/stream?token=${token}` : '';
+  const downloadUrl = token ? `/api/v1/files/${fileId}/download?token=${token}` : '';
 
   const isPDF = fileType === 'application/pdf' || fileName.toLowerCase().endsWith('.pdf');
-  const isImage = fileType.startsWith('image/');
+  const isImage = fileType.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp)$/i.test(fileName);
   const isDocument = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'].includes(fileType);
 
   const getFileIcon = () => {
     if (isPDF || isDocument) return <FileText className="w-6 h-6" />;
-    if (isImage) return <Image className="w-6 h-6" />;
+    if (isImage) return <ImageIcon className="w-6 h-6" />;
     return <File className="w-6 h-6" />;
   };
 
@@ -94,7 +102,8 @@ export function DocumentViewer({ fileId, fileName, fileType, title }: DocumentVi
         )}
 
         {isImage && (
-          <div className="p-4">
+          <div className="p-4 relative w-full flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={streamUrl}
               alt={title || fileName}
@@ -102,7 +111,7 @@ export function DocumentViewer({ fileId, fileName, fileType, title }: DocumentVi
               onLoad={() => setIsLoading(false)}
             />
             {isLoading && (
-              <div className="flex items-center justify-center h-48 bg-gray-100 rounded-lg">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100/50 rounded-lg">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
               </div>
             )}

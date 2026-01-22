@@ -1,1 +1,88 @@
-'use client';\n\nimport { createContext, useContext, useState } from 'react';\n\ninterface DragDropContextType {\n  draggedItem: any;\n  setDraggedItem: (item: any) => void;\n  dropTarget: any;\n  setDropTarget: (target: any) => void;\n}\n\nconst DragDropContext = createContext<DragDropContextType | null>(null);\n\nexport function DragDropProvider({ children }: { children: React.ReactNode }) {\n  const [draggedItem, setDraggedItem] = useState(null);\n  const [dropTarget, setDropTarget] = useState(null);\n\n  return (\n    <DragDropContext.Provider value={{\n      draggedItem,\n      setDraggedItem,\n      dropTarget,\n      setDropTarget\n    }}>\n      {children}\n    </DragDropContext.Provider>\n  );\n}\n\nexport function useDragDrop() {\n  const context = useContext(DragDropContext);\n  if (!context) {\n    throw new Error('useDragDrop must be used within DragDropProvider');\n  }\n  return context;\n}\n\nexport function DraggableItem({ \n  item, \n  type, \n  onReorder, \n  children \n}: { \n  item: any; \n  type: 'module' | 'lesson'; \n  onReorder: (draggedId: string, targetId: string) => void;\n  children: React.ReactNode;\n}) {\n  const { draggedItem, setDraggedItem, setDropTarget } = useDragDrop();\n\n  const handleDragStart = (e: React.DragEvent) => {\n    setDraggedItem({ ...item, type });\n    e.dataTransfer.effectAllowed = 'move';\n  };\n\n  const handleDragOver = (e: React.DragEvent) => {\n    e.preventDefault();\n    e.dataTransfer.dropEffect = 'move';\n  };\n\n  const handleDrop = (e: React.DragEvent) => {\n    e.preventDefault();\n    if (draggedItem && draggedItem.id !== item.id && draggedItem.type === type) {\n      onReorder(draggedItem.id, item.id);\n    }\n    setDraggedItem(null);\n    setDropTarget(null);\n  };\n\n  const handleDragEnter = () => {\n    if (draggedItem && draggedItem.type === type) {\n      setDropTarget(item.id);\n    }\n  };\n\n  return (\n    <div\n      draggable\n      onDragStart={handleDragStart}\n      onDragOver={handleDragOver}\n      onDrop={handleDrop}\n      onDragEnter={handleDragEnter}\n      className={`transition-all duration-200 ${\n        draggedItem?.id === item.id ? 'opacity-50 scale-95' : ''\n      }`}\n    >\n      {children}\n    </div>\n  );\n}
+'use client';
+
+import { createContext, useContext, useState } from 'react';
+
+interface DragDropContextType {
+  draggedItem: any;
+  setDraggedItem: (item: any) => void;
+  dropTarget: any;
+  setDropTarget: (target: any) => void;
+}
+
+const DragDropContext = createContext<DragDropContextType | null>(null);
+
+export function DragDropProvider({ children }: { children: React.ReactNode }) {
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dropTarget, setDropTarget] = useState(null);
+
+  return (
+    <DragDropContext.Provider value={{
+      draggedItem,
+      setDraggedItem,
+      dropTarget,
+      setDropTarget
+    }}>
+      {children}
+    </DragDropContext.Provider>
+  );
+}
+
+export function useDragDrop() {
+  const context = useContext(DragDropContext);
+  if (!context) {
+    throw new Error('useDragDrop must be used within DragDropProvider');
+  }
+  return context;
+}
+
+export function DraggableItem({ 
+  item, 
+  type, 
+  onReorder, 
+  children 
+}: { 
+  item: any; 
+  type: 'module' | 'lesson'; 
+  onReorder: (draggedId: string, targetId: string) => void;
+  children: React.ReactNode;
+}) {
+  const { draggedItem, setDraggedItem, setDropTarget } = useDragDrop();
+
+  const handleDragStart = (e: React.DragEvent) => {
+    setDraggedItem({ ...item, type });
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (draggedItem && draggedItem.id !== item.id && draggedItem.type === type) {
+      onReorder(draggedItem.id, item.id);
+    }
+    setDraggedItem(null);
+    setDropTarget(null);
+  };
+
+  const handleDragEnter = () => {
+    if (draggedItem && draggedItem.type === type) {
+      setDropTarget(item.id);
+    }
+  };
+
+  return (
+    <div
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragEnter={handleDragEnter}
+      className="cursor-move"
+    >
+      {children}
+    </div>
+  );
+}

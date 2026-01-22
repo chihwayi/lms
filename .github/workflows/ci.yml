@@ -51,3 +51,8 @@ jobs:
 
       - name: Build Web
         run: cd apps/web && npm run build
+
+      - name: Build Docker Images (Dry Run)
+        run: |
+          docker build -t eduflow-api-test ./apps/api
+          docker build -t eduflow-web-test ./apps/web

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Role } from '../../rbac/entities/role.entity';
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 
 @Entity('users')
 export class User {
@@ -41,6 +42,9 @@ export class User {
   @Column({ nullable: true })
   bio: string;
 
+  @Column({ name: 'avatar_url', nullable: true })
+  avatar: string;
+
   @ManyToMany(() => Role, role => role.users)
   @JoinTable({
     name: 'user_roles',
@@ -54,4 +58,7 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => Enrollment, enrollment => enrollment.user)
+  enrollments: Enrollment[];
 }

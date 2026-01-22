@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum, IsNumber, IsBoolean, IsUUID, Min, Max } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsNumber, Min, IsBoolean, IsUUID } from 'class-validator';
 import { CourseLevel, CourseVisibility } from '../entities/course.entity';
 import { LessonContentType } from '../entities/course-lesson.entity';
 

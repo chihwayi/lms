@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface User {
   id: string;
@@ -7,6 +7,10 @@ interface User {
   firstName: string;
   lastName: string;
   role: string;
+  roles?: { id: string; name: string; description?: string }[];
+  emailVerified: boolean;
+  avatar?: string;
+  bio?: string;
 }
 
 interface AuthState {
@@ -17,6 +21,7 @@ interface AuthState {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   setAuth: (user: User, accessToken: string) => void;
+  setUser: (user: User) => void;
 }
 
 interface RegisterData {
@@ -26,7 +31,8 @@ interface RegisterData {
   lastName: string;
 }
 
-const API_BASE = 'http://localhost:3001/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE = `${API_URL}/api/v1`;
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -50,7 +56,9 @@ export const useAuthStore = create<AuthState>()(
         const data = await response.json();
         
         // Store token in localStorage for immediate use
-        localStorage.setItem('token', data.accessToken);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', data.accessToken);
+        }
         
         set({
           user: data.user,
@@ -86,7 +94,9 @@ export const useAuthStore = create<AuthState>()(
         }
         
         // Clear localStorage
-        localStorage.removeItem('token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+        }
         
         set({
           user: null,
@@ -97,7 +107,9 @@ export const useAuthStore = create<AuthState>()(
 
       setAuth: (user: User, accessToken: string) => {
         // Store token in localStorage
-        localStorage.setItem('token', accessToken);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', accessToken);
+        }
         
         set({
           user,
@@ -105,19 +117,28 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
         });
       },
+
+      setUser: (user: User) => {
+        set({ user });
+      },
     }),
     {
-      name: 'eduflow-auth',
-      storage: {
-        getItem: (name) => {
-          const str = localStorage.getItem(name);
-          return str ? JSON.parse(str) : null;
-        },
-        setItem: (name, value) => {
-          localStorage.setItem(name, JSON.stringify(value));
-        },
-        removeItem: (name) => localStorage.removeItem(name),
-      },
+      name: 'auth-storage',
+      storage: createJSONStorage(() => {
+        if (typeof window !== 'undefined') {
+          return localStorage;
+        }
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {},
+        };
+      }),
+      partialize: (state) => ({ 
+        user: state.user, 
+        accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
     }
   )
 );

@@ -16,7 +16,7 @@ export default function CourseEditPage() {
   const params = useParams();
   const router = useRouter();
   const [course, setCourse] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,59 +36,59 @@ export default function CourseEditPage() {
   };
 
   useEffect(() => {
+    const fetchCourse = async (courseId: string) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/v1/courses/${courseId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const courseData = await response.json();
+          setCourse(courseData);
+          setFormData({
+            title: courseData.title || '',
+            description: courseData.description || '',
+            short_description: courseData.short_description || '',
+            category_id: courseData.category_id || '',
+            level: courseData.level || 'beginner',
+            price: courseData.price || 0,
+            visibility: courseData.visibility || 'public',
+          });
+        } else {
+          toast.error('Failed to load course');
+          router.push('/courses');
+        }
+      } catch (error) {
+        toast.error('Failed to load course');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/v1/courses/categories', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
     if (params.id) {
-      fetchCourse(params.id);
+      fetchCourse(params.id as string);
       fetchCategories();
     }
-  }, [params.id]);
+  }, [params.id, router]);
 
-  const fetchCourse = async (courseId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const courseData = await response.json();
-        setCourse(courseData);
-        setFormData({
-          title: courseData.title || '',
-          description: courseData.description || '',
-          short_description: courseData.short_description || '',
-          category_id: courseData.category_id || '',
-          level: courseData.level || 'beginner',
-          price: courseData.price || 0,
-          visibility: courseData.visibility || 'public',
-        });
-      } else {
-        toast.error('Failed to load course');
-        router.push('/courses');
-      }
-    } catch (error) {
-      toast.error('Failed to load course');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/v1/courses/categories', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
@@ -116,7 +116,7 @@ export default function CourseEditPage() {
     }
   };
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

@@ -13,7 +13,8 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerProps) {
-  const streamUrl = `/api/files/${fileId}/stream`;
+  const [token, setToken] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -23,6 +24,14 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showControls, setShowControls] = useState(true);
 
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    if (t) setToken(t);
+    setIsLoading(false);
+  }, []);
+
+  const streamUrl = token ? `/api/v1/files/${fileId}/stream?token=${token}` : '';
+  
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -46,6 +55,14 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
       video.removeEventListener('ended', () => setIsPlaying(false));
     };
   }, [onProgress]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -127,6 +144,15 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
         poster={poster}
         className="w-full h-auto"
         onClick={togglePlay}
+        onError={(e) => {
+          const video = e.target as HTMLVideoElement;
+          console.error('Video load error:', {
+            error: video.error,
+            src: video.currentSrc,
+            networkState: video.networkState,
+            readyState: video.readyState
+          });
+        }}
       />
 
       {/* Controls Overlay */}

@@ -32,4 +32,12 @@ function CardContent({ className = '', ...props }: CardContentProps) {
   )
 }
 
-export { Card, CardHeader, CardTitle, CardContent }
+interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+function CardFooter({ className = '', ...props }: CardFooterProps) {
+  return (
+    <div className={`flex items-center p-6 pt-0 ${className}`} {...props} />
+  )
+}
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter }

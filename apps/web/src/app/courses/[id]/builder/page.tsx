@@ -13,7 +13,7 @@ export default function CourseBuilderPage() {
   const { user, logout } = useAuthStore();
   const params = useParams();
   const router = useRouter();
-  const [course, setCourse] = useState(null);
+  const [course, setCourse] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const handleLogout = () => {
@@ -23,31 +23,31 @@ export default function CourseBuilderPage() {
   };
 
   useEffect(() => {
-    if (params.id) {
-      fetchCourse(params.id);
-    }
-  }, [params.id]);
+    const fetchCourse = async (courseId: string) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/v1/courses/${courseId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-  const fetchCourse = async (courseId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const courseData = await response.json();
-        setCourse(courseData);
-      } else {
+        if (response.ok) {
+          const courseData = await response.json();
+          setCourse(courseData);
+        } else {
+          toast.error('Failed to load course');
+          router.push('/courses');
+        }
+      } catch (error) {
         toast.error('Failed to load course');
-        router.push('/courses');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      toast.error('Failed to load course');
-    } finally {
-      setLoading(false);
+    };
+
+    if (params.id) {
+      fetchCourse(params.id as string);
     }
-  };
+  }, [params.id, router]);
 
   if (loading) {
     return (

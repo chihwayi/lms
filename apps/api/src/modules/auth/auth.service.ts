@@ -9,6 +9,7 @@ import { LoginDto } from './dto/login.dto';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { PasswordReset } from './entities/password-reset.entity';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/password-reset.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,8 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.userRepository.findOne({
-      where: { email: loginDto.email }
+      where: { email: loginDto.email },
+      relations: ['roles'],
     });
 
     if (!user || !(await bcrypt.compare(loginDto.password, user.passwordHash))) {
@@ -64,8 +66,13 @@ export class AuthService {
       throw new UnauthorizedException('Account is locked');
     }
 
-    const payload = { sub: user.id, email: user.email, role: user.role };
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const payload = { 
+      sub: user.id, 
+      email: user.email, 
+      role: user.role,
+      roles: user.roles?.map(r => r.name) || []
+    };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '7d' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     // Store refresh token
@@ -89,6 +96,9 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
+        roles: user.roles,
+        emailVerified: user.emailVerified,
+        avatar: user.avatar,
       },
     };
   }
@@ -165,5 +175,54 @@ export class AuthService {
     await this.passwordResetRepository.update(passwordReset.id, { used: true });
 
     return { success: true, message: 'Password reset successfully' };
+  }
+
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+    if (!user || !(await bcrypt.compare(changePasswordDto.currentPassword, user.passwordHash))) {
+      throw new UnauthorizedException('Invalid current password');
+    }
+
+    const passwordHash = await bcrypt.hash(changePasswordDto.newPassword, 12);
+    await this.userRepository.update(userId, { passwordHash });
+
+    return { success: true, message: 'Password changed successfully' };
+  }
+
+  async verifyEmail(token: string) {
+    const user = await this.userRepository.findOne({ 
+      where: { emailVerificationToken: token } 
+    });
+
+    if (!user) {
+      throw new NotFoundException('Invalid verification token');
+    }
+
+    await this.userRepository.update(user.id, { 
+      emailVerified: true,
+      emailVerificationToken: null
+    });
+
+    return { success: true, message: 'Email verified successfully' };
+  }
+
+  async resendVerificationEmail(userId: string) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.emailVerified) {
+      throw new ConflictException('Email already verified');
+    }
+
+    const verificationToken = Math.random().toString(36).substring(2, 15);
+    await this.userRepository.update(userId, { emailVerificationToken: verificationToken });
+
+    // In production, send email here
+    console.log(`Verification token for ${user.email}: ${verificationToken}`);
+
+    return { success: true, message: 'Verification email sent' };
   }
 }

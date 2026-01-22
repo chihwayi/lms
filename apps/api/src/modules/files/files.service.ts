@@ -78,6 +78,30 @@ export class FilesService {
     return this.fileRepository.save(courseFile);
   }
 
+  async uploadAvatar(file: Express.Multer.File): Promise<string> {
+    // Validate file size (e.g. 5MB for avatars)
+    const maxAvatarSize = 5 * 1024 * 1024;
+    if (file.size > maxAvatarSize) {
+      throw new BadRequestException('Avatar size exceeds 5MB limit');
+    }
+
+    // Validate file type (images only)
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!this.allowedTypes.image.includes(ext)) {
+      throw new BadRequestException('Only image files are allowed for avatars');
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const fileName = `avatar_${timestamp}_${file.originalname}`;
+    const filePath = path.join(this.uploadPath, fileName);
+
+    // Save file to disk
+    await fs.writeFile(filePath, file.buffer);
+
+    return fileName;
+  }
+
   private getFileType(ext: string): string | null {
     for (const [type, extensions] of Object.entries(this.allowedTypes)) {
       if (extensions.includes(ext)) {
@@ -155,7 +179,7 @@ export class FilesService {
     stream.pipe(res);
   }
 
-  async getCourseFiles(courseId: string, userId: string): Promise<CourseFile[]> {
+  async getCourseFiles(courseId: string): Promise<CourseFile[]> {
     return this.fileRepository.find({
       where: { course_id: courseId },
       relations: ['course', 'lesson', 'uploader'],

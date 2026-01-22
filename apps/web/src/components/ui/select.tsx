@@ -29,7 +29,7 @@ function SelectValue({ placeholder }: { placeholder?: string }) {
   return null;
 }
 
-function SelectContent({ children }: { children: React.ReactNode }) {
+function SelectContent({ children, className }: { children: React.ReactNode; className?: string }) {
   return <>{children}</>;
 }
 

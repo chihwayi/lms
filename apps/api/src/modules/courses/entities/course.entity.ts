@@ -12,6 +12,7 @@ import { User } from '../../users/entities/user.entity';
 import { Category } from './category.entity';
 import { CourseModule } from './course-module.entity';
 import { CourseFile } from './course-file.entity';
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 
 export enum CourseLevel {
   BEGINNER = 'beginner',
@@ -119,4 +120,7 @@ export class Course {
 
   @OneToMany(() => CourseFile, (file) => file.course)
   files: CourseFile[];
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course)
+  enrollments: Enrollment[];
 }

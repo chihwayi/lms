@@ -16,6 +16,7 @@ interface FileUploadProps {
 }
 
 interface UploadFile {
+  id: string;
   file: File;
   progress: number;
   status: 'pending' | 'uploading' | 'completed' | 'error';
@@ -38,6 +39,7 @@ export function FileUpload({
     if (!selectedFiles) return;
 
     const newFiles: UploadFile[] = Array.from(selectedFiles).map(file => ({
+      id: crypto.randomUUID(),
       file,
       progress: 0,
       status: 'pending'
@@ -62,9 +64,9 @@ export function FileUpload({
     setFiles(prev => [...prev, ...validFiles]);
   };
 
-  const uploadFile = async (uploadFile: UploadFile) => {
+  const uploadFile = async (fileItem: UploadFile) => {
     const formData = new FormData();
-    formData.append('file', uploadFile.file);
+    formData.append('file', fileItem.file);
     formData.append('courseId', courseId);
     if (lessonId) {
       formData.append('lessonId', lessonId);
@@ -72,7 +74,7 @@ export function FileUpload({
 
     try {
       setFiles(prev => prev.map(f => 
-        f === uploadFile ? { ...f, status: 'uploading' } : f
+        f.id === fileItem.id ? { ...f, status: 'uploading' } : f
       ));
 
       const token = localStorage.getItem('token');
@@ -83,7 +85,7 @@ export function FileUpload({
           if (e.lengthComputable) {
             const progress = (e.loaded / e.total) * 100;
             setFiles(prev => prev.map(f => 
-              f === uploadFile ? { ...f, progress } : f
+              f.id === fileItem.id ? { ...f, progress } : f
             ));
           }
         });
@@ -92,17 +94,17 @@ export function FileUpload({
           if (xhr.status === 200 || xhr.status === 201) {
             const result = JSON.parse(xhr.responseText);
             setFiles(prev => prev.map(f => 
-              f === uploadFile ? { ...f, status: 'completed', result } : f
+              f.id === fileItem.id ? { ...f, status: 'completed', result } : f
             ));
             onUploadComplete?.(result);
-            toast.success(`${uploadFile.file.name} uploaded successfully`);
+            toast.success(`${fileItem.file.name} uploaded successfully`);
             resolve(result);
           } else {
             const error = 'Upload failed';
             setFiles(prev => prev.map(f => 
-              f === uploadFile ? { ...f, status: 'error', error } : f
+              f.id === fileItem.id ? { ...f, status: 'error', error } : f
             ));
-            toast.error(`Failed to upload ${uploadFile.file.name}`);
+            toast.error(`Failed to upload ${fileItem.file.name}`);
             reject(new Error(error));
           }
         });
@@ -110,9 +112,9 @@ export function FileUpload({
         xhr.addEventListener('error', () => {
           const error = 'Network error';
           setFiles(prev => prev.map(f => 
-            f === uploadFile ? { ...f, status: 'error', error } : f
+            f.id === fileItem.id ? { ...f, status: 'error', error } : f
           ));
-          toast.error(`Failed to upload ${uploadFile.file.name}`);
+          toast.error(`Failed to upload ${fileItem.file.name}`);
           reject(new Error(error));
         });
 
@@ -122,9 +124,9 @@ export function FileUpload({
       });
     } catch (error) {
       setFiles(prev => prev.map(f => 
-        f === uploadFile ? { ...f, status: 'error', error: 'Upload failed' } : f
+        f.id === fileItem.id ? { ...f, status: 'error', error: 'Upload failed' } : f
       ));
-      toast.error(`Failed to upload ${uploadFile.file.name}`);
+      toast.error(`Failed to upload ${fileItem.file.name}`);
     }
   };
 
@@ -137,7 +139,7 @@ export function FileUpload({
   };
 
   const removeFile = (fileToRemove: UploadFile) => {
-    setFiles(prev => prev.filter(f => f !== fileToRemove));
+    setFiles(prev => prev.filter(f => f.id !== fileToRemove.id));
   };
 
   const formatFileSize = (bytes: number) => {
@@ -225,48 +227,48 @@ export function FileUpload({
             </Button>
           </div>
 
-          {files.map((uploadFile, index) => (
+          {files.map((fileItem, index) => (
             <Card key={index}>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-3">
-                  {getFileIcon(uploadFile.file.name)}
+                  {getFileIcon(fileItem.file.name)}
                   
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">
-                      {uploadFile.file.name}
+                      {fileItem.file.name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {formatFileSize(uploadFile.file.size)}
+                      {formatFileSize(fileItem.file.size)}
                     </p>
                     
-                    {(uploadFile.status === 'uploading' || uploadFile.progress > 0) && (
+                    {(fileItem.status === 'uploading' || fileItem.progress > 0) && (
                       <div className="mt-2">
-                        <Progress value={uploadFile.progress} className="h-2" />
+                        <Progress value={fileItem.progress} className="h-2" />
                         <p className="text-xs text-gray-500 mt-1">
-                          {Math.round(uploadFile.progress)}% uploaded
+                          {Math.round(fileItem.progress)}% uploaded
                         </p>
                       </div>
                     )}
                     
-                    {uploadFile.status === 'completed' && (
+                    {fileItem.status === 'completed' && (
                       <p className="text-xs text-green-500 mt-1">
                         ✅ Upload completed
                       </p>
                     )}
                     
-                    {uploadFile.status === 'error' && (
+                    {fileItem.status === 'error' && (
                       <p className="text-xs text-red-500 mt-1">
-                        {uploadFile.error}
+                        {fileItem.error}
                       </p>
                     )}
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    {getStatusIcon(uploadFile.status)}
+                    {getStatusIcon(fileItem.status)}
                     
-                    {uploadFile.status === 'pending' && (
+                    {fileItem.status === 'pending' && (
                       <Button
-                        onClick={() => uploadFile(uploadFile)}
+                        onClick={() => uploadFile(fileItem)}
                         size="sm"
                         variant="outline"
                       >
@@ -275,7 +277,7 @@ export function FileUpload({
                     )}
                     
                     <Button
-                      onClick={() => removeFile(uploadFile)}
+                      onClick={() => removeFile(fileItem)}
                       size="sm"
                       variant="ghost"
                     >
