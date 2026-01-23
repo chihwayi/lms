@@ -5,6 +5,7 @@ export class HealthService {
   getHealth() {
     return {
       status: 'ok',
+      app: 'EduFlow',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: process.env.NODE_ENV || 'development',

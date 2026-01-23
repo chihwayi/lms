@@ -66,6 +66,11 @@
 ## 🟡 Planned / Up Next
 
 ### Phase 6: Enterprise & Access
-- [ ] **Offline PWA**: Service workers for offline content
+- [x] **Offline PWA**: 
+    - [x] Dynamic Instance URL Configuration
+    - [x] Offline Video Storage & Playback
+    - [x] Service Worker & Manifest
+- [ ] **Full Offline Course Support**: Cache text content, quizzes, and navigation
+- [ ] **Native Mobile App**: React Native (Expo) implementation
 - [ ] **SCORM Support**: Legacy content import
 - [ ] **Multi-tenancy**: Organization-specific subdomains

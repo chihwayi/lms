@@ -178,4 +178,9 @@ export class CoursesController {
   getCoursePreview(@Param('id') id: string) {
     return this.coursesService.getCoursePreview(id);
   }
+
+  @Get(':courseId/lessons/:lessonId')
+  getLesson(@Param('courseId') courseId: string, @Param('lessonId') lessonId: string) {
+    return this.coursesService.getLessonContent(lessonId);
+  }
 }

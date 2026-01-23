@@ -735,3 +735,159 @@
 2026-01-23T12:47:32.864860Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
 2026-01-23T12:47:52.964517Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/next.config.js")}
 2026-01-23T12:47:52.964552Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T20:42:07.039004Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-01-23T20:42:07.039012Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T20:42:07.139288Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-01-23T20:42:07.139295Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T20:44:21.740008Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:44:21.740044Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:44:22.739304Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:44:22.739377Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:44:22.771533Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:46:11.739248Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/lib/offline-storage.ts")}
+2026-01-23T20:46:11.739265Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:46:11.938727Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/lib/offline-content.ts")}
+2026-01-23T20:46:11.938739Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:02.739072Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/constants/theme.ts")}
+2026-01-23T20:50:02.739088Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:05.639137Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Button.tsx")}
+2026-01-23T20:50:05.639145Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:05.738928Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Toast.tsx")}
+2026-01-23T20:50:05.738936Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:05.939164Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Card.tsx")}
+2026-01-23T20:50:05.939171Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:37.838932Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/_layout.tsx")}
+2026-01-23T20:50:37.838946Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.338945Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/_layout.tsx")}
+2026-01-23T20:50:54.338961Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.439606Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/profile.tsx")}
+2026-01-23T20:50:54.439616Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.542699Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/profile.tsx")}
+2026-01-23T20:50:54.542754Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.542783Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:50:54.638937Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:50:54.638946Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.787876Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:50:54.787883Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:54.787896Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:50:55.737891Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:50:55.737898Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:50:55.737914Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:51:42.744871Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:51:42.744885Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:51:42.845407Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:51:42.845418Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:51:42.945467Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:51:42.945476Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:51:42.945496Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:51:43.945944Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:51:43.945951Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:51:43.945972Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:52:01.849382Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:52:01.849392Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:02.950134Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:52:02.950166Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:02.950195Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:52:03.349391Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Card.tsx")}
+2026-01-23T20:52:03.349402Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:03.450161Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:52:03.450172Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:03.649495Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:52:03.649504Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:04.649531Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:52:04.649542Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:04.649560Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:52:32.050704Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:52:32.050712Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:32.150777Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:52:32.150800Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:32.250169Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T20:52:32.250181Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:33.350610Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:52:33.350619Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:52:33.350673Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:53:25.151105Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/hooks/use-offline-course.ts")}
+2026-01-23T20:53:25.151138Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:54:26.750843Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/hooks/use-offline-course.ts")}
+2026-01-23T20:54:26.750871Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:58:02.551387Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Card.tsx")}
+2026-01-23T20:58:02.551405Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:58:15.250459Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T20:58:15.250467Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:58:16.350715Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:58:16.350722Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:58:16.350741Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:59:55.551057Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/expo-env.d.ts")}
+2026-01-23T20:59:55.551291Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:59:55.574247Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T20:59:56.851658Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T20:59:56.851666Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T20:59:56.886804Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:00:45.450328Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/health/health.service.ts")}
+2026-01-23T21:00:45.450347Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T21:00:59.451081Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/index.tsx")}
+2026-01-23T21:00:59.451090Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:01:00.451198Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:01:00.451209Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:01:00.451234Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:01:07.954049Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/index.tsx")}
+2026-01-23T21:01:07.954059Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:01:08.951696Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:01:08.951710Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:01:08.958997Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:02:39.150918Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T21:02:39.150942Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:02:40.250781Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:02:40.250797Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:02:40.250917Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:02:46.350725Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T21:02:46.350732Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:02:47.451909Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:02:47.451918Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:02:47.451941Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:03:38.250824Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/dashboard.tsx")}
+2026-01-23T21:03:38.250840Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:03:39.251281Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:03:39.251290Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:03:39.283963Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:03:44.050880Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx")}
+2026-01-23T21:03:44.050890Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:03:45.050639Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:03:45.050647Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:03:45.052639Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:04:45.450776Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/index.tsx")}
+2026-01-23T21:04:45.450787Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:46.550813Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:04:46.550823Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:46.550847Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:04:51.752180Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/index.tsx")}
+2026-01-23T21:04:51.752192Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:52.751019Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:04:52.751037Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:52.783715Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:04:57.951208Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/login.tsx")}
+2026-01-23T21:04:57.951221Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:58.952521Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:04:58.952544Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:04:58.974841Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:08:32.858947Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses.tsx"), AnchoredSystemPathBuf("apps/mobile/app/(app)/courses/index.tsx")}
+2026-01-23T21:08:32.858966Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:08:33.959648Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:08:33.959678Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:08:33.959742Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:08:38.457702Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/(app)/courses/_layout.tsx")}
+2026-01-23T21:08:38.457710Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:09:02.559273Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/expo-env.d.ts")}
+2026-01-23T21:09:02.559280Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:09:02.564180Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:09:03.958553Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/.expo/types/router.d.ts")}
+2026-01-23T21:09:03.958560Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:09:03.958577Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T21:10:59.659154Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Toast.tsx")}
+2026-01-23T21:10:59.659171Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:11:20.658480Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/app/_layout.tsx")}
+2026-01-23T21:11:20.658490Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))
+2026-01-23T21:18:48.458846Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/courses/courses.controller.ts")}
+2026-01-23T21:18:48.458880Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T21:24:23.662950Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/mobile/components/ui/Toast.tsx")}
+2026-01-23T21:24:23.662965Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/mobile"), path: AnchoredSystemPathBuf("apps/mobile") }}))

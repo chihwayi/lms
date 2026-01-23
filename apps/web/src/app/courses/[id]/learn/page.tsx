@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,13 +8,17 @@ import { Badge } from '@/components/ui/badge';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthStore } from '@/lib/auth-store';
 import { toast } from 'sonner';
-import { ChevronLeft, ChevronRight, PlayCircle, CheckCircle, FileText, Lock, Circle, Menu, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlayCircle, CheckCircle, FileText, Lock, Circle, Menu, Check, Download, Wifi, WifiOff, RefreshCw, Loader2 } from 'lucide-react';
 import { VideoPlayer } from '@/components/courses/VideoPlayer';
 import { QuizRunner, QuizData } from '@/components/courses/QuizRunner';
 import { AiAssistantButton } from '@/components/ai/AiAssistantButton';
 import { ScrollArea } from '../../../../components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '../../../../components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
+import { useOfflineCourse } from '@/hooks/use-offline-course';
+import { offlineStorage } from '@/lib/offline-storage';
+import { cn } from '@/lib/utils';
+
 
 interface Lesson {
   id: string;
@@ -51,46 +55,104 @@ export default function CourseLearnPage() {
   const params = useParams();
   const router = useRouter();
   const { accessToken } = useAuthStore();
+  const { downloadCourse, isDownloading, downloadProgress, isCourseDownloaded } = useOfflineCourse();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
+
+  // Check if course is downloaded
+  useEffect(() => {
+      if (params.id) {
+          isCourseDownloaded(params.id as string).then(setIsDownloaded);
+      }
+  }, [params.id, isDownloading]); // Re-check after downloading
 
   // Fetch course and enrollment data
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!accessToken) {
-          router.push('/login');
-          return;
+           // Check if we have offline access
+           const hasOfflineAccess = await offlineStorage.isCourseOffline(params.id as string);
+           if (!hasOfflineAccess) {
+             router.push('/login');
+             return;
+           }
+           setIsOfflineMode(true);
         }
 
-        // Fetch Course
-        const courseRes = await apiClient(`courses/${params.id}`);
+        // Try loading from offline storage first if we suspect offline or if downloaded
+        const localCourse = await offlineStorage.getCourse(params.id as string);
         
-        if (!courseRes.ok) throw new Error('Failed to load course');
-        const courseData = await courseRes.json();
-        setCourse(courseData);
+        let fetchedCourse = null;
+        let fetchedEnrollment = null;
 
-        // Fetch Enrollment
-        const enrollRes = await apiClient(`enrollments/${params.id}/check`);
-        
-        if (enrollRes.ok) {
-          const enrollData = await enrollRes.json();
-          if (!enrollData.isEnrolled) {
-            toast.error('You are not enrolled in this course');
-            router.push(`/courses/${params.id}`);
-            return;
-          }
-          setEnrollment(enrollData.enrollment);
+        if (!isOfflineMode) {
+            try {
+                // Fetch Course from API
+                const courseRes = await apiClient(`courses/${params.id}`);
+                if (courseRes.ok) {
+                    fetchedCourse = await courseRes.json();
+                    
+                    // Fetch Enrollment
+                    const enrollRes = await apiClient(`enrollments/${params.id}/check`);
+                    if (enrollRes.ok) {
+                        const enrollData = await enrollRes.json();
+                        if (enrollData.isEnrolled) {
+                             fetchedEnrollment = enrollData.enrollment;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Network request failed, attempting offline fallback');
+            }
+        }
+
+        // Use offline data if API failed or we are in offline mode
+        if (!fetchedCourse && localCourse) {
+            fetchedCourse = localCourse;
+            setIsOfflineMode(true);
+            toast.info('Viewing offline version of course');
+            
+            // Load offline progress
+            const offlineProgress = await offlineStorage.getCourseProgress(params.id as string);
+            if (offlineProgress) {
+                fetchedEnrollment = {
+                    id: 'offline',
+                    progress: offlineProgress.progress,
+                    completedLessons: offlineProgress.completedLessons,
+                    status: 'active'
+                };
+            }
+        }
+
+        if (!fetchedCourse) {
+             throw new Error('Failed to load course');
+        }
+
+        setCourse(fetchedCourse);
+
+        if (fetchedEnrollment) {
+          setEnrollment(fetchedEnrollment);
           
           // Set initial lesson (first incomplete or first overall)
-          const allLessons = courseData.modules.flatMap((m: Module) => m.lessons);
-          const completed = enrollData.enrollment.completedLessons || [];
-          const firstIncomplete = allLessons.find((l: Lesson) => !completed.includes(l.id));
-          setCurrentLesson(firstIncomplete || allLessons[0]);
+          const allLessons = fetchedCourse.modules.flatMap((m: Module) => m.lessons);
+          const completed = fetchedEnrollment.completedLessons || [];
+          
+          // If we already have a current lesson (e.g. from state preservation), keep it, else find first incomplete
+          if (!currentLesson) {
+              const firstIncomplete = allLessons.find((l: Lesson) => !completed.includes(l.id));
+              setCurrentLesson(firstIncomplete || allLessons[0]);
+          }
+        } else if (!isOfflineMode) {
+             // Only redirect if online and not enrolled
+             toast.error('You are not enrolled in this course');
+             router.push(`/courses/${params.id}`);
         }
       } catch (error) {
         console.error('Error loading course:', error);
@@ -100,10 +162,49 @@ export default function CourseLearnPage() {
       }
     };
 
-    if (accessToken) {
-        fetchData();
-    }
+    fetchData();
   }, [params.id, router, accessToken]);
+
+  // Sync offline progress
+  useEffect(() => {
+      const syncProgress = async () => {
+           if (!accessToken || !navigator.onLine) return;
+           
+           const unsynced = await offlineStorage.getUnsyncedProgress();
+           if (unsynced.length === 0) return;
+           
+           toast.info('Syncing offline progress...');
+           
+           let syncedCount = 0;
+           for (const item of unsynced) {
+               try {
+                   const response = await apiClient('/enrollments/progress', {
+                      method: 'PATCH',
+                      body: JSON.stringify({
+                          courseId: item.courseId,
+                          lessonId: item.lessonId,
+                          progress: item.progress || 0
+                      })
+                   });
+                   
+                   if (response.ok) {
+                       await offlineStorage.markProgressSynced(item.lessonId);
+                       syncedCount++;
+                   }
+               } catch (e) {
+                   console.error('Failed to sync lesson', item.lessonId);
+               }
+           }
+           
+           if (syncedCount > 0) {
+               toast.success(`Synced ${syncedCount} offline progress items`);
+           }
+      };
+      
+      syncProgress();
+      window.addEventListener('online', syncProgress);
+      return () => window.removeEventListener('online', syncProgress);
+  }, [accessToken]);
 
   const handleProgress = useCallback(async (currentTime: number, duration: number) => {
     if (!currentLesson || !enrollment) return;
@@ -119,24 +220,67 @@ export default function CourseLearnPage() {
 
   const handleLessonComplete = async (lessonId: string) => {
     try {
-      if (!accessToken) return;
+        const newProgress = calculateTotalProgress(lessonId);
+        
+        // Optimistic update
+        const newCompletedLessons = [...(enrollment?.completedLessons || [])];
+        if (!newCompletedLessons.includes(lessonId)) {
+            newCompletedLessons.push(lessonId);
+            setEnrollment(prev => prev ? ({
+                ...prev,
+                completedLessons: newCompletedLessons,
+                progress: newProgress
+            }) : null);
+            toast.success('Lesson completed!');
+        }
+
+        if (isOfflineMode || !accessToken) {
+             // Save to offline storage
+             if (course?.id) {
+                await offlineStorage.saveProgress(lessonId, course.id, newProgress);
+                await offlineStorage.saveCourseProgress({
+                    courseId: course.id,
+                    progress: newProgress,
+                    completedLessons: newCompletedLessons
+                });
+             }
+             return;
+         }
+
       const response = await apiClient('/enrollments/progress', {
         method: 'PATCH',
         body: JSON.stringify({
             courseId: course?.id,
             lessonId: lessonId,
             // Calculate total progress
-            progress: calculateTotalProgress(lessonId)
+            progress: newProgress
         })
       });
 
       if (response.ok) {
         const updatedEnrollment = await response.json();
         setEnrollment(updatedEnrollment);
-        toast.success('Lesson completed!');
       }
     } catch (error) {
       console.error('Error updating progress:', error);
+      // Fallback to offline save if request fails
+       if (!isOfflineMode && course?.id) {
+            const newProgress = calculateTotalProgress(lessonId);
+            const newCompletedLessons = [...(enrollment?.completedLessons || [])];
+            if (!newCompletedLessons.includes(lessonId)) {
+                newCompletedLessons.push(lessonId);
+            }
+            
+             await offlineStorage.saveProgress(lessonId, course.id, newProgress);
+              await offlineStorage.saveCourseProgress({
+                 courseId: course.id,
+                 progress: newProgress,
+                 completedLessons: newCompletedLessons
+              });
+             
+             setIsOfflineMode(true);
+             toast.info('Network failed, progress saved offline');
+       }
     }
   };
 
@@ -150,6 +294,40 @@ export default function CourseLearnPage() {
 
   const handleQuizComplete = async (score: number, passed: boolean, answers: Record<string, string>) => {
     if (!currentLesson || !enrollment) return;
+
+    if (isOfflineMode || !accessToken) {
+        if (passed) {
+             toast.success(`Quiz passed locally with score: ${Math.round(score)}%`);
+             
+             // Update local state
+             const newCompletedLessons = [...(enrollment.completedLessons || [])];
+             if (!newCompletedLessons.includes(currentLesson.id)) {
+                 newCompletedLessons.push(currentLesson.id);
+                 
+                 const allLessons = course?.modules.flatMap(m => m.lessons) || [];
+                 const newProgress = (newCompletedLessons.length / allLessons.length) * 100;
+                 
+                 setEnrollment({
+                     ...enrollment,
+                     completedLessons: newCompletedLessons,
+                     progress: newProgress
+                 });
+                 
+                 // Save progress to IDB
+                  if (course?.id) {
+                      await offlineStorage.saveProgress(currentLesson.id, course.id, newProgress);
+                      await offlineStorage.saveCourseProgress({
+                         courseId: course.id,
+                        progress: newProgress,
+                        completedLessons: newCompletedLessons
+                     });
+                  }
+             }
+        } else {
+             toast.error(`Quiz failed. Score: ${Math.round(score)}%. Try again!`);
+        }
+        return;
+    }
 
     try {
       const response = await apiClient(`/enrollments/${enrollment.id}/quiz/${currentLesson.id}`, {
@@ -278,9 +456,30 @@ export default function CourseLearnPage() {
           ))}
         </div>
       </ScrollArea>
-      <div className="p-4 border-t">
+      <div className="p-4 border-t space-y-2">
+        <Button 
+            variant={isDownloaded ? "secondary" : "default"} 
+            className="w-full"
+            onClick={() => course && downloadCourse(course.id)}
+            disabled={isDownloading || isDownloaded || isOfflineMode}
+        >
+            {isDownloading ? (
+                <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {Math.round(downloadProgress)}%
+                </>
+            ) : isDownloaded ? (
+                <>
+                    <Check className="w-4 h-4 mr-2" /> Downloaded
+                </>
+            ) : (
+                <>
+                    <Download className="w-4 h-4 mr-2" /> Download
+                </>
+            )}
+        </Button>
         <Button variant="outline" className="w-full" onClick={() => router.push('/dashboard')}>
-            <ChevronLeft className="w-4 h-4 mr-2" /> Back to Dashboard
+            <ChevronLeft className="w-4 h-4 mr-2" /> Dashboard
         </Button>
       </div>
     </div>
@@ -316,7 +515,14 @@ export default function CourseLearnPage() {
           <main className="flex-1 overflow-y-auto p-4 md:p-8">
             <div className="max-w-4xl mx-auto space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold">{currentLesson.title}</h1>
+                <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-bold">{currentLesson.title}</h1>
+                    {isOfflineMode && (
+                        <Badge variant="outline" className="gap-1 border-yellow-500 text-yellow-600 bg-yellow-50">
+                            <WifiOff className="w-3 h-3" /> Offline Mode
+                        </Badge>
+                    )}
+                </div>
                 <div className="flex gap-2 items-center">
                     <AiAssistantButton 
                       title={currentLesson.title}
