@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,13 +26,8 @@ export function SchedulePublishing({ courseId, onScheduled }: SchedulePublishing
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}/schedule-publish`, {
+      const response = await apiClient(`/api/v1/courses/${courseId}/schedule-publish`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ publishDate }),
       });
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/auth-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +10,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Clock } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { apiClient } from '@/lib/api-client';
 
 export function MentorProfileForm() {
   const router = useRouter();
@@ -25,6 +28,9 @@ export function MentorProfileForm() {
   });
   const [currentTag, setCurrentTag] = useState('');
   const [expertise, setExpertise] = useState<string[]>([]);
+  const [availability, setAvailability] = useState<{dayOfWeek: number, startTime: string, endTime: string}[]>([]);
+  const [newSlot, setNewSlot] = useState({ dayOfWeek: 1, startTime: '09:00', endTime: '17:00' });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -45,21 +51,27 @@ export function MentorProfileForm() {
     setExpertise(expertise.filter(t => t !== tag));
   };
 
+  const addSlot = () => {
+      setAvailability([...availability, newSlot]);
+  };
+
+  const removeSlot = (index: number) => {
+      setAvailability(availability.filter((_, i) => i !== index));
+  };
+
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/mentorship/profile', {
+      const res = await apiClient('/mentorship/profile', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           ...formData,
           expertise,
+          availability
         }),
       });
 
@@ -205,6 +217,77 @@ export function MentorProfileForm() {
                 value={formData.websiteUrl}
                 onChange={handleChange}
               />
+            </div>
+          </div>
+
+          {/* Availability Section */}
+          <div className="space-y-4 pt-4 border-t border-slate-100">
+            <Label className="text-base font-semibold text-slate-900">Weekly Availability</Label>
+            <CardDescription>Set your recurring available hours for mentorship sessions.</CardDescription>
+            
+            <div className="flex flex-wrap gap-4 items-end bg-slate-50 p-4 rounded-lg border border-slate-100">
+                <div className="space-y-2 w-full sm:w-40">
+                    <Label>Day</Label>
+                    <Select 
+                        value={newSlot.dayOfWeek.toString()} 
+                        onValueChange={(val) => setNewSlot({...newSlot, dayOfWeek: parseInt(val)})}
+                    >
+                        <SelectTrigger className="bg-white">
+                            <SelectValue placeholder="Select day" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {days.map((day, index) => (
+                                <SelectItem key={index} value={index.toString()}>{day}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="space-y-2 w-32">
+                    <Label>Start Time</Label>
+                    <Input 
+                        type="time" 
+                        value={newSlot.startTime} 
+                        onChange={(e) => setNewSlot({...newSlot, startTime: e.target.value})}
+                        className="bg-white"
+                    />
+                </div>
+                <div className="space-y-2 w-32">
+                    <Label>End Time</Label>
+                    <Input 
+                        type="time" 
+                        value={newSlot.endTime} 
+                        onChange={(e) => setNewSlot({...newSlot, endTime: e.target.value})}
+                        className="bg-white"
+                    />
+                </div>
+                <Button type="button" onClick={addSlot} className="bg-indigo-600 hover:bg-indigo-700">
+                    <Plus className="w-4 h-4 mr-2" /> Add Slot
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {availability.map((slot, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-indigo-50 rounded-full text-indigo-600">
+                                <Clock className="w-4 h-4" />
+                            </div>
+                            <div>
+                                <p className="font-medium text-slate-900">{days[slot.dayOfWeek]}</p>
+                                <p className="text-sm text-slate-500">{slot.startTime} - {slot.endTime}</p>
+                            </div>
+                        </div>
+                        <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-slate-400 hover:text-red-500"
+                            onClick={() => removeSlot(index)}
+                        >
+                            <X className="w-4 h-4" />
+                        </Button>
+                    </div>
+                ))}
             </div>
           </div>
 

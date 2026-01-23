@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, Users, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { apiClient } from '@/lib/api-client';
 
 export function FeaturedCourses() {
   const [courses, setCourses] = useState([]);
@@ -16,15 +17,7 @@ export function FeaturedCourses() {
 
   const fetchFeaturedCourses = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers: any = {};
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-      
-      const response = await fetch('/api/v1/courses/featured', {
-        headers,
-      });
+      const response = await apiClient('/api/v1/courses/featured');
       
       if (response.ok) {
         const data = await response.json();

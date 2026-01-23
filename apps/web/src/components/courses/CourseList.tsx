@@ -28,8 +28,10 @@ interface Course {
   created_by: string;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export function CourseList() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, accessToken } = useAuthStore();
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -45,13 +47,15 @@ export function CourseList() {
   };
 
   useEffect(() => {
-    fetchCourses();
-    fetchCategories();
-  }, [search, selectedCategory, selectedLevel]);
+    if (accessToken) {
+      fetchCourses();
+      fetchCategories();
+    }
+  }, [search, selectedCategory, selectedLevel, accessToken]);
 
   const fetchCourses = async () => {
     try {
-      const token = localStorage.getItem('token');
+      if (!accessToken) return;
       const params = new URLSearchParams();
       // Always filter by published status for the public course list
       params.append('status', 'published');
@@ -60,9 +64,12 @@ export function CourseList() {
       if (selectedCategory) params.append('category', selectedCategory);
       if (selectedLevel) params.append('level', selectedLevel);
 
-      const response = await fetch(`/api/v1/courses?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient(`courses?${params}`);
+
+      if (response.status === 401) {
+        logout();
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();
@@ -77,10 +84,13 @@ export function CourseList() {
 
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/v1/courses/categories', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (!accessToken) return;
+      const response = await apiClient('courses/categories');
+
+      if (response.status === 401) {
+        logout();
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();

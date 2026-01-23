@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { GripVertical } from 'lucide-react';
 import { toast } from 'sonner';
@@ -51,7 +52,6 @@ export function ReorderableList({ items, type, courseId, moduleId, onReorder, re
     }));
 
     try {
-      const token = localStorage.getItem('token');
       const endpoint = type === 'modules' 
         ? `/api/v1/courses/${courseId}/modules/reorder`
         : `/api/v1/courses/modules/${moduleId}/lessons/reorder`;
@@ -60,12 +60,8 @@ export function ReorderableList({ items, type, courseId, moduleId, onReorder, re
         ? { moduleIds: reorderedItems.map(item => item.id) }
         : { lessonIds: reorderedItems.map(item => item.id) };
 
-      const response = await fetch(endpoint, {
+      const response = await apiClient(endpoint, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(body),
       });
 

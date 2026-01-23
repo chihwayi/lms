@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { CreateCourseForm } from '@/components/courses/CreateCourseForm';
 import { useAuthStore } from '@/lib/auth-store';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -26,14 +27,7 @@ export default function CreateCoursePage() {
 
   const fetchCategories = async () => {
     try {
-      const { accessToken } = useAuthStore.getState();
-      const token = accessToken || localStorage.getItem('token');
-      
-      const response = await fetch('/api/v1/courses/categories', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient('/courses/categories');
 
       if (response.ok) {
         const data = await response.json();

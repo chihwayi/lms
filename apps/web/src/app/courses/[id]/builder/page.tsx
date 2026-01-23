@@ -7,6 +7,7 @@ import { TopNav } from '@/components/layout/TopNav';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { CourseBuilder } from '@/components/courses/CourseBuilder';
+import { apiClient } from '@/lib/api-client';
 import Link from 'next/link';
 
 export default function CourseBuilderPage() {
@@ -18,10 +19,7 @@ export default function CourseBuilderPage() {
   useEffect(() => {
     const fetchCourse = async (courseId: string) => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/v1/courses/${courseId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient(`/courses/${courseId}`);
 
         if (response.ok) {
           const courseData = await response.json();

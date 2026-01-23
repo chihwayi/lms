@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { X, Users, UserPlus, Search, Trash2, Mail, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 
 interface Enrollment {
   id: string;
@@ -31,6 +32,7 @@ export function CourseEnrollments({ courseId, isOpen, onClose }: CourseEnrollmen
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const { accessToken } = useAuthStore();
 
   // New state for enrollment search
   const [enrollSearchTerm, setEnrollSearchTerm] = useState('');
@@ -40,21 +42,17 @@ export function CourseEnrollments({ courseId, isOpen, onClose }: CourseEnrollmen
   const [bulkEnrolling, setBulkEnrolling] = useState(false);
 
   useEffect(() => {
-    if (isOpen && courseId) {
+    if (isOpen && courseId && accessToken) {
       fetchEnrollments();
     }
-  }, [isOpen, courseId]);
+  }, [isOpen, courseId, accessToken]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
       if (enrollSearchTerm.length >= 2) {
         setIsSearching(true);
         try {
-          const { accessToken } = useAuthStore.getState();
-          const token = accessToken || localStorage.getItem('token');
-          const response = await fetch(`http://localhost:3001/api/v1/enrollments/${courseId}/search-students?q=${enrollSearchTerm}`, {
-             headers: { Authorization: `Bearer ${token}` }
-          });
+          const response = await apiClient(`/enrollments/${courseId}/search-students?q=${enrollSearchTerm}`);
           if (response.ok) {
             const data = await response.json();
             setPotentialStudents(data);
@@ -75,14 +73,8 @@ export function CourseEnrollments({ courseId, isOpen, onClose }: CourseEnrollmen
   const fetchEnrollments = async () => {
     try {
       setLoading(true);
-      const { accessToken } = useAuthStore.getState();
-      const token = accessToken || localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:3001/api/v1/enrollments/${courseId}/students`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient(`/enrollments/${courseId}/students`);
 
       if (response.ok) {
         const data = await response.json();
@@ -108,14 +100,10 @@ export function CourseEnrollments({ courseId, isOpen, onClose }: CourseEnrollmen
     if (selectedStudents.length === 0) return;
     setBulkEnrolling(true);
     try {
-      const { accessToken } = useAuthStore.getState();
-      const token = accessToken || localStorage.getItem('token');
-
-      const response = await fetch(`http://localhost:3001/api/v1/enrollments/${courseId}/bulk`, {
+      const response = await apiClient(`/enrollments/${courseId}/bulk`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userIds: selectedStudents.map(s => s.id) }),
       });

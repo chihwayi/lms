@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,13 +57,8 @@ export default function InnovationForm() {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/innovations', {
+      const res = await apiClient('/innovations', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({
           ...formData,
           budget_estimate: formData.budget_estimate ? parseFloat(formData.budget_estimate) : undefined

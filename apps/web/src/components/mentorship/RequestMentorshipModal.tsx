@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { apiClient } from '@/lib/api-client';
 
 interface RequestMentorshipModalProps {
   mentorId: string;
@@ -35,13 +36,8 @@ export function RequestMentorshipModal({ mentorId, mentorName, children }: Reque
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/mentorship/requests', {
+      const res = await apiClient('/mentorship/requests', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           mentorId,
           message,
@@ -72,7 +68,7 @@ export function RequestMentorshipModal({ mentorId, mentorName, children }: Reque
         <DialogHeader>
           <DialogTitle>Request Mentorship</DialogTitle>
           <DialogDescription>
-            Send a request to {mentorName} to be your mentor. Explain why you'd like to be mentored by them.
+            Send a request to {mentorName} to be your mentor. Explain why you&apos;d like to be mentored by them.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

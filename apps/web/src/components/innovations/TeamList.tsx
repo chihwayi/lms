@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Users, Trash2, UserPlus, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api-client';
 
 interface TeamListProps {
   innovationId: string;
@@ -49,13 +50,8 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${innovationId}/team`, {
+      const res = await apiClient(`/innovations/${innovationId}/team`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ email, role }),
       });
 
@@ -80,10 +76,8 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
     if (!confirm('Are you sure you want to remove this member?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${innovationId}/team/${memberId}`, {
+      const res = await apiClient(`/innovations/${innovationId}/team/${memberId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error('Failed to remove member');

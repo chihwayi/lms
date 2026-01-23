@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { Loader2, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { SessionsList } from './SessionsList';
+import { apiClient } from '@/lib/api-client';
 
 interface User {
   id: string;
@@ -45,12 +47,9 @@ export function MentorshipDashboard() {
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-
       const [sentRes, receivedRes] = await Promise.all([
-        fetch('/api/v1/mentorship/requests/sent', { headers }),
-        fetch('/api/v1/mentorship/requests/received', { headers }),
+        apiClient('/mentorship/requests/sent'),
+        apiClient('/mentorship/requests/received'),
       ]);
 
       if (sentRes.ok) {
@@ -70,13 +69,8 @@ export function MentorshipDashboard() {
 
   const handleStatusUpdate = async (requestId: string, status: 'ACCEPTED' | 'REJECTED') => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/mentorship/requests/${requestId}`, {
+      const res = await apiClient(`/mentorship/requests/${requestId}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ status }),
       });
 
@@ -110,15 +104,32 @@ export function MentorshipDashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-end">
-        <Button variant="outline" className="hidden sm:flex" onClick={fetchRequests}>
-            <Clock className="w-4 h-4 mr-2" />
-            Refresh
-        </Button>
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <h1 className="text-3xl font-bold mb-2 tracking-tight">Mentorship Dashboard</h1>
+                <p className="text-indigo-100 max-w-xl text-lg opacity-90">
+                    Manage your mentorship sessions, track requests, and connect with your mentors or mentees.
+                </p>
+            </div>
+            <Button 
+                variant="secondary" 
+                className="bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm" 
+                onClick={fetchRequests}
+            >
+                <Clock className="w-4 h-4 mr-2" />
+                Refresh Data
+            </Button>
+        </div>
       </div>
       
-      <Tabs defaultValue="sent" className="w-full">
+      <Tabs defaultValue="sessions" className="w-full">
         <TabsList className="bg-slate-100 p-1 rounded-lg w-full sm:w-auto mb-6">
+          <TabsTrigger value="sessions" className="rounded-md px-6 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 transition-all">
+            Sessions
+          </TabsTrigger>
           <TabsTrigger value="sent" className="rounded-md px-6 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-600 transition-all">
             My Requests
           </TabsTrigger>
@@ -132,6 +143,10 @@ export function MentorshipDashboard() {
           </TabsTrigger>
         </TabsList>
 
+        <TabsContent value="sessions" className="space-y-4 animate-in fade-in-50 duration-300">
+            <SessionsList />
+        </TabsContent>
+
         <TabsContent value="sent" className="space-y-4 animate-in fade-in-50 duration-300">
           {sentRequests.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-200">
@@ -139,7 +154,7 @@ export function MentorshipDashboard() {
                     <Loader2 className="w-8 h-8 text-slate-400" />
                 </div>
                 <h3 className="text-lg font-medium text-slate-900">No requests sent</h3>
-                <p className="text-slate-500 mt-1 max-w-sm mx-auto">You haven't sent any mentorship requests yet. Browse mentors to get started.</p>
+                <p className="text-slate-500 mt-1 max-w-sm mx-auto">You haven&apos;t sent any mentorship requests yet. Browse mentors to get started.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
@@ -160,7 +175,7 @@ export function MentorshipDashboard() {
                                         </div>
                                         <p className="text-sm text-slate-500 font-medium mb-3">{request.mentor.title} at {request.mentor.company}</p>
                                         <div className="bg-slate-50 p-3 rounded-lg text-slate-700 text-sm italic border border-slate-100">
-                                            "{request.message}"
+                                            &quot;{request.message}&quot;
                                         </div>
                                         <div className="mt-4 flex items-center gap-2 text-xs text-slate-400 font-medium uppercase tracking-wider">
                                             <Clock className="w-3 h-3" />
@@ -189,7 +204,7 @@ export function MentorshipDashboard() {
                     <Loader2 className="w-8 h-8 text-slate-400" />
                 </div>
                 <h3 className="text-lg font-medium text-slate-900">No requests received</h3>
-                <p className="text-slate-500 mt-1 max-w-sm mx-auto">You haven't received any mentorship requests yet.</p>
+                <p className="text-slate-500 mt-1 max-w-sm mx-auto">You haven&apos;t received any mentorship requests yet.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
@@ -212,7 +227,7 @@ export function MentorshipDashboard() {
                                         </div>
                                         
                                         <div className="bg-slate-50 p-3 rounded-lg text-slate-700 text-sm italic border border-slate-100 mt-2">
-                                            "{request.message}"
+                                            &quot;{request.message}&quot;
                                         </div>
                                         <div className="mt-3 flex items-center gap-2 text-xs text-slate-400 font-medium uppercase tracking-wider">
                                             <Clock className="w-3 h-3" />

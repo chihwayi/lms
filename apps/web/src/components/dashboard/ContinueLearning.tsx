@@ -1,23 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api-client';
 import Link from 'next/link';
 import { PlayCircle, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useAuthStore } from '@/lib/auth-store';
 
 export function ContinueLearning() {
   const [lastAccessed, setLastAccessed] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { accessToken, logout } = useAuthStore();
 
   useEffect(() => {
     const fetchLastAccessed = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('/api/v1/enrollments/last-accessed', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        if (!accessToken) return;
+
+        const res = await apiClient('/enrollments/last-accessed');
+
         if (res.ok) {
           const text = await res.text();
           if (text) {
@@ -38,8 +41,10 @@ export function ContinueLearning() {
       }
     };
 
-    fetchLastAccessed();
-  }, []);
+    if (accessToken) {
+      fetchLastAccessed();
+    }
+  }, [accessToken]);
 
   if (loading || !lastAccessed) return null;
 
@@ -49,8 +54,8 @@ export function ContinueLearning() {
   // Find the lesson title if possible
   let lessonTitle = 'Continue where you left off';
   if (nextLessonId && course.modules) {
-    for (const module of course.modules) {
-      const lesson = module.lessons?.find((l: any) => l.id === nextLessonId);
+    for (const mod of course.modules) {
+      const lesson = mod.lessons?.find((l: any) => l.id === nextLessonId);
       if (lesson) {
         lessonTitle = lesson.title;
         break;

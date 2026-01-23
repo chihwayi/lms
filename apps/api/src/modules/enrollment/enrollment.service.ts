@@ -99,9 +99,17 @@ export class EnrollmentService implements OnModuleInit {
       .createQueryBuilder('user')
       .leftJoin('user.enrollments', 'enrollment', 'enrollment.courseId = :courseId', { courseId })
       .where('enrollment.id IS NULL')
-      .andWhere('(user.firstName ILIKE :search OR user.lastName ILIKE :search OR user.email ILIKE :search)', { search: `%${search}%` })
-      .take(20)
+      .andWhere('(user.email ILIKE :search OR user.firstName ILIKE :search OR user.lastName ILIKE :search)', { search: `%${search}%` })
+      .take(10)
       .getMany();
+  }
+
+  async getEnrolledStudents(courseId: string): Promise<User[]> {
+    const enrollments = await this.enrollmentRepository.find({
+      where: { courseId, status: EnrollmentStatus.ENROLLED },
+      relations: ['user'],
+    });
+    return enrollments.map(e => e.user);
   }
 
   async checkEnrollment(userId: string, courseId: string): Promise<{ isEnrolled: boolean; enrollment?: Enrollment }> {

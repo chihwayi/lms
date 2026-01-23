@@ -10,6 +10,8 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { PasswordReset } from './entities/password-reset.entity';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/password-reset.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { AnalyticsService } from '../analytics/analytics.service';
+import { ActivityType } from '../analytics/entities/user-activity.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,7 @@ export class AuthService {
     @InjectRepository(PasswordReset)
     private passwordResetRepository: Repository<PasswordReset>,
     private jwtService: JwtService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -85,6 +88,9 @@ export class AuthService {
 
     // Reset failed attempts on successful login
     await this.userRepository.update(user.id, { failedLoginAttempts: 0 });
+
+    // Log analytics
+    await this.analyticsService.logActivity(user.id, ActivityType.LOGIN);
 
     return {
       success: true,

@@ -40,6 +40,13 @@ export class MentorProfile {
   @Column({ name: 'max_mentees', default: 5 })
   maxMentees: number;
 
+  @Column({ type: 'jsonb', nullable: true })
+  availability: {
+    dayOfWeek: number; // 0-6
+    startTime: string; // HH:mm
+    endTime: string;   // HH:mm
+  }[];
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

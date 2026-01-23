@@ -1,9 +1,13 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Settings } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Settings, Download, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { saveVideoForOffline, getOfflineVideoUrl, isVideoOffline, removeOfflineVideo } from '@/lib/offline-content';
+import { toast } from 'sonner';
+import { useAuthStore } from '@/lib/auth-store';
+import { useConfigStore } from '@/lib/config-store';
 
 interface VideoPlayerProps {
   fileId: string;
@@ -13,7 +17,8 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerProps) {
-  const [token, setToken] = useState<string>('');
+  const { accessToken: token } = useAuthStore();
+  const { instanceUrl } = useConfigStore();
   const [isLoading, setIsLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -23,15 +28,65 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
   const [isMuted, setIsMuted] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [showControls, setShowControls] = useState(true);
+  const [isOffline, setIsOffline] = useState(false);
+  const [offlineUrl, setOfflineUrl] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
-    const t = localStorage.getItem('token');
-    if (t) setToken(t);
+    // Initial loading state
     setIsLoading(false);
   }, []);
 
-  const streamUrl = token ? `/api/v1/files/${fileId}/stream?token=${token}` : '';
+  // Check offline status on mount
+  useEffect(() => {
+    if (!fileId || !token) return;
+    
+    const checkOffline = async () => {
+      const isAvailable = await isVideoOffline(fileId);
+      setIsOffline(isAvailable);
+      if (isAvailable) {
+        const url = await getOfflineVideoUrl(fileId, token);
+        setOfflineUrl(url);
+      }
+    };
+    
+    checkOffline();
+  }, [fileId, token]);
+
+  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const streamUrl = offlineUrl || (token ? `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}` : '');
   
+  const handleDownload = async () => {
+    if (!token) return;
+
+    if (isOffline) {
+        // Option to remove?
+        try {
+            await removeOfflineVideo(fileId, token);
+            setIsOffline(false);
+            setOfflineUrl(null);
+            toast.success('Removed from offline downloads');
+        } catch (e) {
+            toast.error('Failed to remove video');
+        }
+        return;
+    }
+
+    setDownloading(true);
+    toast.info('Starting download for offline viewing...');
+    try {
+      await saveVideoForOffline(fileId, token);
+      setIsOffline(true);
+      const url = await getOfflineVideoUrl(fileId, token);
+      setOfflineUrl(url);
+      toast.success('Video downloaded for offline viewing!');
+    } catch (error) {
+      toast.error('Failed to download video');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -204,6 +259,23 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
           </div>
 
           <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDownload}
+              className="text-white hover:bg-white/20"
+              disabled={downloading}
+              title={isOffline ? "Remove from downloads" : "Download for offline viewing"}
+            >
+              {downloading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : isOffline ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+            </Button>
+
             {/* Playback Speed */}
             <select
               value={playbackRate}

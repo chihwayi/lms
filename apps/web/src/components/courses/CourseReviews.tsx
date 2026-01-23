@@ -25,6 +25,8 @@ interface CourseReviewsProps {
   isEnrolled: boolean;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export function CourseReviews({ courseId, isEnrolled }: CourseReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,7 @@ export function CourseReviews({ courseId, isEnrolled }: CourseReviewsProps) {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch(`/api/v1/reviews/course/${courseId}`);
+      const res = await apiClient(`reviews/course/${courseId}`);
       if (res.ok) {
         const data = await res.json();
         setReviews(data);
@@ -58,12 +60,8 @@ export function CourseReviews({ courseId, isEnrolled }: CourseReviewsProps) {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/reviews', {
+      const res = await apiClient('reviews', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           course_id: courseId,
           rating,

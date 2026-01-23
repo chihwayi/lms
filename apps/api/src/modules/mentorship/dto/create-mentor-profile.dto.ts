@@ -33,4 +33,12 @@ export class CreateMentorProfileDto {
   @IsNumber()
   @Min(1)
   maxMentees?: number;
+
+  @IsOptional()
+  @IsArray()
+  availability?: {
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+  }[];
 }

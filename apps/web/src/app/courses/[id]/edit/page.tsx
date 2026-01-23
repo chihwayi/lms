@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 
 export default function CourseEditPage() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, accessToken } = useAuthStore();
   const params = useParams();
   const router = useRouter();
   const [course, setCourse] = useState(null);
@@ -38,10 +39,7 @@ export default function CourseEditPage() {
   useEffect(() => {
     const fetchCourse = async (courseId: string) => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/v1/courses/${courseId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient(`/courses/${courseId}`);
 
         if (response.ok) {
           const courseData = await response.json();
@@ -68,10 +66,7 @@ export default function CourseEditPage() {
 
     const fetchCategories = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('/api/v1/courses/categories', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient('/courses/categories');
 
         if (response.ok) {
           const data = await response.json();
@@ -82,23 +77,26 @@ export default function CourseEditPage() {
       }
     };
 
-    if (params.id) {
+    if (params.id && accessToken) {
       fetchCourse(params.id as string);
       fetchCategories();
     }
-  }, [params.id, router]);
+  }, [params.id, router, accessToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${params.id}`, {
+      if (!accessToken) {
+         toast.error("Not authenticated");
+         return;
+      }
+      
+      const response = await apiClient(`/courses/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

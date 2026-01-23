@@ -6,28 +6,28 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, PlayCircle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 import { Progress } from '@/components/ui/progress';
 
 export function EnrolledCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const user = useAuthStore((state) => state.user);
+  const { user, accessToken, logout } = useAuthStore();
 
   useEffect(() => {
-    fetchEnrolledCourses();
-  }, []);
+    if (accessToken) {
+      fetchEnrolledCourses();
+    }
+  }, [accessToken]);
 
   const fetchEnrolledCourses = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers: any = {};
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
+      const response = await apiClient('/api/v1/enrollments/my-courses');
       
-      const response = await fetch('http://localhost:3001/api/v1/enrollments/my-courses', {
-        headers,
-      });
+      if (response.status === 401) {
+        logout();
+        return;
+      }
       
       if (response.ok) {
         const data = await response.json();

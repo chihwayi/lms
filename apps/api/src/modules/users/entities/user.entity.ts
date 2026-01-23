@@ -45,6 +45,9 @@ export class User {
   @Column({ name: 'avatar_url', nullable: true })
   avatar: string;
 
+  @Column('text', { array: true, default: '{}' })
+  interests: string[];
+
   @ManyToMany(() => Role, role => role.users)
   @JoinTable({
     name: 'user_roles',
@@ -52,6 +55,12 @@ export class User {
     inverseJoinColumn: { name: 'role_id' }
   })
   roles: Role[];
+
+  @Column({ default: 0 })
+  xp: number;
+
+  @Column({ default: 1 })
+  level: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

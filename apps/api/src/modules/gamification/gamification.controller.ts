@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Param } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { GamificationService } from './gamification.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -8,12 +8,17 @@ export class GamificationController {
   constructor(private readonly gamificationService: GamificationService) {}
 
   @Get('stats')
-  getMyStats(@Request() req) {
+  async getUserStats(@Request() req) {
     return this.gamificationService.getUserStats(req.user.id);
   }
 
   @Get('leaderboard')
-  getLeaderboard() {
+  async getLeaderboard() {
     return this.gamificationService.getLeaderboard();
+  }
+
+  @Get('badges')
+  async getAllBadges() {
+    return this.gamificationService.getAllBadges();
   }
 }

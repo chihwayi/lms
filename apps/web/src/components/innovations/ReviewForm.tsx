@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api-client';
 
 interface ReviewFormProps {
   innovationId: string;
@@ -22,13 +23,8 @@ export function ReviewForm({ innovationId, onReviewSubmitted }: ReviewFormProps)
     setSubmitting(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/innovations/reviews', {
+      const res = await apiClient('/innovations/reviews', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify({
           innovation_id: innovationId,
           score: parseInt(score),

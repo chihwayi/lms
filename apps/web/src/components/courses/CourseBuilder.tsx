@@ -19,6 +19,7 @@ import { QuizData } from './QuizRunner';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { LessonAttachments } from './LessonAttachments';
 import { CourseEnrollments } from './CourseEnrollments';
+import { apiClient } from '@/lib/api-client';
 import {
   Dialog,
   DialogContent,
@@ -105,13 +106,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
 
   const createModule = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${course.id}/modules`, {
+      const response = await apiClient(`/courses/${course.id}/modules`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           ...moduleForm,
           order_index: (course.modules?.length || 0) + 1
@@ -139,13 +135,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
   const updateModule = async () => {
     if (!editingModule) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${course.id}/modules/${editingModule.id}`, {
+      const response = await apiClient(`/courses/${course.id}/modules/${editingModule.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(moduleForm),
       });
 
@@ -197,16 +188,11 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
 
   const createLesson = async (moduleId: string) => {
     try {
-      const token = localStorage.getItem('token');
       const targetModule = course.modules.find(m => m.id === moduleId);
       if (!targetModule) return;
 
-      const response = await fetch(`/api/v1/courses/modules/${moduleId}/lessons`, {
+      const response = await apiClient(`/api/v1/courses/modules/${moduleId}/lessons`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           ...lessonForm,
           order_index: (targetModule.lessons?.length || 0) + 1
@@ -242,13 +228,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
   const updateLesson = async (moduleId: string) => {
     if (!editingLesson) return;
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/modules/${moduleId}/lessons/${editingLesson.id}`, {
+      const response = await apiClient(`/api/v1/courses/modules/${moduleId}/lessons/${editingLesson.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(lessonForm),
       });
 
@@ -289,10 +270,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
     if (deleteConfirmation.type === 'module') {
       const moduleId = deleteConfirmation.id;
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/v1/courses/${course.id}/modules/${moduleId}`, {
+        const response = await apiClient(`/api/v1/courses/${course.id}/modules/${moduleId}`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (response.ok) {
@@ -309,10 +288,8 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
       const { id: lessonId, moduleId } = deleteConfirmation;
       if (!moduleId) return;
        try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/v1/courses/modules/${moduleId}/lessons/${lessonId}`, {
+        const response = await apiClient(`/api/v1/courses/modules/${moduleId}/lessons/${lessonId}`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (response.ok) {

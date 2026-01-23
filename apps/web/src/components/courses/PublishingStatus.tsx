@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, AlertCircle, Clock, Rocket, Eye, Calendar } from 'lucide-react';
@@ -32,12 +33,9 @@ export function PublishingStatus({ courseId, currentStatus, onStatusUpdate, last
 
   const fetchPublishingStatus = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token || !courseId) return;
+      if (!courseId) return;
       
-      const response = await fetch(`/api/v1/courses/${courseId}/publishing-status`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient(`/api/v1/courses/${courseId}/publishing-status`);
 
       if (response.status === 401) {
         // Token expired, redirect to login
@@ -57,10 +55,8 @@ export function PublishingStatus({ courseId, currentStatus, onStatusUpdate, last
   const publishCourse = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}/publish`, {
+      const response = await apiClient(`/api/v1/courses/${courseId}/publish`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
@@ -80,10 +76,8 @@ export function PublishingStatus({ courseId, currentStatus, onStatusUpdate, last
   const unpublishCourse = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}/unpublish`, {
+      const response = await apiClient(`/api/v1/courses/${courseId}/unpublish`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {

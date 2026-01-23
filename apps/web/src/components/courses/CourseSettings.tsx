@@ -23,6 +23,8 @@ interface CourseSettingsProps {
   onUpdate: (updatedCourse: any) => void;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSettingsProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -58,11 +60,7 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
       const { accessToken } = useAuthStore.getState();
       const token = accessToken || localStorage.getItem('token');
       
-      const response = await fetch('/api/v1/courses/categories', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient('courses/categories');
 
       if (response.ok) {
         const data = await response.json();
@@ -89,12 +87,8 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
         delete payload.category_id;
       }
 
-      const response = await fetch(`/api/v1/courses/${course.id}`, {
+      const response = await apiClient(`courses/${course.id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
 

@@ -45,9 +45,12 @@ interface Enrollment {
   status: string;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export default function CourseLearnPage() {
   const params = useParams();
   const router = useRouter();
+  const { accessToken } = useAuthStore();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
@@ -59,25 +62,20 @@ export default function CourseLearnPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        if (!accessToken) {
           router.push('/login');
           return;
         }
 
         // Fetch Course
-        const courseRes = await fetch(`http://localhost:3001/api/v1/courses/${params.id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const courseRes = await apiClient(`courses/${params.id}`);
         
         if (!courseRes.ok) throw new Error('Failed to load course');
         const courseData = await courseRes.json();
         setCourse(courseData);
 
         // Fetch Enrollment
-        const enrollRes = await fetch(`http://localhost:3001/api/v1/enrollments/${params.id}/check`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const enrollRes = await apiClient(`enrollments/${params.id}/check`);
         
         if (enrollRes.ok) {
           const enrollData = await enrollRes.json();
@@ -102,10 +100,10 @@ export default function CourseLearnPage() {
       }
     };
 
-    if (params.id) {
-      fetchData();
+    if (accessToken) {
+        fetchData();
     }
-  }, [params.id, router]);
+  }, [params.id, router, accessToken]);
 
   const handleProgress = useCallback(async (currentTime: number, duration: number) => {
     if (!currentLesson || !enrollment) return;
@@ -121,13 +119,9 @@ export default function CourseLearnPage() {
 
   const handleLessonComplete = async (lessonId: string) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/enrollments/progress', {
+      if (!accessToken) return;
+      const response = await apiClient('/enrollments/progress', {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify({
             courseId: course?.id,
             lessonId: lessonId,
@@ -158,13 +152,8 @@ export default function CourseLearnPage() {
     if (!currentLesson || !enrollment) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/v1/enrollments/${enrollment.id}/quiz/${currentLesson.id}`, {
+      const response = await apiClient(`/enrollments/${enrollment.id}/quiz/${currentLesson.id}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify(answers)
       });
 

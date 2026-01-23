@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -39,12 +40,8 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     try {
       const [usersResponse, rolesResponse] = await Promise.all([
-        fetch('http://localhost:3001/api/v1/admin/users', {
-          headers: { 'Authorization': `Bearer ${accessToken}` }
-        }),
-        fetch('http://localhost:3001/api/v1/rbac/roles', {
-          headers: { 'Authorization': `Bearer ${accessToken}` }
-        })
+        apiClient('/admin/users'),
+        apiClient('/rbac/roles')
       ]);
 
       if (usersResponse.ok) {
@@ -89,10 +86,9 @@ export default function AdminPage() {
     }));
 
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles`, {
+      const response = await apiClient(`/rbac/users/${userId}/roles`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ roleName }),
@@ -133,12 +129,8 @@ export default function AdminPage() {
     }));
 
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/rbac/users/${userId}/roles/${roleName}`, {
+      const response = await apiClient(`/rbac/users/${userId}/roles/${roleName}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
       });
       
       if (response.status === 401) {
@@ -161,12 +153,8 @@ export default function AdminPage() {
 
   const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/admin/users/${userId}/status`, {
+      const response = await apiClient(`/admin/users/${userId}/status`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ emailVerified: !currentStatus }),
       });
       if (response.ok) {
@@ -181,11 +169,8 @@ export default function AdminPage() {
 
   const createUser = async (userData: any) => {
     try {
-      const response = await fetch('http://localhost:3001/api/v1/auth/register', {
+      const response = await apiClient('/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(userData),
       });
       if (response.ok) {
@@ -207,11 +192,8 @@ export default function AdminPage() {
     if (!userToDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/v1/admin/users/${userToDelete}`, {
+      const response = await apiClient(`/admin/users/${userToDelete}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
       });
 
       if (response.ok) {

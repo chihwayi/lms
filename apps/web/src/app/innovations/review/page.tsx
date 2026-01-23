@@ -8,10 +8,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
+import { apiClient } from '@/lib/api-client';
+
 export default function ReviewerDashboard() {
   const [innovations, setInnovations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuthStore();
+  const { user, accessToken } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,16 +22,17 @@ export default function ReviewerDashboard() {
       router.push('/innovations');
       return;
     }
-    fetchSubmittedInnovations();
-  }, [user]);
+    if (accessToken) {
+      fetchSubmittedInnovations();
+    }
+  }, [user, accessToken]);
 
   const fetchSubmittedInnovations = async () => {
     try {
-      const token = localStorage.getItem('token');
+      if (!accessToken) return;
+      
       // Fetch all (admin/instructor sees all)
-      const res = await fetch('/api/v1/innovations', {
-         headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await apiClient('innovations');
       if (res.ok) {
         const data = await res.json();
         // Filter for submitted only

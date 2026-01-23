@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { apiClient } from './api-client';
 
 interface User {
   id: string;
@@ -11,6 +12,7 @@ interface User {
   emailVerified: boolean;
   avatar?: string;
   bio?: string;
+  interests?: string[];
 }
 
 interface AuthState {
@@ -31,9 +33,6 @@ interface RegisterData {
   lastName: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-const API_BASE = `${API_URL}/api/v1`;
-
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -42,10 +41,10 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       login: async (email: string, password: string) => {
-        const response = await fetch(`${API_BASE}/auth/login`, {
+        const response = await apiClient('/auth/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
+          skipAuth: true,
         });
 
         if (!response.ok) {
@@ -68,10 +67,10 @@ export const useAuthStore = create<AuthState>()(
       },
 
       register: async (registerData: RegisterData) => {
-        const response = await fetch(`${API_BASE}/auth/register`, {
+        const response = await apiClient('/auth/register', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(registerData),
+          skipAuth: true,
         });
 
         if (!response.ok) {
@@ -85,11 +84,8 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         const token = get().accessToken;
         if (token) {
-          fetch(`${API_BASE}/auth/logout`, {
+          apiClient('/auth/logout', {
             method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
           }).catch(() => {});
         }
         

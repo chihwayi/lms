@@ -13,6 +13,7 @@ import { Category } from './category.entity';
 import { CourseModule } from './course-module.entity';
 import { CourseFile } from './course-file.entity';
 import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { LiveSession } from '../../live-sessions/entities/live-session.entity';
 
 export enum CourseLevel {
   BEGINNER = 'beginner',
@@ -123,4 +124,7 @@ export class Course {
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.course)
   enrollments: Enrollment[];
+
+  @OneToMany(() => LiveSession, (session) => session.course)
+  live_sessions: LiveSession[];
 }

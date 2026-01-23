@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiClient } from '@/lib/api-client';
 import Link from 'next/link';
 
 export default function RegisterForm() {
@@ -30,7 +31,7 @@ export default function RegisterForm() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/v1/auth/register', {
+      const response = await apiClient('/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

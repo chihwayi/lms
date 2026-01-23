@@ -1,28 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/lib/auth-store';
 import { InnovationCard } from '@/components/innovations/InnovationCard';
 import { Input } from "@/components/ui/input";
 import { Search } from 'lucide-react';
+
+import { apiClient } from '@/lib/api-client';
 
 export default function InnovationShowcase() {
   const [innovations, setInnovations] = useState<any[]>([]); // TODO: Type this properly
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
-    fetchApprovedInnovations();
-  }, []);
+    if (accessToken) {
+      fetchApprovedInnovations();
+    }
+  }, [accessToken]);
 
   const fetchApprovedInnovations = async () => {
     try {
+      if (!accessToken) return;
+
       // TODO: Backend needs an endpoint for public/approved innovations without auth or with auth but filtered
       // Using findAll for now, assuming backend filters or we filter here.
       // Ideally: GET /api/v1/innovations/showcase or ?status=approved
-      const token = localStorage.getItem('token');
-      const res = await fetch('/api/v1/innovations', {
-         headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await apiClient('innovations');
       if (res.ok) {
         const data = await res.json();
         // Filter client-side for now if backend doesn't support specific filter endpoint yet

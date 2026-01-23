@@ -11,6 +11,12 @@ import { EnrolledCourses } from '@/components/courses/EnrolledCourses';
 import { TeachingCourses } from '@/components/courses/TeachingCourses';
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning';
 import { XPDisplay } from '@/components/gamification/XPDisplay';
+import { LeaderboardWidget } from '@/components/gamification/LeaderboardWidget';
+import { CalendarWidget } from '@/components/dashboard/CalendarWidget';
+import { MentorshipSessionsWidget } from '@/components/dashboard/MentorshipSessionsWidget';
+import { MentorshipStatsWidget } from '@/components/dashboard/MentorshipStatsWidget';
+import { RecommendedPathsWidget } from '@/components/learning-paths/RecommendedPathsWidget';
+import { InstructorDashboard } from '@/components/instructor/InstructorDashboard';
 import { BookOpen, Presentation, LayoutDashboard } from 'lucide-react';
 import { TopNav } from '@/components/layout/TopNav';
 
@@ -117,22 +123,32 @@ export default function DashboardPage() {
 
         {/* Widgets Grid */}
         {activeTab === 'learning' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 relative z-10">
+            <div className="lg:col-span-2 space-y-6">
               <ContinueLearning />
+              <RecommendedPathsWidget />
             </div>
-            <div>
-              <XPDisplay />
-            </div>
+            <div className="space-y-8">
+            <MentorshipStatsWidget />
+            <MentorshipSessionsWidget />
+            <XPDisplay />
+            <LeaderboardWidget />
+            <CalendarWidget />
+          </div>
           </div>
         )}
 
         {/* Content */}
-        <div className="min-h-[500px]">
+        <div className="min-h-[500px] relative z-0">
             {activeTab === 'learning' ? (
                 <EnrolledCourses />
             ) : (
-                isInstructor && <TeachingCourses />
+                isInstructor && (
+                  <div className="space-y-8">
+                    <InstructorDashboard />
+                    <TeachingCourses />
+                  </div>
+                )
             )}
         </div>
       </main>

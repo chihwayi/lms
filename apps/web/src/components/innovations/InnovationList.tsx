@@ -17,25 +17,28 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
+import { apiClient } from '@/lib/api-client';
+
 export default function InnovationList() {
   const [innovations, setInnovations] = useState<Innovation[]>([]);
   const [loading, setLoading] = useState(true);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [itemToSubmit, setItemToSubmit] = useState<string | null>(null);
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { user, accessToken, logout } = useAuthStore();
 
   const fetchInnovations = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
+      if (!accessToken) {
         return;
       }
 
-      const res = await fetch('/api/v1/innovations', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await apiClient('innovations');
+
+      if (res.status === 401) {
+        logout();
+        return;
+      }
       
       if (res.ok) {
         const data = await res.json();
@@ -50,8 +53,10 @@ export default function InnovationList() {
   };
 
   useEffect(() => {
-    fetchInnovations();
-  }, []);
+    if (accessToken) {
+      fetchInnovations();
+    }
+  }, [accessToken]);
 
   const initiateDelete = (id: string) => {
     setItemToDelete(id);
@@ -61,11 +66,16 @@ export default function InnovationList() {
     if (!itemToDelete) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${itemToDelete}`, {
+      if (!accessToken) return;
+
+      const res = await apiClient(`innovations/${itemToDelete}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
       });
+
+      if (res.status === 401) {
+        logout();
+        return;
+      }
 
       if (res.ok) {
         setInnovations(innovations.filter(i => i.id !== itemToDelete));
@@ -89,11 +99,16 @@ export default function InnovationList() {
     if (!itemToSubmit) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${itemToSubmit}/submit`, {
+      if (!accessToken) return;
+
+      const res = await apiClient(`/innovations/${itemToSubmit}/submit`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
       });
+
+      if (res.status === 401) {
+        logout();
+        return;
+      }
 
       if (res.ok) {
         setInnovations(innovations.map(i => i.id === itemToSubmit ? { ...i, status: 'submitted' } : i));

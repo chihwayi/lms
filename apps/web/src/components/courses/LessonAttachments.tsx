@@ -5,6 +5,7 @@ import { File, Trash2, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { FileUpload } from './FileUpload';
+import { apiClient } from '@/lib/api-client';
 
 interface LessonAttachmentsProps {
   courseId: string;
@@ -21,11 +22,8 @@ export function LessonAttachments({ courseId, lessonId }: LessonAttachmentsProps
 
   const fetchLessonFiles = async () => {
     try {
-      const token = localStorage.getItem('token');
       // We can use getLessonContent to get files
-      const res = await fetch(`/api/v1/courses/lessons/${lessonId}/content`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await apiClient(`/api/v1/courses/lessons/${lessonId}/content`);
       if (res.ok) {
         const data = await res.json();
         // Filter out the main content file if it's also in the files list?
@@ -40,10 +38,8 @@ export function LessonAttachments({ courseId, lessonId }: LessonAttachmentsProps
 
   const handleDelete = async (fileId: string) => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/files/${fileId}`, {
+      const res = await apiClient(`/api/v1/files/${fileId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
         toast.success('File deleted');

@@ -39,9 +39,9 @@
 *Focus: Supporting synchronous learning alongside async content.*
 
 ### **3.1. Live Session Management**
-- [ ] **Course Integration**: Add "Live Sessions" tab to Course View.
-- [ ] **Instructor Tools**: Form for instructors to schedule Zoom/Meet links with date/time.
-- [ ] **Notifications**: Email/In-app reminders 15 mins before class.
+- [x] **Course Integration**: Add "Live Sessions" tab to Course View.
+- [x] **Instructor Tools**: Form for instructors to schedule Zoom/Meet links with date/time.
+- [x] **Notifications**: Email/In-app reminders 15 mins before class.
 
 ---
 
@@ -49,9 +49,9 @@
 *Focus: Empowering instructors with actionable data.*
 
 ### **4.1. Instructor Dashboard**
-- [ ] **Engagement Stats**: Charts for login frequency, lesson completion rates (using Recharts).
-- [ ] **"At-Risk" Identification**: Logic to flag students with low engagement or failing grades.
+- [x] **Engagement Stats**: Charts for login frequency, lesson completion rates (using Recharts).
+- [x] **"At-Risk" Identification**: Logic to flag students with low engagement or failing grades.
 
 ### **4.2. Data Aggregation (Backend)**
-- [ ] **Analytics Service**: Background jobs to calculate daily stats.
-- [ ] **Reporting API**: Endpoints for `getCourseStats`, `getStudentRiskProfile`.
+- [x] **Analytics Service**: Background jobs to calculate daily stats.
+- [x] **Reporting API**: Endpoints for `getCourseStats`, `getStudentRiskProfile`.

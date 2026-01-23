@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { apiClient } from '@/lib/api-client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,12 +38,10 @@ export function AiQuizGenerator({ onGenerate }: AiQuizGeneratorProps) {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3001/api/v1/ai/generate-quiz', {
+      const res = await apiClient('/ai/generate-quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           topic,

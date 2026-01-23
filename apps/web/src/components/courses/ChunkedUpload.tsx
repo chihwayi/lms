@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api-client';
 
 interface ChunkedUploadProps {
   courseId: string;
@@ -33,15 +34,9 @@ export function ChunkedUpload({ courseId, onUploadComplete }: ChunkedUploadProps
     setStatus('Initiating upload...');
 
     try {
-      const token = localStorage.getItem('token');
-      
       // Step 1: Initiate upload
-      const initiateResponse = await fetch('/api/v1/content/upload/initiate', {
+      const initiateResponse = await apiClient('/api/v1/content/upload/initiate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           fileName: file.name,
           fileSize: file.size,
@@ -68,12 +63,8 @@ export function ChunkedUpload({ courseId, onUploadComplete }: ChunkedUploadProps
           reader.readAsDataURL(chunk);
         });
 
-        const chunkResponse = await fetch('/api/v1/content/upload/chunk', {
+        const chunkResponse = await apiClient('/api/v1/content/upload/chunk', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
           body: JSON.stringify({
             uploadId,
             chunkIndex: i,
@@ -91,12 +82,8 @@ export function ChunkedUpload({ courseId, onUploadComplete }: ChunkedUploadProps
 
       // Step 3: Complete upload
       setStatus('Completing upload...');
-      const completeResponse = await fetch('/api/v1/content/upload/complete', {
+      const completeResponse = await apiClient('/api/v1/content/upload/complete', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ uploadId }),
       });
 

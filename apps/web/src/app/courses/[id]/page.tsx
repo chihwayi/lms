@@ -7,11 +7,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { ContentPreview } from '@/components/courses/ContentPreview';
 import { CourseReviews } from '@/components/courses/CourseReviews';
-import { Play } from 'lucide-react';
+import { LiveSessionsList } from '@/components/courses/LiveSessionsList';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Play, Video } from 'lucide-react';
 import { TopNav } from '@/components/layout/TopNav';
 
 interface Lesson {
@@ -53,7 +56,7 @@ interface Course {
 }
 
 export default function CourseDetailPage() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, accessToken } = useAuthStore();
   const params = useParams();
   const router = useRouter();
   const [course, setCourse] = useState<Course | null>(null);
@@ -63,6 +66,8 @@ export default function CourseDetailPage() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrollmentLoading, setEnrollmentLoading] = useState(true);
 
+  const isInstructor = Boolean(user && course && (user.id === course.created_by || user.role === 'admin' || user.role === 'instructor'));
+
   const handleLogout = () => {
     logout();
     toast.success('Logged out successfully');
@@ -71,12 +76,9 @@ export default function CourseDetailPage() {
 
   const checkEnrollment = useCallback(async (courseId: string) => {
     try {
-        const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!accessToken) return;
         
-        const response = await fetch(`http://localhost:3001/api/v1/enrollments/${courseId}/check`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await apiClient(`/enrollments/${courseId}/check`);
         
         if (response.ok) {
             const data = await response.json();
@@ -91,19 +93,14 @@ export default function CourseDetailPage() {
 
   const handleEnroll = async () => {
     try {
-        const token = localStorage.getItem('token');
-        if (!token) {
+        if (!user) {
             toast.error('Please login to enroll');
             router.push('/login');
             return;
         }
 
-        const response = await fetch('http://localhost:3001/api/v1/enrollments', {
+        const response = await apiClient('/enrollments', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
             body: JSON.stringify({ courseId: course?.id })
         });
 
@@ -137,12 +134,7 @@ export default function CourseDetailPage() {
 
   const fetchCourse = useCallback(async (courseId: string) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient(`/courses/${courseId}`);
 
       if (response.ok) {
         const courseData = await response.json();
@@ -268,8 +260,38 @@ export default function CourseDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Course Description */}
+            <div className="lg:col-span-2">
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 h-auto p-2 gap-2 bg-white/40 backdrop-blur-2xl rounded-2xl shadow-lg border border-white/20 mb-8">
+                  <TabsTrigger 
+                    value="overview" 
+                    className="h-12 md:h-14 text-base md:text-lg font-bold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-md rounded-xl transition-all duration-300 hover:bg-white/50"
+                  >
+                    Overview
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="curriculum" 
+                    className="h-12 md:h-14 text-base md:text-lg font-bold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-md rounded-xl transition-all duration-300 hover:bg-white/50"
+                  >
+                    Curriculum
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="live-sessions" 
+                    className="h-12 md:h-14 text-base md:text-lg font-bold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-md rounded-xl transition-all duration-300 hover:bg-white/50 flex items-center gap-2"
+                  >
+                    <Video className="w-5 h-5" />
+                    Live Sessions
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="reviews" 
+                    className="h-12 md:h-14 text-base md:text-lg font-bold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-md rounded-xl transition-all duration-300 hover:bg-white/50"
+                  >
+                    Reviews
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="overview" className="space-y-8">
+                  {/* Course Description */}
               <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
                 <div className="relative z-10 p-8">
@@ -280,7 +302,10 @@ export default function CourseDetailPage() {
                 </div>
               </div>
 
-              {/* Course Content */}
+              </TabsContent>
+
+              <TabsContent value="curriculum" className="space-y-8">
+                {/* Course Content */}
               <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
                 <div className="relative z-10 p-8">
@@ -344,13 +369,27 @@ export default function CourseDetailPage() {
                 </div>
               </div>
 
-              {/* Course Reviews */}
-              <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-                <div className="relative z-10 p-8">
-                  <CourseReviews courseId={course.id} isEnrolled={isEnrolled} />
+              </TabsContent>
+
+              <TabsContent value="live-sessions" className="space-y-8">
+                <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                  <div className="relative z-10 p-8">
+                    <LiveSessionsList courseId={course.id} isInstructor={isInstructor} />
+                  </div>
                 </div>
-              </div>
+              </TabsContent>
+
+              <TabsContent value="reviews" className="space-y-8">
+                {/* Course Reviews */}
+                <div className="relative overflow-hidden bg-white/30 backdrop-blur-xl rounded-2xl border border-white/30 shadow-xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                  <div className="relative z-10 p-8">
+                    <CourseReviews courseId={course.id} isEnrolled={isEnrolled} />
+                  </div>
+                </div>
+              </TabsContent>
+              </Tabs>
             </div>
 
             {/* Sidebar */}

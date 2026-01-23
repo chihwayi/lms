@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 
 interface Category {
   id: string;
@@ -39,9 +40,6 @@ export function CreateCourseForm({ categories }: CreateCourseFormProps) {
     setLoading(true);
 
     try {
-      const { accessToken } = useAuthStore.getState();
-      const token = accessToken || localStorage.getItem('token');
-      
       // Prepare payload: remove empty strings for optional fields and ensure price is number
       const payload: any = { ...formData };
       if (!payload.category_id) delete payload.category_id;
@@ -51,12 +49,8 @@ export function CreateCourseForm({ categories }: CreateCourseFormProps) {
       // Ensure price is a number, defaulting to 0 if invalid
       payload.price = Number(payload.price) || 0;
 
-      const response = await fetch('/api/v1/courses', {
+      const response = await apiClient('/api/v1/courses', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
 

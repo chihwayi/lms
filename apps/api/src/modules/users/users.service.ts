@@ -17,7 +17,7 @@ export class UsersService {
   async getProfile(userId: string) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'email', 'firstName', 'lastName', 'role', 'emailVerified', 'createdAt', 'avatar', 'bio']
+      select: ['id', 'email', 'firstName', 'lastName', 'role', 'emailVerified', 'createdAt', 'avatar', 'bio', 'interests']
     });
 
     if (!user) {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { apiClient } from '@/lib/api-client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Sparkles, Loader2, Bot, Send } from 'lucide-react';
@@ -25,12 +26,10 @@ export function AiAssistantButton({ context, title }: AiAssistantButtonProps) {
     setResponse('');
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3001/api/v1/ai/explain', {
+      const res = await apiClient('/ai/explain', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           text: query,

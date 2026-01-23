@@ -29,21 +29,22 @@ interface InnovationDetailProps {
   id: string;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export default function InnovationDetail({ id }: InnovationDetailProps) {
   const [innovation, setInnovation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showApprovalForm, setShowApprovalForm] = useState(false);
   const [showRejectionDialog, setShowRejectionDialog] = useState(false);
   const [allocatedBudget, setAllocatedBudget] = useState('');
-  const { user } = useAuthStore();
+  const { user, accessToken } = useAuthStore();
   const router = useRouter();
 
   const fetchInnovation = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      if (!accessToken) return;
+
+      const res = await apiClient(`innovations/${id}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -63,24 +64,21 @@ export default function InnovationDetail({ id }: InnovationDetailProps) {
   };
 
   useEffect(() => {
-    fetchInnovation();
-  }, [id]);
+    if (accessToken) {
+      fetchInnovation();
+    }
+  }, [id, accessToken]);
 
   const handleDecision = async (status: 'approved' | 'rejected') => {
     try {
-      const token = localStorage.getItem('token');
       const body: any = { status: status === 'approved' ? 'approved' : 'rejected' };
       
       if (status === 'approved' && allocatedBudget) {
         body.allocated_budget = parseFloat(allocatedBudget);
       }
 
-      const res = await fetch(`/api/v1/innovations/${id}/review`, {
+      const res = await apiClient(`innovations/${id}/review`, {
         method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
         body: JSON.stringify(body)
       });
 

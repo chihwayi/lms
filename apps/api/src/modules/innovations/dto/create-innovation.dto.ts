@@ -19,6 +19,10 @@ export class CreateInnovationDto {
   budget_estimate?: number;
 
   @IsOptional()
+  @IsString({ each: true })
+  tags?: string[];
+
+  @IsOptional()
   @IsEnum(InnovationStatus)
   status?: InnovationStatus;
 }

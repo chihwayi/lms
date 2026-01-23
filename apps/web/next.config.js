@@ -1,7 +1,26 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
 const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.API_URL || 'http://localhost:3001',
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   async rewrites() {
     return [
@@ -13,4 +32,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withPWA(nextConfig);

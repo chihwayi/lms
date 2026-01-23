@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
+import { useConfigStore } from '@/lib/config-store';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +24,7 @@ import {
 
 export default function ProfilePage() {
   const { user, logout, setUser } = useAuthStore();
+  const { instanceUrl } = useConfigStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -31,6 +34,7 @@ export default function ProfilePage() {
     firstName: '',
     lastName: '',
     bio: '',
+    interests: '',
   });
   const [verifying, setVerifying] = useState(false);
   const [passwordData, setPasswordData] = useState({
@@ -46,6 +50,7 @@ export default function ProfilePage() {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         bio: user.bio || '',
+        interests: user.interests?.join(', ') || '',
       });
     }
   }, [user]);
@@ -61,13 +66,17 @@ export default function ProfilePage() {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/users/profile', {
+      const payload = {
+        ...formData,
+        interests: formData.interests.split(',').map(i => i.trim()).filter(Boolean),
+      };
+
+      const response = await apiClient('/users/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -93,22 +102,20 @@ export default function ProfilePage() {
     formData.append('file', file);
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/users/avatar', {
+      // Use apiClient for avatar upload
+      // Note: apiClient handles the Authorization header automatically
+      // and we updated it to not force Content-Type: application/json when body is FormData
+      const response = await apiClient('/users/avatar', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       });
 
       if (response.ok) {
-        const data = await response.json();
-        // Assuming response returns { avatar: 'filename' } or the updated user
-        // We might need to refresh the user profile
-        const profileResponse = await fetch('http://localhost:3001/api/v1/users/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // No need to parse response if we don't use the data, 
+        // but usually we might get the new avatar URL back.
+        // The original code re-fetched the profile.
+        
+        const profileResponse = await apiClient('/users/profile');
         if (profileResponse.ok) {
             const updatedUser = await profileResponse.json();
             setUser({ ...user!, ...updatedUser });
@@ -118,6 +125,7 @@ export default function ProfilePage() {
         toast.error('Failed to upload avatar');
       }
     } catch (error) {
+      console.error('Avatar upload error:', error);
       toast.error('Failed to upload avatar');
     } finally {
       setUploading(false);
@@ -133,13 +141,8 @@ export default function ProfilePage() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/auth/change-password', {
+      const response = await apiClient('/auth/change-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
@@ -163,12 +166,8 @@ export default function ProfilePage() {
   const handleResendVerification = async () => {
     setVerifying(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/auth/resend-verification', {
+      const response = await apiClient('/auth/resend-verification', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
 
       if (response.ok) {
@@ -190,12 +189,8 @@ export default function ProfilePage() {
 
   const confirmDeleteAccount = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/v1/users/account', {
+      const response = await apiClient('/users/account', {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
 
       if (response.ok) {
@@ -241,7 +236,7 @@ export default function ProfilePage() {
                 <div className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2 border border-blue-200">
                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden relative">
                     {user?.avatar ? (
-                        <Image src={`http://localhost:3001/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
+                        <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
                     ) : (
                         <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
                     )}
@@ -274,7 +269,7 @@ export default function ProfilePage() {
                     <div className="relative w-32 h-32 mx-auto mb-4 group">
                         <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-md bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center relative">
                             {user?.avatar ? (
-                                <Image src={`http://localhost:3001/uploads/${user.avatar}`} alt="Profile" fill className="object-cover" unoptimized />
+                                <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${user.avatar}`} alt="Profile" fill className="object-cover" unoptimized />
                             ) : (
                                 <span className="text-4xl text-white font-bold">{user?.firstName?.[0] || 'U'}</span>
                             )}
@@ -337,6 +332,18 @@ export default function ProfilePage() {
                                 placeholder="Tell us about yourself..."
                                 className="bg-white/50 h-32 resize-none"
                             />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Interests</label>
+                            <Input 
+                                value={formData.interests}
+                                onChange={(e) => setFormData({...formData, interests: e.target.value})}
+                                placeholder="React, TypeScript, Design (comma separated)"
+                                className="bg-white/50"
+                            />
+                            <p className="text-xs text-gray-500">
+                                Enter your interests separated by commas to get personalized learning recommendations.
+                            </p>
                         </div>
                         <div className="flex justify-end pt-4">
                             <Button type="submit" disabled={loading} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">

@@ -7,13 +7,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { Search, Filter, Star, Clock, DollarSign, Users, X } from 'lucide-react';
 import Link from 'next/link';
+import { useAuthStore } from '@/lib/auth-store';
 
 interface CourseSearchProps {
   onResults?: (results: any) => void;
 }
 
+import { apiClient } from '@/lib/api-client';
+
 export function CourseSearch({ onResults }: CourseSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const { accessToken, logout } = useAuthStore();
   const [filters, setFilters] = useState<{
     categories: string[];
     levels: string[];
@@ -35,21 +39,20 @@ export function CourseSearch({ onResults }: CourseSearchProps) {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
-    searchCourses();
-  }, []);
+    if (accessToken) {
+      fetchCategories();
+      searchCourses();
+    }
+  }, [accessToken]);
 
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
+      if (!accessToken) return;
       
-      const response = await fetch('/api/v1/courses/categories', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient('courses/categories');
       
       if (response.status === 401) {
-        window.location.href = '/login';
+        logout();
         return;
       }
       
@@ -76,10 +79,13 @@ export function CourseSearch({ onResults }: CourseSearchProps) {
         status: 'published',
       });
 
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/search?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (!accessToken) return;
+      const response = await apiClient(`courses/search?${params}`);
+
+      if (response.status === 401) {
+        logout();
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();

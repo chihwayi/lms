@@ -17,12 +17,21 @@ import { InnovationsModule } from './modules/innovations/innovations.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
 import { MentorshipModule } from './modules/mentorship/mentorship.module';
 import { AiModule } from './modules/ai/ai.module';
+import { ChatModule } from './modules/chat/chat.module';
+import { CalendarModule } from './modules/calendar/calendar.module';
+import { LiveSessionsModule } from './modules/live-sessions/live-sessions.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { MailModule } from './modules/mail/mail.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { LearningPathsModule } from './modules/learning-paths/learning-paths.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
@@ -50,6 +59,14 @@ import { AiModule } from './modules/ai/ai.module';
     InnovationsModule,
     GamificationModule,
     MentorshipModule,
+    AiModule,
+    ChatModule,
+    CalendarModule,
+    LiveSessionsModule,
+    NotificationsModule,
+    MailModule,
+    AnalyticsModule,
+    LearningPathsModule,
   ],
 })
 export class AppModule {}

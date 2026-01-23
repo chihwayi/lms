@@ -42,6 +42,9 @@ export class Innovation {
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
   allocated_budget: number;
 
+  @Column('text', { array: true, default: [] })
+  tags: string[];
+
   @Column({
     type: 'enum',
     enum: InnovationStatus,

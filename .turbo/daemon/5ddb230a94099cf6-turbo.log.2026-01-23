@@ -1,0 +1,737 @@
+2026-01-23T05:28:22.128636Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-01-23T05:28:22.128643Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T05:28:22.228876Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-01-23T05:28:22.228885Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T05:31:22.228495Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/ui/button.tsx")}
+2026-01-23T05:31:22.228518Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:32:27.627678Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/EnrolledCourses.tsx")}
+2026-01-23T05:32:27.627685Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:32:28.027529Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/XPDisplay.tsx")}
+2026-01-23T05:32:28.027537Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:32:28.227153Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorProfileForm.tsx")}
+2026-01-23T05:32:28.227161Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:32:38.727432Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorProfileForm.tsx")}
+2026-01-23T05:32:38.727441Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:14.726890Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T05:34:14.726917Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:15.927242Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T05:34:15.927250Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:16.127678Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T05:34:16.127692Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:25.327374Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationShowcase.tsx")}
+2026-01-23T05:34:25.327384Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:25.626668Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationShowcase.tsx")}
+2026-01-23T05:34:25.626680Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:34:42.027868Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationShowcase.tsx")}
+2026-01-23T05:34:42.027881Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:07.827634Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationDetail.tsx")}
+2026-01-23T05:35:07.827643Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:08.027620Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationDetail.tsx")}
+2026-01-23T05:35:08.027636Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:26.726700Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationDetail.tsx")}
+2026-01-23T05:35:26.726710Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:37.027496Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/innovations/review/page.tsx")}
+2026-01-23T05:35:37.027503Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:53.027420Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationForm.tsx")}
+2026-01-23T05:35:53.027435Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:35:53.226923Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationForm.tsx")}
+2026-01-23T05:35:53.226931Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:36:11.027341Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T05:36:11.027353Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:36:13.727805Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T05:36:13.727818Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:36:13.828050Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T05:36:13.828062Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:36:13.828128Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T05:38:19.625581Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T05:38:19.625600Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:38:53.127143Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T05:38:53.127159Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:39:50.034599Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/TeachingCourses.tsx")}
+2026-01-23T05:39:50.034621Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:36.924938Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T05:40:36.924952Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:38.424780Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T05:40:38.424787Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:41.624794Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T05:40:41.624801Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:41.725562Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T05:40:41.725569Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:41.725596Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T05:40:43.024915Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseList.tsx")}
+2026-01-23T05:40:43.024929Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:45.525539Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseList.tsx")}
+2026-01-23T05:40:45.525547Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:46.525721Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseList.tsx")}
+2026-01-23T05:40:46.525731Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:49.025144Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:40:49.025151Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:52.725135Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:40:52.725146Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:52.825208Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx"), AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:40:52.825215Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:40:53.025674Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:40:53.025699Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:11.825339Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:41:11.825351Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:11.924514Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:41:11.924549Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:32.324924Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:41:32.324931Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:35.424742Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T05:41:35.424748Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:36.925113Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T05:41:36.925120Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:42.025102Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T05:41:42.025111Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:41:42.125418Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T05:41:42.125449Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:42:02.225661Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T05:42:02.225677Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:42:48.225095Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T05:42:48.225104Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:43:20.425209Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T05:43:20.425217Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:43:20.525486Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T05:43:20.525499Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:43:20.525572Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T05:52:55.922617Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/Leaderboard.tsx")}
+2026-01-23T05:52:55.922633Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:52:56.023522Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/AchievementsList.tsx")}
+2026-01-23T05:52:56.023536Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:26.523559Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/EnrolledCourses.tsx")}
+2026-01-23T05:53:26.523570Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:29.423280Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T05:53:29.423292Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:29.524274Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/AchievementsList.tsx")}
+2026-01-23T05:53:29.524283Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:29.624589Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/Leaderboard.tsx")}
+2026-01-23T05:53:29.624602Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:51.023770Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/XPDisplay.tsx")}
+2026-01-23T05:53:51.023782Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:53:51.123426Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/TeachingCourses.tsx")}
+2026-01-23T05:53:51.123439Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:54:26.623041Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T05:54:26.623050Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T05:54:26.724092Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseList.tsx")}
+2026-01-23T05:54:26.724103Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:03:31.621058Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/package.json")}
+2026-01-23T06:03:31.621071Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:03:31.921751Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-01-23T06:03:31.921758Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T06:03:48.322193Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/AuthWrapper.tsx")}
+2026-01-23T06:03:48.322203Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:03:48.521652Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T06:03:48.521664Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:05:42.023970Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/AchievementsList.tsx")}
+2026-01-23T06:05:42.023979Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:06:42.421375Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T06:06:42.421383Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:16:11.013732Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/strategies/jwt.strategy.ts")}
+2026-01-23T06:16:11.013753Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:17:28.711954Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/EnrolledCourses.tsx")}
+2026-01-23T06:17:28.711963Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:21:06.111262Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/strategies/jwt.strategy.ts")}
+2026-01-23T06:21:06.111286Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:21:29.011549Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/strategies/jwt.strategy.ts")}
+2026-01-23T06:21:29.011556Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:21:58.510213Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/auth.module.ts")}
+2026-01-23T06:21:58.510221Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:22:18.011021Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/strategies/jwt.strategy.ts")}
+2026-01-23T06:22:18.011030Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:22:46.211474Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/auth/strategies/jwt.strategy.ts")}
+2026-01-23T06:22:46.211492Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:23:00.411506Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/EnrolledCourses.tsx")}
+2026-01-23T06:23:00.411514Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:26:13.317111Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/apps/api/src/modules/calendar/entities"), AnchoredSystemPathBuf("apps/web/apps/api/src/modules/calendar"), AnchoredSystemPathBuf("apps/web/apps/api/src"), AnchoredSystemPathBuf("apps/web/apps"), AnchoredSystemPathBuf("apps/web/apps/api"), AnchoredSystemPathBuf("apps/web/apps/api/src/modules"), AnchoredSystemPathBuf("apps/web/apps/api/src/modules/calendar/dto")}
+2026-01-23T06:26:13.317126Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:26:13.332989Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:26:36.817208Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/dto/calendar-event.dto.ts"), AnchoredSystemPathBuf("apps/api/src/modules/calendar"), AnchoredSystemPathBuf("apps/api/src/modules/calendar/dto")}
+2026-01-23T06:26:36.817216Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:26:37.917102Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.service.ts")}
+2026-01-23T06:26:37.917109Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:26:38.116721Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.controller.ts"), AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.module.ts")}
+2026-01-23T06:26:38.116731Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:26:38.217544Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.controller.ts"), AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.module.ts")}
+2026-01-23T06:26:38.217552Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:26:38.217591Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:26:52.116343Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/app.module.ts")}
+2026-01-23T06:26:52.116353Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:27:07.617160Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/package.json")}
+2026-01-23T06:27:07.617174Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:27:07.917895Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-01-23T06:27:07.917904Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T06:27:27.816930Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/apps/web/src/app/dashboard/calendar"), AnchoredSystemPathBuf("apps/web/apps/web/src/app"), AnchoredSystemPathBuf("apps/web/apps/web/src/components"), AnchoredSystemPathBuf("apps/web/apps/web/src/components/calendar"), AnchoredSystemPathBuf("apps/web/apps/web"), AnchoredSystemPathBuf("apps/web/apps/web/src"), AnchoredSystemPathBuf("apps/web/apps/web/src/app/dashboard")}
+2026-01-23T06:27:27.816944Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:27:27.816975Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:27:28.817212Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar"), AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:27:28.817221Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:27:29.117314Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/calendar"), AnchoredSystemPathBuf("apps/web/src/app/dashboard/calendar/page.tsx")}
+2026-01-23T06:27:29.117326Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:27:44.317199Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:27:44.317208Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:28:16.917211Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T06:28:16.917227Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:28:17.216940Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/page.tsx")}
+2026-01-23T06:28:17.216950Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:28:34.717166Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/page.tsx")}
+2026-01-23T06:28:34.717176Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:30:00.216686Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/page.tsx")}
+2026-01-23T06:30:00.216696Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:30:00.216722Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:39:54.414198Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/calendar/page.tsx")}
+2026-01-23T06:39:54.414228Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:40:12.613961Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarToolbar.tsx")}
+2026-01-23T06:40:12.613970Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:40:47.917662Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:40:47.917681Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:41:21.417841Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarToolbar.tsx")}
+2026-01-23T06:41:21.417849Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:44:43.333287Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarToolbar.tsx")}
+2026-01-23T06:44:43.333303Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:47:20.018175Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/apps/api/src/modules/live-sessions/dto"), AnchoredSystemPathBuf("apps/web/apps/api/src/modules/live-sessions/entities"), AnchoredSystemPathBuf("apps/web/apps/api/src/modules/live-sessions")}
+2026-01-23T06:47:20.018190Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:47:20.023585Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:47:31.218436Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions"), AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/entities"), AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/entities/live-session.entity.ts")}
+2026-01-23T06:47:31.218444Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:47:41.118933Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/courses/entities/course.entity.ts")}
+2026-01-23T06:47:41.118940Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:47:48.117330Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/courses/entities/course.entity.ts")}
+2026-01-23T06:47:48.117337Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:47:57.317771Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/dto/create-live-session.dto.ts"), AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/dto")}
+2026-01-23T06:47:57.317781Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:48:05.718385Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/dto/update-live-session.dto.ts")}
+2026-01-23T06:48:05.718393Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:48:05.818542Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/dto/update-live-session.dto.ts")}
+2026-01-23T06:48:05.818550Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:48:05.818580Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:48:17.918707Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/live-sessions.service.ts")}
+2026-01-23T06:48:17.918714Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:48:29.517685Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/live-sessions.controller.ts")}
+2026-01-23T06:48:29.517695Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:49:08.518874Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/live-sessions.controller.ts")}
+2026-01-23T06:49:08.518882Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:49:17.217733Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/live-sessions.module.ts")}
+2026-01-23T06:49:17.217743Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:49:31.217590Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/app.module.ts")}
+2026-01-23T06:49:31.217600Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:49:37.418798Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/app.module.ts")}
+2026-01-23T06:49:37.418812Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:50:33.218074Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CreateSessionDialog.tsx")}
+2026-01-23T06:50:33.218081Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:50:59.818608Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/LiveSessionsList.tsx")}
+2026-01-23T06:50:59.818617Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:51:17.317180Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/LiveSessionsList.tsx")}
+2026-01-23T06:51:17.317190Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:51:47.018117Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:51:47.018125Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:51:55.517585Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:51:55.517598Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:52:13.917636Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:52:13.917644Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:52:21.218340Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:52:21.218349Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:52:45.917352Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:52:45.917358Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:52:55.916612Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T06:52:55.916623Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:53:37.317472Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.module.ts")}
+2026-01-23T06:53:37.317492Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:54:05.217384Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.service.ts")}
+2026-01-23T06:54:05.217405Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:54:34.617407Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/dto/calendar-event.dto.ts")}
+2026-01-23T06:54:34.617424Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T06:54:45.217438Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:54:45.217449Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:54:59.417080Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:54:59.417091Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:54:59.517175Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:54:59.517187Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:54:59.517253Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T06:55:08.817588Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:55:08.817598Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:55:16.317547Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:55:16.317555Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:55:50.417730Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T06:55:50.417751Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T06:59:37.079684Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie"), AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-01-23T06:59:37.079691Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T07:01:59.103564Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-01-23T07:01:59.103573Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T07:01:59.204265Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-01-23T07:01:59.204274Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T07:03:27.205541Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/calendar/calendar.service.ts")}
+2026-01-23T07:03:27.205572Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T07:04:25.204154Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/live-sessions/live-sessions.module.ts")}
+2026-01-23T07:04:25.204163Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T10:51:07.648616Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie"), AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-01-23T10:51:07.648623Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T10:51:33.992382Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie"), AnchoredSystemPathBuf(".turbo/cookies/1.cookie")}
+2026-01-23T10:51:33.992390Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T10:55:10.493369Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/api/src/modules/analytics/analytics.service.ts")}
+2026-01-23T10:55:10.493382Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/api"), path: AnchoredSystemPathBuf("apps/api") }}))
+2026-01-23T11:06:02.690628Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:06:02.690702Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:06:03.489781Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:06:03.489792Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:06:03.591717Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:06:03.591727Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:07:29.190607Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/learning-paths/RecommendedPathsWidget.tsx")}
+2026-01-23T11:07:29.190640Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:07:32.690361Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T11:07:32.690400Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:07:32.790430Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/MentorshipSessionsWidget.tsx")}
+2026-01-23T11:07:32.790444Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:07:32.990678Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/dashboard/page.tsx")}
+2026-01-23T11:07:32.990688Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:07:51.891400Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/learning-paths/RecommendedPathsWidget.tsx")}
+2026-01-23T11:07:51.891419Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:11:26.991112Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:11:26.991138Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:11:38.491142Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T11:11:38.491167Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:14.994571Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/learning-paths/RecommendedPathsWidget.tsx")}
+2026-01-23T11:17:14.994591Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:15.696686Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/MentorshipSessionsWidget.tsx")}
+2026-01-23T11:17:15.696697Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:15.795785Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T11:17:15.795799Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:15.995246Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:17:15.995257Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:32.595163Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:17:32.595176Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:17:32.696687Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:17:32.696698Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:21:38.796446Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/PROJECT_STATUS.md")}
+2026-01-23T11:21:38.796514Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T11:25:48.795869Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/config-store.ts")}
+2026-01-23T11:25:48.795889Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:25:49.096820Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/api-client.ts")}
+2026-01-23T11:25:49.096828Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:26:13.096446Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/auth-store.ts")}
+2026-01-23T11:26:13.096471Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:27:12.795903Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/connect/page.tsx"), AnchoredSystemPathBuf("apps/web/src/app/connect")}
+2026-01-23T11:27:12.795923Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:27:12.897247Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/connect/page.tsx")}
+2026-01-23T11:27:12.897259Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:27:12.898014Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:27:30.296969Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/AuthWrapper.tsx")}
+2026-01-23T11:27:30.297008Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:28:17.197064Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("")}
+2026-01-23T11:28:17.197149Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({}))
+2026-01-23T11:28:18.199427Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/package.json")}
+2026-01-23T11:28:18.199436Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:28:18.597319Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2026-01-23T11:28:18.597337Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T11:28:30.296895Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/next.config.js")}
+2026-01-23T11:28:30.296957Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:28:30.396780Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/next.config.js")}
+2026-01-23T11:28:30.396788Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:28:30.396874Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:28:56.596794Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/layout.tsx")}
+2026-01-23T11:28:56.596808Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:29:22.797128Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T11:29:22.797144Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:29:44.496941Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/VideoPlayer.tsx")}
+2026-01-23T11:29:44.496948Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:32:03.197317Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/VideoPlayer.tsx")}
+2026-01-23T11:32:03.197330Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:33:12.497420Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorList.tsx")}
+2026-01-23T11:33:12.497438Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:33:23.997904Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/LiveSessionsList.tsx")}
+2026-01-23T11:33:23.997911Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:33:42.398305Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T11:33:42.398322Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:33:54.097780Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/TeachingCourses.tsx")}
+2026-01-23T11:33:54.097790Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:34:28.500956Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationShowcase.tsx")}
+2026-01-23T11:34:28.500972Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:34:44.297886Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T11:34:44.297894Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:34:58.398269Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationDetail.tsx")}
+2026-01-23T11:34:58.398281Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:35:10.698360Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/innovations/review/page.tsx")}
+2026-01-23T11:35:10.698375Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:35:38.997955Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSearch.tsx")}
+2026-01-23T11:35:38.997963Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:35:52.798368Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseSettings.tsx")}
+2026-01-23T11:35:52.798376Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:36:04.997989Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseReviews.tsx")}
+2026-01-23T11:36:04.997996Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:36:18.298211Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseList.tsx")}
+2026-01-23T11:36:18.298219Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:13.499290Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T11:38:13.499307Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:13.702955Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T11:38:13.702966Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:26.198641Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/create/page.tsx")}
+2026-01-23T11:38:26.198649Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:26.297888Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/create/page.tsx")}
+2026-01-23T11:38:26.297896Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:26.337158Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:38:31.897942Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/create/page.tsx")}
+2026-01-23T11:38:31.897949Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:33.698969Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:38:33.698977Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:33.798770Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:38:33.798782Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:33.815248Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:38:34.199029Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:38:34.199064Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:38:53.599078Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/create/page.tsx")}
+2026-01-23T11:38:53.599087Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:39:04.199086Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:39:04.199098Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:39:04.399748Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T11:39:04.399757Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:39:54.299896Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:39:54.299906Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:39:58.499275Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T11:39:58.499284Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:40:08.298740Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:40:08.298746Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:40:25.398818Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:40:25.398829Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:40:25.598602Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T11:40:25.598618Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:40:41.498608Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T11:40:41.498618Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:13.298955Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T11:41:13.299002Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:13.499718Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx")}
+2026-01-23T11:41:13.499730Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:24.499509Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T11:41:24.499517Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:24.599286Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T11:41:24.599294Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:24.615407Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:41:24.699316Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T11:41:24.699325Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:36.899096Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/MentorshipSessionsWidget.tsx")}
+2026-01-23T11:41:36.899112Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:40.500038Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/MentorshipSessionsWidget.tsx")}
+2026-01-23T11:41:40.500047Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:40.699322Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T11:41:40.699334Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:40.899098Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T11:41:40.899107Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:41:40.928921Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:44:22.500597Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:22.500627Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:22.627315Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:22.627325Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:22.627436Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:44:22.699985Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:22.699993Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:31.599817Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:31.599848Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:31.800026Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:31.800035Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:31.899623Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:31.899636Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:31.899721Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:44:32.099912Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:32.099921Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:44:36.401871Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:44:36.401889Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:03.600998Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:45:03.601013Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:03.699994Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/ai/AiAssistantButton.tsx")}
+2026-01-23T11:45:03.700005Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:07.400153Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/ai/AiAssistantButton.tsx")}
+2026-01-23T11:45:07.400167Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:07.599872Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/ai/AiQuizGenerator.tsx")}
+2026-01-23T11:45:07.599881Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:09.800570Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/ai/AiQuizGenerator.tsx")}
+2026-01-23T11:45:09.800580Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:11.399831Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:45:11.399838Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:17.400648Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:45:17.400660Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:20.900345Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:45:20.900367Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:30.900069Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:45:30.900968Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:31.099674Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:45:31.099689Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:31.500150Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/auth/RegisterForm.tsx")}
+2026-01-23T11:45:31.500160Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:45:32.800849Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/auth/RegisterForm.tsx")}
+2026-01-23T11:45:32.800873Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:48:47.191006Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CreateSessionDialog.tsx")}
+2026-01-23T11:48:47.191035Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:49:06.390668Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CreateSessionDialog.tsx")}
+2026-01-23T11:49:06.390685Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:49:06.790525Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:49:06.790536Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:49:06.891174Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:49:06.891187Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:49:08.090904Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T11:49:08.090985Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:49:08.105265Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:50:23.989376Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T11:50:23.989423Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:50:24.390546Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T11:50:24.390557Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:55:31.690770Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T11:55:31.690793Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:55:32.490854Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T11:55:32.490865Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:55:32.790898Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T11:55:32.790907Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:08.091179Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T11:56:08.091187Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:09.990400Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T11:56:09.990418Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:15.390666Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T11:56:15.390674Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:19.089669Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T11:56:19.089681Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:21.191179Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T11:56:21.191190Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:23.690682Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseEnrollments.tsx")}
+2026-01-23T11:56:23.690692Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:25.690702Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatWindow.tsx")}
+2026-01-23T11:56:25.690711Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:28.692804Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatWindow.tsx"), AnchoredSystemPathBuf("apps/web/src/components/chat/ChatList.tsx")}
+2026-01-23T11:56:28.692818Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:28.790545Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatList.tsx")}
+2026-01-23T11:56:28.790555Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:28.790600Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:56:29.090137Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatList.tsx")}
+2026-01-23T11:56:29.090148Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:29.191946Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatList.tsx")}
+2026-01-23T11:56:29.192006Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:56:29.192076Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T11:58:29.091467Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T11:58:29.091721Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:58:41.391254Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T11:58:41.391269Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:58:42.293380Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T11:58:42.293395Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:02.391353Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:59:02.391398Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:02.590280Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:59:02.590288Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:02.790486Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T11:59:02.790497Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:29.290835Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:59:29.290844Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:30.890700Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:59:30.890709Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:32.791658Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:59:32.791668Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:33.090479Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:59:33.090490Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T11:59:37.592102Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("README.md")}
+2026-01-23T11:59:37.592224Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-01-23T11:59:50.790382Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T11:59:50.790400Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:00:06.690961Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T12:00:06.690972Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:00:06.891149Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/learn/page.tsx"), AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T12:00:06.891159Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:02:15.991370Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/page.tsx")}
+2026-01-23T12:02:15.991386Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:02:33.691390Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T12:02:33.691403Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:02:49.390732Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/admin/page.tsx")}
+2026-01-23T12:02:49.390750Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:03:18.698604Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/edit/page.tsx")}
+2026-01-23T12:03:18.698625Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:03:29.101271Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/builder/page.tsx")}
+2026-01-23T12:03:29.101298Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:03:38.505759Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/courses/[id]/builder/page.tsx")}
+2026-01-23T12:03:38.505789Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:03:48.007146Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:03:48.007164Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:04:05.801639Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:04:05.801680Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:06.402096Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/SessionsList.tsx")}
+2026-01-23T12:07:06.402114Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:12.901513Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/MentorshipStatsWidget.tsx")}
+2026-01-23T12:07:12.901525Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:23.202227Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorCard.tsx")}
+2026-01-23T12:07:23.202253Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:35.001850Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/FeedbackDialog.tsx")}
+2026-01-23T12:07:35.001883Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:46.603346Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorshipDashboard.tsx")}
+2026-01-23T12:07:46.603363Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:54.702522Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/BookingModal.tsx")}
+2026-01-23T12:07:54.702535Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:55.001989Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/MentorProfileForm.tsx")}
+2026-01-23T12:07:55.002002Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:07:55.402480Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/RequestMentorshipModal.tsx")}
+2026-01-23T12:07:55.402492Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:11:57.302744Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/AchievementsList.tsx")}
+2026-01-23T12:11:57.302879Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:11:57.511658Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/learning-paths/RecommendedPathsWidget.tsx")}
+2026-01-23T12:11:57.511671Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:12:47.626301Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/Leaderboard.tsx")}
+2026-01-23T12:12:47.628823Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:12:47.902496Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/LeaderboardWidget.tsx")}
+2026-01-23T12:12:47.902654Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:12:48.203831Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/gamification/XPDisplay.tsx")}
+2026-01-23T12:12:48.203839Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:13:27.105629Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/learning-paths/page.tsx")}
+2026-01-23T12:13:27.105662Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:13:27.204534Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/learning-paths/my-paths/page.tsx")}
+2026-01-23T12:13:27.204549Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:14:38.303918Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/learning-paths/[id]/page.tsx")}
+2026-01-23T12:14:38.304456Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:15:31.704306Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationForm.tsx")}
+2026-01-23T12:15:31.704339Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:15:42.803851Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/ReviewForm.tsx")}
+2026-01-23T12:15:42.803860Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:15:56.003655Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/CommentSection.tsx")}
+2026-01-23T12:15:56.003669Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:15:56.204510Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/TeamList.tsx")}
+2026-01-23T12:15:56.204522Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:15:56.603385Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/MilestoneList.tsx")}
+2026-01-23T12:15:56.603407Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:18:40.604234Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/EnrolledCourses.tsx")}
+2026-01-23T12:18:40.604255Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:19:05.206255Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/FeaturedCourses.tsx")}
+2026-01-23T12:19:05.206284Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:19:21.908428Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CreateCourseForm.tsx")}
+2026-01-23T12:19:21.908467Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:19:31.707987Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CreateCourseForm.tsx")}
+2026-01-23T12:19:31.708006Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:20:14.009459Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:20:14.009496Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:20:23.111600Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:20:23.111617Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:20:34.117352Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:20:34.117394Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:20:42.609329Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CourseBuilder.tsx")}
+2026-01-23T12:20:42.609338Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:20:59.608309Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/LessonAttachments.tsx")}
+2026-01-23T12:20:59.608324Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:21:12.507685Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/LessonAttachments.tsx")}
+2026-01-23T12:21:12.507693Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:21:30.808823Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ContentAssignment.tsx")}
+2026-01-23T12:21:30.808834Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:21:40.308719Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ContentAssignment.tsx")}
+2026-01-23T12:21:40.308726Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:21:49.508864Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ContentAssignment.tsx")}
+2026-01-23T12:21:49.508872Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:24:24.403268Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/PublishingStatus.tsx")}
+2026-01-23T12:24:24.403280Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:24:24.803028Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/PublishingStatus.tsx")}
+2026-01-23T12:24:24.803040Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:24:37.902303Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CoursePreview.tsx")}
+2026-01-23T12:24:37.902310Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:24:38.202412Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CoursePreview.tsx")}
+2026-01-23T12:24:38.202424Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:24:57.303056Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ChunkedUpload.tsx")}
+2026-01-23T12:24:57.303064Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:25:14.403084Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ChunkedUpload.tsx")}
+2026-01-23T12:25:14.403103Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:26:03.658412Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ReorderableList.tsx")}
+2026-01-23T12:26:03.658427Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:26:03.958015Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ReorderableList.tsx")}
+2026-01-23T12:26:03.958022Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:26:13.659188Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/SchedulePublishing.tsx")}
+2026-01-23T12:26:13.659201Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:26:13.957666Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/SchedulePublishing.tsx")}
+2026-01-23T12:26:13.957674Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:26:47.458865Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/api-client.ts")}
+2026-01-23T12:26:47.458875Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:30:41.659867Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T12:30:41.659878Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:13.359161Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/MilestoneList.tsx")}
+2026-01-23T12:31:13.359174Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:15.859504Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/innovations/InnovationList.tsx")}
+2026-01-23T12:31:15.859512Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:19.158921Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T12:31:19.158932Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:19.359819Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T12:31:19.359827Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:19.459896Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ContentAssignment.tsx")}
+2026-01-23T12:31:19.459907Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:50.459012Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/learning-paths/my-paths/page.tsx")}
+2026-01-23T12:31:50.459023Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:31:50.658098Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/mentorship/SessionsList.tsx"), AnchoredSystemPathBuf("apps/web/src/app/learning-paths/my-paths/page.tsx")}
+2026-01-23T12:31:50.658108Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:32:24.958189Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/learning-paths/my-paths/page.tsx")}
+2026-01-23T12:32:24.958208Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:32:55.260157Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/calendar/CalendarView.tsx")}
+2026-01-23T12:32:55.260171Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:33:26.559507Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/chat/ChatList.tsx")}
+2026-01-23T12:33:26.559522Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:33:56.063193Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CoursePreview.tsx")}
+2026-01-23T12:33:56.063207Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:33:56.160181Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/CoursePreview.tsx")}
+2026-01-23T12:33:56.160189Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:33:56.160225Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T12:34:28.159549Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/PublishingStatus.tsx")}
+2026-01-23T12:34:28.159560Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:34:48.059841Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/CalendarWidget.tsx")}
+2026-01-23T12:34:48.059852Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:35:31.958824Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ReorderableList.tsx")}
+2026-01-23T12:35:31.958837Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:35:32.059370Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/ReorderableList.tsx")}
+2026-01-23T12:35:32.059379Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:35:32.059423Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T12:36:05.759786Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/SchedulePublishing.tsx")}
+2026-01-23T12:36:05.759798Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:36:35.059225Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/dashboard/ContinueLearning.tsx")}
+2026-01-23T12:36:35.059235Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:37:13.960331Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T12:37:13.960352Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:37:57.359993Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks")}
+2026-01-23T12:37:57.360024Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:37:57.388152Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T12:38:03.659369Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/use-online-status.ts")}
+2026-01-23T12:38:03.659378Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:38:03.760103Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/hooks/use-online-status.ts")}
+2026-01-23T12:38:03.760110Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:38:03.760157Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-01-23T12:38:22.859379Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T12:38:22.859391Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:38:30.660221Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T12:38:30.660229Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:38:45.860193Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T12:38:45.860200Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:39:08.660129Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/VideoPlayer.tsx")}
+2026-01-23T12:39:08.660142Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:39:32.161240Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/VideoPlayer.tsx")}
+2026-01-23T12:39:32.161248Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:39:53.362621Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:39:53.362629Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:40:04.362554Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:40:04.362565Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:40:12.463081Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:40:12.463088Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:41:06.763636Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/api-client.ts")}
+2026-01-23T12:41:06.763646Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:41:29.463073Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/instructor/InstructorDashboard.tsx")}
+2026-01-23T12:41:29.463084Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:43:40.863005Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/AuthWrapper.tsx")}
+2026-01-23T12:43:40.863024Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:43:51.564412Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/api-client.ts")}
+2026-01-23T12:43:51.564423Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:44:07.262697Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:44:07.262728Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:44:14.463723Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:44:14.463731Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:44:22.163399Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/lib/offline-content.ts")}
+2026-01-23T12:44:22.163419Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:44:33.463789Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/connect/page.tsx"), AnchoredSystemPathBuf("apps/web/src/app/connect")}
+2026-01-23T12:44:33.463807Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:45:15.765213Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/layout/TopNav.tsx")}
+2026-01-23T12:45:15.765274Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:45:23.563148Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/courses/VideoPlayer.tsx")}
+2026-01-23T12:45:23.563155Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:45:32.264349Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T12:45:32.264360Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:45:40.164244Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/app/profile/page.tsx")}
+2026-01-23T12:45:40.164253Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:45:56.663804Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/context/ChatContext.tsx")}
+2026-01-23T12:45:56.663812Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:46:11.663821Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T12:46:11.663868Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:47:32.864837Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/src/components/notifications/NotificationsDrawer.tsx")}
+2026-01-23T12:47:32.864860Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))
+2026-01-23T12:47:52.964517Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("apps/web/next.config.js")}
+2026-01-23T12:47:52.964552Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@eduflow/web"), path: AnchoredSystemPathBuf("apps/web") }}))

@@ -7,30 +7,29 @@ import { Presentation, Plus, Users, Clock, Edit } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/auth-store';
 
+import { apiClient } from '@/lib/api-client';
+
 export function TeachingCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const user = useAuthStore((state) => state.user);
-  const isInstructor = user?.roles?.some((r) => ['instructor', 'educator', 'admin', 'super_admin'].includes(r.name)) || 
-                      ['instructor', 'educator', 'admin', 'super_admin'].includes(user?.role || '');
+  const { user, accessToken, logout } = useAuthStore();
 
   useEffect(() => {
-    if (user?.id) {
-        fetchMyCourses();
+    if (user && accessToken) {
+      fetchMyCourses();
     }
-  }, [user?.id]);
+  }, [user, accessToken]);
 
   const fetchMyCourses = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers: any = {};
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
+      if (!accessToken) return;
       
-      const response = await fetch(`http://localhost:3001/api/v1/courses?instructorId=${user?.id}&limit=100`, {
-        headers,
-      });
+      const response = await apiClient(`courses?instructorId=${user?.id}&limit=100`);
+
+      if (response.status === 401) {
+        logout();
+        return;
+      }
       
       if (response.ok) {
         const data = await response.json();
@@ -143,7 +142,7 @@ export function TeachingCourses() {
                  <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
                    <Plus className="w-12 h-12 text-gray-400" />
                  </div>
-                 <h3 className="text-2xl font-bold text-gray-900 mb-4">You haven't created any courses yet</h3>
+                 <h3 className="text-2xl font-bold text-gray-900 mb-4">You haven&apos;t created any courses yet</h3>
                  <p className="text-gray-600 mb-6">Share your knowledge with the world!</p>
                  <Link href="/courses/create">
                     <Button className="bg-purple-600 hover:bg-purple-700 text-white">

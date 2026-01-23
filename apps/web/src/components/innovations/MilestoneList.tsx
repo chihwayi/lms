@@ -26,6 +26,7 @@ import {
 import { Plus, Calendar, CheckCircle2, Clock, Trash2, Edit2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { apiClient } from '@/lib/api-client';
 
 interface MilestoneListProps {
   innovationId: string;
@@ -81,19 +82,14 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
       const url = editingMilestone
-        ? `/api/v1/innovations/${innovationId}/milestones/${editingMilestone.id}`
-        : `/api/v1/innovations/${innovationId}/milestones`;
+        ? `/innovations/${innovationId}/milestones/${editingMilestone.id}`
+        : `/innovations/${innovationId}/milestones`;
       
       const method = editingMilestone ? 'PATCH' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await apiClient(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(formData),
       });
 
@@ -113,10 +109,8 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
     if (!confirm('Are you sure you want to delete this milestone?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${innovationId}/milestones/${milestoneId}`, {
+      const res = await apiClient(`/innovations/${innovationId}/milestones/${milestoneId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) throw new Error('Failed to delete');

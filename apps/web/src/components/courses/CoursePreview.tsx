@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Clock, Users, Star, BookOpen } from 'lucide-react';
@@ -20,10 +21,7 @@ export function CoursePreview({ courseId, onEnroll }: CoursePreviewProps) {
 
   const fetchCoursePreview = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/${courseId}/preview`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiClient(`/api/v1/courses/${courseId}/preview`);
       
       if (response.ok) {
         const data = await response.json();

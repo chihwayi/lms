@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Video, FileText, Image as ImageIcon, Music, X, Upload, Play, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/api-client';
 
 interface ContentAssignmentProps {
   lessonId: string;
@@ -34,12 +35,9 @@ export function ContentAssignment({
   useEffect(() => {
     const fetchCourseFiles = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token || !courseId) return;
+        if (!courseId) return;
         
-        const response = await fetch(`/api/v1/files/course/${courseId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiClient(`/api/v1/files/course/${courseId}`);
   
         if (response.status === 401) {
           window.location.href = '/login';
@@ -86,13 +84,8 @@ export function ContentAssignment({
     
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/lessons/${lessonId}/content`, {
+      const response = await apiClient(`/api/v1/courses/lessons/${lessonId}/content`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({ fileId: selectedFileId }),
       });
 
@@ -116,10 +109,8 @@ export function ContentAssignment({
     if (!currentContent?.content_data?.fileId) return;
     
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/v1/courses/lessons/${lessonId}/content/${currentContent.content_data.fileId}`, {
+      const response = await apiClient(`/courses/lessons/${lessonId}/content/${currentContent.content_data.fileId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { MessageSquare, Reply, Trash2 } from 'lucide-react';
 import { InnovationComment } from './InnovationCard';
 import { useAuthStore } from '@/lib/auth-store';
+import { apiClient } from '@/lib/api-client';
 
 interface CommentSectionProps {
   innovationId: string;
@@ -26,13 +27,8 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
 
     setSubmitting(true);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/${innovationId}/comments`, {
+      const res = await apiClient(`/innovations/${innovationId}/comments`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           content: text,
           parentId,
@@ -56,12 +52,8 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
     if (!confirm('Are you sure you want to delete this comment?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/v1/innovations/comments/${commentId}`, {
+      const res = await apiClient(`/innovations/comments/${commentId}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
 
       if (!res.ok) throw new Error('Failed to delete comment');
