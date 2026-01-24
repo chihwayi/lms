@@ -36,6 +36,8 @@ export enum CourseVisibility {
   RESTRICTED = 'restricted',
 }
 
+import { CertificateTemplate } from '../../certificates/entities/certificate-template.entity';
+
 @Entity('courses')
 export class Course {
   @PrimaryGeneratedColumn('uuid')
@@ -97,6 +99,13 @@ export class Course {
 
   @Column('uuid')
   created_by: string;
+
+  @Column('uuid', { nullable: true })
+  certificate_template_id: string;
+
+  @ManyToOne(() => CertificateTemplate)
+  @JoinColumn({ name: 'certificate_template_id' })
+  certificate_template: CertificateTemplate;
 
   @Column({ nullable: true })
   published_at: Date;

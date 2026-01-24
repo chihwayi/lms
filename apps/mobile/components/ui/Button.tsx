@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
-import { Colors } from '@/constants/theme';
+import { Colors, BorderRadius, Shadows, Spacing } from '@/constants/theme';
 
 interface ButtonProps {
   title: string;
@@ -12,6 +13,7 @@ interface ButtonProps {
   icon?: React.ReactNode;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  fullWidth?: boolean;
 }
 
 export function Button({ 
@@ -23,32 +25,63 @@ export function Button({
   disabled = false,
   icon,
   style,
-  textStyle
+  textStyle,
+  fullWidth = false
 }: ButtonProps) {
   
   const getVariantStyles = () => {
     switch (variant) {
       case 'primary':
-        return { bg: Colors.light.primary, text: Colors.light.primaryForeground, border: 'transparent' };
+        return { 
+          bg: Colors.light.primary, 
+          text: Colors.light.primaryForeground, 
+          border: 'transparent',
+          shadow: Shadows.sm
+        };
       case 'secondary':
-        return { bg: Colors.light.secondary, text: Colors.light.secondaryForeground, border: 'transparent' };
+        return { 
+          bg: Colors.light.secondary, 
+          text: Colors.light.secondaryForeground, 
+          border: 'transparent',
+          shadow: {}
+        };
       case 'outline':
-        return { bg: 'transparent', text: Colors.light.primary, border: Colors.light.border };
+        return { 
+          bg: 'transparent', 
+          text: Colors.light.primary, 
+          border: Colors.light.border,
+          shadow: {}
+        };
       case 'ghost':
-        return { bg: 'transparent', text: Colors.light.primary, border: 'transparent' };
+        return { 
+          bg: 'transparent', 
+          text: Colors.light.textSecondary, 
+          border: 'transparent',
+          shadow: {}
+        };
       case 'destructive':
-        return { bg: Colors.light.destructive, text: Colors.light.destructiveForeground, border: 'transparent' };
+        return { 
+          bg: Colors.light.destructive, 
+          text: Colors.light.destructiveForeground, 
+          border: 'transparent',
+          shadow: Shadows.sm
+        };
       default:
-        return { bg: Colors.light.primary, text: Colors.light.primaryForeground, border: 'transparent' };
+        return { 
+          bg: Colors.light.primary, 
+          text: Colors.light.primaryForeground, 
+          border: 'transparent',
+          shadow: Shadows.sm
+        };
     }
   };
 
   const getSizeStyles = () => {
     switch (size) {
-      case 'sm': return { paddingVertical: 6, paddingHorizontal: 12, fontSize: 14 };
-      case 'md': return { paddingVertical: 10, paddingHorizontal: 16, fontSize: 16 };
-      case 'lg': return { paddingVertical: 14, paddingHorizontal: 20, fontSize: 18 };
-      default: return { paddingVertical: 10, paddingHorizontal: 16, fontSize: 16 };
+      case 'sm': return { paddingVertical: 8, paddingHorizontal: 16, fontSize: 14, height: 36 };
+      case 'md': return { paddingVertical: 12, paddingHorizontal: 20, fontSize: 16, height: 48 };
+      case 'lg': return { paddingVertical: 16, paddingHorizontal: 24, fontSize: 18, height: 56 };
+      default: return { paddingVertical: 12, paddingHorizontal: 20, fontSize: 16, height: 48 };
     }
   };
 
@@ -67,7 +100,9 @@ export function Button({
           borderWidth: variant === 'outline' ? 1 : 0,
           paddingVertical: sizeStyle.paddingVertical,
           paddingHorizontal: sizeStyle.paddingHorizontal,
-          opacity: disabled ? 0.5 : 1
+          opacity: disabled ? 0.6 : 1,
+          width: fullWidth ? '100%' : undefined,
+          ...variantStyle.shadow
         },
         style
       ]}
@@ -82,7 +117,8 @@ export function Button({
             { 
               color: variantStyle.text, 
               fontSize: sizeStyle.fontSize,
-              marginLeft: icon ? 8 : 0 
+              marginLeft: icon ? 8 : 0,
+              fontWeight: '600',
             },
             textStyle
           ]}>
@@ -96,12 +132,12 @@ export function Button({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 8,
+    borderRadius: BorderRadius.full,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
-    fontWeight: '600',
+    textAlign: 'center',
   },
 });

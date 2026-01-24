@@ -1,6 +1,8 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Image } from 'react-native';
+
+import { View, StyleSheet, ScrollView, RefreshControl, Image, Platform, StatusBar, TouchableOpacity } from 'react-native';
+import { Text } from '@/components/ui/Text';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/theme';
+import { Colors, Spacing, BorderRadius, Shadows } from '@/constants/theme';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAuthStore } from '@/stores/auth-store';
@@ -10,6 +12,7 @@ import { apiClient } from '@/lib/api-client';
 import { useToast } from '@/components/ui/Toast';
 import { Feather } from '@expo/vector-icons';
 import * as Network from 'expo-network';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Dashboard() {
   const { user } = useAuthStore();
@@ -66,114 +69,172 @@ export default function Dashboard() {
     loadData();
   }, [loadData]);
 
-  const renderCourseCard = (course: any, type: 'continue' | 'recommended') => (
-    <Card 
-      key={course.id} 
-      style={[styles.courseCard, type === 'recommended' ? styles.recommendedCard : undefined]}
-      onPress={() => router.push(`/(app)/courses/${course.id}/learn`)}
-    >
-      <View style={styles.cardHeader}>
-        <View style={[styles.iconBox, type === 'recommended' && styles.iconBoxAlt]}>
-          <Feather name="book-open" size={20} color={type === 'recommended' ? 'white' : Colors.light.primary} />
-        </View>
-        {type === 'continue' && (
-           <Text style={styles.progressLabel}>{course.progress || 0}%</Text>
-        )}
-      </View>
-      
-      <Text style={styles.courseTitle} numberOfLines={2}>{course.title}</Text>
-      
-      {type === 'continue' && (
-        <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${course.progress || 0}%` }]} />
-        </View>
-      )}
-      
-      {type === 'recommended' && (
-        <View style={styles.metaRow}>
-          <Feather name="star" size={12} color={Colors.light.warning} />
-          <Text style={styles.metaText}>4.8</Text>
-          <Text style={[styles.metaText, { marginLeft: 8 }]}>
-            {typeof course.category === 'object' ? (course.category?.name || 'General') : (course.category || 'General')}
-          </Text>
-        </View>
-      )}
-    </Card>
-  );
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView 
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); loadData(); }} />
-        }
+  const renderCourseCard = (course: any, type: 'continue' | 'recommended') => {
+    const isRecommended = type === 'recommended';
+    
+    return (
+      <Card 
+        key={course.id} 
+        style={[styles.courseCard, isRecommended ? styles.recommendedCard : undefined]}
+        variant={isRecommended ? 'elevated' : 'default'}
+        onPress={() => {
+            if (isRecommended) {
+                router.push(`/(app)/courses/${course.id}`);
+            } else {
+                router.push(`/(app)/courses/${course.id}/learn`);
+            }
+        }}
       >
-        {/* Header Section */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Welcome back,</Text>
-            <Text style={styles.userName}>{user?.firstName || 'Learner'}!</Text>
-          </View>
-          <View style={styles.avatar}>
-             <Text style={styles.avatarText}>{user?.firstName?.[0]}</Text>
-          </View>
-        </View>
-
-        {/* Gamification Widget */}
-        <Card style={styles.statsCard} variant="default">
-          <View style={styles.statsRow}>
-             <View style={styles.statItem}>
-                <Text style={styles.statValue}>{stats.level}</Text>
-                <Text style={styles.statLabel}>Level</Text>
-             </View>
-             <View style={styles.divider} />
-             <View style={styles.statItem}>
-                <Text style={styles.statValue}>{stats.xp}</Text>
-                <Text style={styles.statLabel}>XP Earned</Text>
-             </View>
-             <View style={styles.divider} />
-             <View style={styles.statItem}>
-                <Text style={styles.statValue}>{stats.nextLevelXp - stats.xp}</Text>
-                <Text style={styles.statLabel}>To Next Lvl</Text>
-             </View>
-          </View>
-        </Card>
-
-        {/* Continue Learning */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Continue Learning</Text>
-            <Button 
-                title="See All" 
-                variant="ghost" 
-                size="sm" 
-                onPress={() => router.push('/(app)/courses')} 
+        <View style={styles.cardHeader}>
+          <View style={[styles.iconBox, isRecommended && styles.iconBoxAlt]}>
+            <Feather 
+              name={isRecommended ? "star" : "book-open"} 
+              size={20} 
+              color={isRecommended ? "white" : Colors.light.primary} 
             />
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
-            {continueLearning.length > 0 ? (
-                continueLearning.map(c => renderCourseCard(c, 'continue'))
-            ) : (
-                <Text style={styles.emptyText}>No courses in progress</Text>
-            )}
-          </ScrollView>
+          {!isRecommended && (
+             <View style={styles.progressBadge}>
+               <Text style={styles.progressLabel}>{course.progress || 0}%</Text>
+             </View>
+          )}
         </View>
-
-        {/* Recommended */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recommended for You</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalList}>
-            {recommended.length > 0 ? (
-                recommended.map(c => renderCourseCard(c, 'recommended'))
-            ) : (
-                <Text style={styles.emptyText}>No recommendations yet</Text>
-            )}
-          </ScrollView>
+        
+        <View style={styles.cardContent}>
+          <Text 
+            style={[styles.courseTitle, isRecommended && { color: 'white' }]} 
+            numberOfLines={2}
+          >
+            {course.title}
+          </Text>
+          
+          {isRecommended ? (
+             <Text style={styles.categoryText} numberOfLines={1}>
+                {typeof course.category === 'object' ? (course.category?.name || 'General') : (course.category || 'General')}
+             </Text>
+          ) : (
+            <View style={styles.progressBarBg}>
+                <View style={[styles.progressFill, { width: `${course.progress || 0}%` }]} />
+            </View>
+          )}
         </View>
+      </Card>
+    );
+  };
 
-      </ScrollView>
-    </SafeAreaView>
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      
+      {/* Decorative Header Background */}
+      <LinearGradient
+        colors={[Colors.light.gradientStart, Colors.light.gradientEnd]}
+        style={styles.headerBackground}
+      />
+
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <ScrollView 
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={() => { setRefreshing(true); loadData(); }} 
+              tintColor="white"
+            />
+          }
+        >
+          {/* Header Section */}
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.greeting}>Welcome back,</Text>
+              <Text style={styles.userName}>{user?.firstName || 'Learner'}!</Text>
+            </View>
+            <TouchableOpacity onPress={() => router.push('/profile')} style={styles.avatar}>
+               {user?.avatar ? (
+                 <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+               ) : (
+                 <Text style={styles.avatarText}>{user?.firstName?.[0]}</Text>
+               )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Gamification Widget */}
+          <Card style={styles.statsCard} variant="elevated">
+            <View style={styles.statsRow}>
+               <View style={styles.statItem}>
+                  <Text style={styles.statValue}>{stats.level}</Text>
+                  <Text style={styles.statLabel}>Level</Text>
+               </View>
+               <View style={styles.divider} />
+               <View style={styles.statItem}>
+                  <Text style={styles.statValue}>{stats.xp}</Text>
+                  <Text style={styles.statLabel}>XP Earned</Text>
+               </View>
+               <View style={styles.divider} />
+               <View style={styles.statItem}>
+                  <Text style={styles.statValue}>{stats.nextLevelXp - stats.xp}</Text>
+                  <Text style={styles.statLabel}>To Next Lvl</Text>
+               </View>
+            </View>
+          </Card>
+
+          {/* Continue Learning */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Continue Learning</Text>
+              <Button 
+                  title="See All" 
+                  variant="ghost" 
+                  size="sm" 
+                  onPress={() => router.push('/(app)/courses')} 
+              />
+            </View>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              contentContainerStyle={styles.horizontalList}
+              decelerationRate="fast"
+              snapToInterval={200 + Spacing.md} // card width + gap
+            >
+              {continueLearning.length > 0 ? (
+                  continueLearning.map(c => renderCourseCard(c, 'continue'))
+              ) : (
+                  <View style={styles.emptyStateCard}>
+                    <Text style={styles.emptyText}>No courses in progress</Text>
+                    <Button 
+                      title="Browse Courses" 
+                      variant="outline" 
+                      size="sm" 
+                      onPress={() => router.push('/(app)/courses')}
+                      style={{ marginTop: 8 }}
+                    />
+                  </View>
+              )}
+            </ScrollView>
+          </View>
+
+          {/* Recommended */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recommended for You</Text>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              contentContainerStyle={styles.horizontalList}
+              decelerationRate="fast"
+              snapToInterval={200 + Spacing.md}
+            >
+              {recommended.length > 0 ? (
+                  recommended.map(c => renderCourseCard(c, 'recommended'))
+              ) : (
+                  <Text style={styles.emptyText}>No recommendations yet</Text>
+              )}
+            </ScrollView>
+          </View>
+
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -182,32 +243,52 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
   },
+  headerBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 280, // Covers header and part of stats card
+  },
+  safeArea: {
+    flex: 1,
+  },
   content: {
-    padding: 20,
+    padding: Spacing.lg,
     paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: Spacing.xl,
+    marginTop: Spacing.sm,
   },
   greeting: {
     fontSize: 16,
-    color: Colors.light.textSecondary,
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '500',
   },
   userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.text,
+    fontSize: 28,
+    fontWeight: '700',
+    color: 'white',
+    marginTop: 4,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.light.primary,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.4)',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   avatarText: {
     color: 'white',
@@ -215,10 +296,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   statsCard: {
-    marginBottom: 32,
-    backgroundColor: Colors.light.card,
-    borderRadius: 16,
-    padding: 20,
+    marginBottom: Spacing.xl,
+    padding: Spacing.lg,
   },
   statsRow: {
     flexDirection: 'row',
@@ -231,45 +310,50 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: 1,
-    height: 30,
+    height: 40,
     backgroundColor: Colors.light.border,
   },
   statValue: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
+    fontWeight: '800',
+    color: Colors.light.text,
   },
   statLabel: {
     fontSize: 12,
-    color: Colors.light.textSecondary,
+    color: Colors.light.textMuted,
+    fontWeight: '500',
     marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: Spacing.xl,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '700',
     color: Colors.light.text,
-    marginBottom: 16,
   },
   horizontalList: {
-    gap: 16,
-    paddingRight: 20,
+    gap: Spacing.md,
+    paddingRight: Spacing.lg,
   },
   courseCard: {
-    width: 160,
-    height: 140,
+    width: 200,
+    height: 160,
     justifyContent: 'space-between',
+    padding: Spacing.md,
   },
   recommendedCard: {
-    backgroundColor: Colors.light.primary,
+    backgroundColor: Colors.light.primary, // Will be overridden if gradient used, but keeping simple for now
+    borderWidth: 0,
+    ...Shadows.md,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -277,9 +361,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   iconBox: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     backgroundColor: Colors.light.secondary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -287,41 +371,55 @@ const styles = StyleSheet.create({
   iconBoxAlt: {
     backgroundColor: 'rgba(255,255,255,0.2)',
   },
+  progressBadge: {
+    backgroundColor: Colors.light.secondary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
   progressLabel: {
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '700',
     color: Colors.light.primary,
   },
+  cardContent: {
+    justifyContent: 'flex-end',
+  },
   courseTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: Colors.light.text,
-    marginTop: 8,
+    marginBottom: 12,
+    lineHeight: 22,
   },
-  progressBar: {
-    height: 4,
+  categoryText: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '500',
+  },
+  progressBarBg: {
+    height: 6,
     backgroundColor: Colors.light.secondary,
-    borderRadius: 2,
-    marginTop: 8,
+    borderRadius: 3,
+    width: '100%',
   },
   progressFill: {
     height: '100%',
     backgroundColor: Colors.light.primary,
-    borderRadius: 2,
+    borderRadius: 3,
   },
-  metaRow: {
-    flexDirection: 'row',
+  emptyStateCard: {
+    width: 200,
+    height: 140,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
-  },
-  metaText: {
-    fontSize: 12,
-    color: 'white',
-    marginLeft: 4,
-    fontWeight: '500',
+    backgroundColor: Colors.light.secondary,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
   },
   emptyText: {
     color: Colors.light.textMuted,
     fontStyle: 'italic',
+    marginBottom: 8,
   },
 });

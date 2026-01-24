@@ -107,9 +107,15 @@ export function TopNav() {
                           <Link href="/instructor/dashboard" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
                             <BarChart className="w-5 h-5" />
                             Instructor Dashboard
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Link href="/admin/certificates" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
+                          <FileCheck className="w-5 h-5" />
+                          Certificates
+                        </Link>
+                      </SheetClose>
+                      <SheetClose asChild>
                           <Link href="/innovations/review" className="flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-slate-50 text-slate-700 hover:text-blue-600 transition-colors">
                             <FileCheck className="w-5 h-5" />
                             Review Innovations
@@ -192,6 +198,14 @@ export function TopNav() {
               >
                 Mentorship
               </Link>
+              {isInstructor && (
+                <Link 
+                  href="/admin/certificates" 
+                  className={`${isActive('/admin/certificates') ? 'text-blue-600 font-medium border-b-2 border-blue-600' : 'text-gray-700 hover:text-blue-600'} transition-colors py-5`}
+                >
+                  Certificates
+                </Link>
+              )}
               {isAdmin && (
                 <Link 
                   href="/admin" 

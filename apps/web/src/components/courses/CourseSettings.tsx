@@ -27,6 +27,7 @@ import { apiClient } from '@/lib/api-client';
 
 export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSettingsProps) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -37,6 +38,7 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
     language: 'en',
     price: 0,
     visibility: 'public',
+    certificate_template_id: '',
   });
 
   useEffect(() => {
@@ -50,10 +52,24 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
         language: course.language || 'en',
         price: course.price || 0,
         visibility: course.visibility || 'public',
+        certificate_template_id: course.certificate_template_id || 'none',
       });
     }
     fetchCategories();
+    fetchTemplates();
   }, [course]);
+
+  const fetchTemplates = async () => {
+    try {
+        const response = await apiClient('/certificates/templates');
+        if (response.ok) {
+            const data = await response.json();
+            setTemplates(data);
+        }
+    } catch (error) {
+        console.error('Error fetching templates:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -85,6 +101,10 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
       // Remove empty strings for optional fields to avoid validation errors
       if (!payload.category_id) {
         delete payload.category_id;
+      }
+
+      if (!payload.certificate_template_id || payload.certificate_template_id === 'none') {
+        payload.certificate_template_id = null;
       }
 
       const response = await apiClient(`courses/${course.id}`, {
@@ -223,6 +243,26 @@ export function CourseSettings({ course, isOpen, onClose, onUpdate }: CourseSett
                     />
                   </div>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="certificate_template" className="text-gray-700 font-semibold text-base ml-1">Certificate Template</Label>
+                <Select
+                  value={formData.certificate_template_id}
+                  onValueChange={(value) => setFormData({ ...formData, certificate_template_id: value })}
+                >
+                  <SelectTrigger className="bg-white/50 border-blue-100 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-400/10 transition-all duration-300 h-12 text-lg rounded-xl shadow-sm">
+                    <SelectValue placeholder="Select a certificate template" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-blue-100 shadow-xl bg-white/95 backdrop-blur-xl">
+                    <SelectItem value="none" className="focus:bg-blue-50 focus:text-blue-700 rounded-lg cursor-pointer py-3 transition-colors">None (Use Default)</SelectItem>
+                    {templates.map((template) => (
+                      <SelectItem key={template.id} value={template.id} className="focus:bg-blue-50 focus:text-blue-700 rounded-lg cursor-pointer py-3 transition-colors">
+                        {template.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

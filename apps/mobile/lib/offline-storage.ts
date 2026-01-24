@@ -188,6 +188,27 @@ class OfflineStorageService {
     const data = await AsyncStorage.getItem(key);
     return data ? JSON.parse(data) : undefined;
   }
+
+  async clearAllContent() {
+    if (Platform.OS === 'web') {
+      const keys = await AsyncStorage.getAllKeys();
+      const offlineKeys = keys.filter(k => k.startsWith('@offline:'));
+      if (offlineKeys.length > 0) {
+        await AsyncStorage.multiRemove(offlineKeys);
+      }
+      return;
+    }
+
+    try {
+      const dirInfo = await FileSystem.getInfoAsync(BASE_DIR);
+      if (dirInfo.exists) {
+        await FileSystem.deleteAsync(BASE_DIR);
+      }
+    } catch (error) {
+      console.error('Failed to clear offline content:', error);
+      throw error;
+    }
+  }
 }
 
 export const offlineStorage = new OfflineStorageService();

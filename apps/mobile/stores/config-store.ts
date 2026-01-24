@@ -18,6 +18,11 @@ export const useConfigStore = create<ConfigState>()(
     {
       name: 'eduflow-mobile-config',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        if (state && state.instanceUrl && state.instanceUrl.includes('localhost:3000')) {
+          state.setInstanceUrl(state.instanceUrl.replace('localhost:3000', 'localhost:3001'));
+        }
+      },
     }
   )
 );

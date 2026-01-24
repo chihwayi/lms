@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useOfflineCourse } from '@/hooks/use-offline-course';
 import { apiClient } from '@/lib/api-client';
@@ -10,20 +10,33 @@ import { QuizView } from '@/components/CoursePlayer/QuizView';
 import { Feather } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/auth-store';
 import * as Network from 'expo-network';
+import { Text } from '@/components/ui/Text';
+import { Colors, Spacing, Shadows, BorderRadius } from '@/constants/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useCourseProgress } from '@/hooks/use-course-progress';
+import { CompletionModal } from '@/components/CoursePlayer/CompletionModal';
+import { PdfViewer } from '@/components/CoursePlayer/PdfViewer';
 
 export default function CourseLearnScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id: paramId } = useLocalSearchParams<{ id: string }>();
+  const id = Array.isArray(paramId) ? paramId[0] : paramId;
   const router = useRouter();
   const { accessToken } = useAuthStore();
+  const { markLessonComplete, syncOfflineProgress } = useCourseProgress();
   
   const [course, setCourse] = useState<any>(null);
   const [currentLesson, setCurrentLesson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
+  const [completionModalVisible, setCompletionModalVisible] = useState(false);
+  const [isLastLesson, setIsLastLesson] = useState(false);
 
   useEffect(() => {
     loadCourse();
+    // Try to sync any offline progress when entering the course
+    syncOfflineProgress();
   }, [id]);
 
   const loadCourse = async () => {
@@ -101,7 +114,19 @@ export default function CourseLearnScreen() {
               }
           }
 
-          setCurrentLesson(fullLesson || lessonMeta);
+          // Unwrap lesson if wrapped (API returns { lesson: {...}, files: [], ... })
+          let finalLesson = fullLesson || lessonMeta;
+          if (finalLesson && finalLesson.lesson) {
+              const { lesson, ...rest } = finalLesson;
+              finalLesson = { ...lesson, ...rest };
+          }
+          
+          // Map content for text lessons if missing
+          if (finalLesson && !finalLesson.content && finalLesson.content_type === 'text') {
+              finalLesson.content = finalLesson.content_data?.html || finalLesson.content_data?.text || finalLesson.description || '';
+          }
+
+          setCurrentLesson(finalLesson);
           setMenuOpen(false); // Close menu on selection
       } catch (e) {
           console.error('Failed to load lesson', e);
@@ -110,12 +135,31 @@ export default function CourseLearnScreen() {
   };
 
   const handleLessonComplete = async () => {
-      // Logic to mark lesson as complete
-      // Move to next lesson
-      navigateToNextLesson();
+      if (!currentLesson || !course) return;
+
+      // 1. Mark complete via hook (API + Offline)
+      await markLessonComplete(id, currentLesson.id);
+
+      // 2. Check if it's the last lesson
+      const isLast = checkIsLastLesson();
+      setIsLastLesson(isLast);
+
+      // 3. Show celebration modal
+      setCompletionModalVisible(true);
+  };
+
+  const checkIsLastLesson = () => {
+      if (!course || !currentLesson) return false;
+      
+      const allLessons = course.modules.flatMap((m: any) => m.lessons);
+      const currentIndex = allLessons.findIndex((l: any) => l.id === currentLesson.id);
+      
+      return currentIndex === allLessons.length - 1;
   };
 
   const navigateToNextLesson = () => {
+      setCompletionModalVisible(false);
+
       if (!course || !currentLesson) return;
       
       let found = false;
@@ -137,7 +181,8 @@ export default function CourseLearnScreen() {
       if (nextLessonId) {
           loadLesson(nextLessonId);
       } else {
-          Alert.alert('Congratulations!', 'You have completed the course.');
+          // Course completed - maybe go back to dashboard or course details
+          router.replace('/(app)/dashboard');
       }
   };
 
@@ -166,206 +211,271 @@ export default function CourseLearnScreen() {
   if (loading) {
       return (
           <View style={styles.centerContainer}>
-              <ActivityIndicator size="large" color="#2563EB" />
+              <ActivityIndicator size="large" color={Colors.light.primary} />
           </View>
       );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
+      <LinearGradient
+        colors={[Colors.light.gradientStart, Colors.light.gradientEnd]}
+        style={styles.headerBackground}
+      />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-            <Feather name="chevron-left" size={24} color="#374151" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>{course?.title}</Text>
-        <TouchableOpacity onPress={() => setMenuOpen(!menuOpen)} style={styles.headerBtn}>
-            <Feather name="menu" size={24} color="#374151" />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.contentContainer}>
-        {/* Main Content Area */}
-        <ScrollView style={styles.mainContent}>
-            {currentLesson && (
-                <View>
-                    <Text style={styles.lessonTitle}>{currentLesson.title}</Text>
-                    
-                    {currentLesson.content_type === 'video' && currentLesson.content_data?.fileId && (
-                        <VideoPlayer 
-                            fileId={currentLesson.content_data.fileId} 
-                            onComplete={handleLessonComplete}
-                        />
-                    )}
-
-                    {currentLesson.content_type === 'text' && (
-                        <LessonContent content={currentLesson.content} />
-                    )}
-
-                    {currentLesson.type === 'quiz' && currentLesson.content_data && (
-                        <QuizView 
-                            data={currentLesson.content_data} 
-                            onComplete={(score, passed) => {
-                                if (passed) handleLessonComplete();
-                            }} 
-                        />
-                    )}
-
-                    {currentLesson.description && (
-                        <Text style={styles.description}>{currentLesson.description}</Text>
-                    )}
-                </View>
-            )}
-        </ScrollView>
-
-        {/* Navigation Footer */}
-        <View style={styles.footer}>
-            <TouchableOpacity 
-                style={styles.navBtn} 
-                onPress={navigateToPrevLesson}
-            >
-                <Feather name="chevron-left" size={20} color="#374151" />
-                <Text style={styles.navBtnText}>Previous</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-                style={[styles.navBtn, styles.primaryBtn]} 
-                onPress={handleLessonComplete}
-            >
-                <Text style={styles.primaryBtnText}>Complete & Next</Text>
-                <Feather name="chevron-right" size={20} color="white" />
-            </TouchableOpacity>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
+              <Feather name="chevron-left" size={24} color="white" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle} numberOfLines={1}>{course?.title}</Text>
+          <TouchableOpacity onPress={() => setMenuOpen(!menuOpen)} style={styles.headerBtn}>
+              <Feather name="menu" size={24} color="white" />
+          </TouchableOpacity>
         </View>
 
-        {/* Course Menu Overlay */}
-        {menuOpen && (
-            <View style={styles.menuOverlay}>
-                <View style={styles.menuHeader}>
-                    <Text style={styles.menuTitle}>Course Content</Text>
-                    <TouchableOpacity onPress={() => setMenuOpen(false)}>
-                        <Text style={{ color: '#6B7280' }}>Close</Text>
-                    </TouchableOpacity>
-                </View>
-                <ScrollView style={styles.menuList}>
-                    {course?.modules.map((module: any) => (
-                        <View key={module.id} style={styles.moduleItem}>
-                            <Text style={styles.moduleTitle}>{module.title}</Text>
-                            {module.lessons.map((lesson: any) => {
-                                const isActive = currentLesson?.id === lesson.id;
-                                return (
-                                    <TouchableOpacity 
-                                        key={lesson.id} 
-                                        style={[styles.lessonItem, isActive && styles.lessonItemActive]}
-                                        onPress={() => loadLesson(lesson.id)}
-                                    >
-                                        {lesson.type === 'quiz' ? (
-                                            <Feather name="help-circle" size={16} color={isActive ? '#2563EB' : '#6B7280'} />
-                                        ) : lesson.content_type === 'video' ? (
-                                            <Feather name="play-circle" size={16} color={isActive ? '#2563EB' : '#6B7280'} />
-                                        ) : (
-                                            <Feather name="file-text" size={16} color={isActive ? '#2563EB' : '#6B7280'} />
-                                        )}
-                                        <Text 
-                                            style={[styles.lessonItemText, isActive && styles.lessonItemTextActive]} 
-                                            numberOfLines={1}
-                                        >
-                                            {lesson.title}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    ))}
-                </ScrollView>
+        <View style={styles.contentContainer}>
+          {isOfflineMode && (
+            <View style={styles.offlineBanner}>
+              <Feather name="wifi-off" size={14} color="white" />
+              <Text style={styles.offlineText}>You are viewing downloaded content</Text>
             </View>
-        )}
-      </View>
-    </SafeAreaView>
+          )}
+          {/* Main Content Area */}
+          <ScrollView style={styles.mainContent} contentContainerStyle={{ paddingBottom: 100 }}>
+              {currentLesson && (
+                  <View style={styles.lessonCard}>
+                      <Text style={styles.lessonTitle}>{currentLesson.title}</Text>
+                      
+                      {currentLesson.content_type === 'video' && currentLesson.content_data?.fileId && (
+                          <View style={styles.videoContainer}>
+                            <VideoPlayer 
+                                fileId={currentLesson.content_data.fileId} 
+                                onComplete={handleLessonComplete}
+                            />
+                          </View>
+                      )}
+
+                      {(currentLesson.content_type === 'pdf' || currentLesson.content_type === 'document') && currentLesson.content_data?.fileId && (
+                          <View style={styles.videoContainer}>
+                            <PdfViewer fileId={currentLesson.content_data.fileId} />
+                          </View>
+                      )}
+
+                      {currentLesson.content_type === 'text' && (
+                          <LessonContent content={currentLesson.content} />
+                      )}
+
+                      {currentLesson.content_type === 'quiz' && currentLesson.content_data && (
+                          <QuizView 
+                              data={currentLesson.content_data} 
+                              onComplete={(score, passed) => {
+                                  if (passed) handleLessonComplete();
+                              }} 
+                          />
+                      )}
+
+                      {currentLesson.description && (
+                          <Text style={styles.description}>{currentLesson.description}</Text>
+                      )}
+                  </View>
+              )}
+          </ScrollView>
+
+          {/* Navigation Footer */}
+          <View style={styles.footer}>
+              <TouchableOpacity 
+                  style={styles.navBtn} 
+                  onPress={navigateToPrevLesson}
+              >
+                  <Feather name="chevron-left" size={20} color={Colors.light.text} />
+                  <Text style={styles.navBtnText}>Previous</Text>
+              </TouchableOpacity>
+
+              {currentLesson?.content_type !== 'quiz' && (
+                  <TouchableOpacity 
+                      style={[styles.navBtn, styles.primaryBtn]} 
+                      onPress={handleLessonComplete}
+                  >
+                      <Text style={styles.primaryBtnText}>Complete & Next</Text>
+                      <Feather name="chevron-right" size={20} color="white" />
+                  </TouchableOpacity>
+              )}
+          </View>
+
+          {/* Course Menu Overlay */}
+          {menuOpen && (
+              <View style={styles.menuOverlay}>
+                  <View style={styles.menuHeader}>
+                      <Text style={styles.menuTitle}>Course Content</Text>
+                      <TouchableOpacity onPress={() => setMenuOpen(false)} style={styles.closeBtn}>
+                          <Feather name="x" size={24} color={Colors.light.textMuted} />
+                      </TouchableOpacity>
+                  </View>
+                  <ScrollView style={styles.menuList}>
+                      {course?.modules.map((module: any) => (
+                          <View key={module.id} style={styles.moduleItem}>
+                              <Text style={styles.moduleTitle}>{module.title}</Text>
+                              {module.lessons.map((lesson: any) => {
+                                  const isActive = currentLesson?.id === lesson.id;
+                                  return (
+                                      <TouchableOpacity 
+                                          key={lesson.id} 
+                                          style={[styles.lessonItem, isActive && styles.lessonItemActive]}
+                                          onPress={() => loadLesson(lesson.id)}
+                                      >
+                                          {lesson.type === 'quiz' ? (
+                                              <Feather name="help-circle" size={16} color={isActive ? Colors.light.primary : Colors.light.textMuted} />
+                                          ) : lesson.content_type === 'video' ? (
+                                              <Feather name="play-circle" size={16} color={isActive ? Colors.light.primary : Colors.light.textMuted} />
+                                          ) : (
+                                              <Feather name="file-text" size={16} color={isActive ? Colors.light.primary : Colors.light.textMuted} />
+                                          )}
+                                          <Text 
+                                              style={[styles.lessonItemText, isActive && styles.lessonItemTextActive]} 
+                                              numberOfLines={1}
+                                          >
+                                              {lesson.title}
+                                          </Text>
+                                      </TouchableOpacity>
+                                  );
+                              })}
+                          </View>
+                      ))}
+                  </ScrollView>
+              </View>
+          )}
+
+          {/* Completion Modal */}
+          <CompletionModal
+            visible={completionModalVisible}
+            onNext={navigateToNextLesson}
+            onClose={() => setCompletionModalVisible(false)}
+            isLastLesson={isLastLesson}
+          />
+
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
+  },
+  headerBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 120,
+  },
+  safeArea: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Colors.light.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    backgroundColor: '#fff',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    zIndex: 10,
   },
   headerBtn: {
-    padding: 8,
+    padding: Spacing.sm,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: BorderRadius.full,
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: 'white',
     flex: 1,
     textAlign: 'center',
+    marginHorizontal: Spacing.md,
   },
   contentContainer: {
     flex: 1,
     position: 'relative',
+    backgroundColor: Colors.light.background,
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
+    marginTop: Spacing.sm,
+    overflow: 'hidden',
   },
   mainContent: {
     flex: 1,
-    padding: 16,
+    padding: Spacing.lg,
+  },
+  lessonCard: {
+    backgroundColor: 'white',
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    ...Shadows.sm,
   },
   lessonTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 16,
+    color: Colors.light.text,
+    marginBottom: Spacing.lg,
+  },
+  videoContainer: {
+    borderRadius: BorderRadius.md,
+    overflow: 'hidden',
+    backgroundColor: '#000',
+    marginBottom: Spacing.lg,
   },
   description: {
-    marginTop: 16,
-    fontSize: 14,
-    color: '#4B5563',
-    lineHeight: 20,
+    marginTop: Spacing.lg,
+    fontSize: 15,
+    color: Colors.light.textSecondary,
+    lineHeight: 24,
   },
   footer: {
     flexDirection: 'row',
-    padding: 16,
+    padding: Spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
-    backgroundColor: '#fff',
-    gap: 12,
+    borderTopColor: Colors.light.border,
+    backgroundColor: 'white',
+    gap: Spacing.md,
+    ...Shadows.sm,
   },
   navBtn: {
     flex: 1,
-    height: 48,
+    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
-    gap: 8,
+    borderColor: Colors.light.border,
+    borderRadius: BorderRadius.lg,
+    gap: Spacing.sm,
+    backgroundColor: 'white',
   },
   navBtnText: {
-    color: '#374151',
-    fontWeight: '500',
+    color: Colors.light.text,
+    fontWeight: '600',
+    fontSize: 15,
   },
   primaryBtn: {
-    backgroundColor: '#2563EB',
-    borderColor: '#2563EB',
+    backgroundColor: Colors.light.primary,
+    borderColor: Colors.light.primary,
     flex: 1.5,
   },
   primaryBtnText: {
     color: 'white',
     fontWeight: '600',
+    fontSize: 15,
   },
   menuOverlay: {
     position: 'absolute',
@@ -374,55 +484,76 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'white',
-    zIndex: 10,
+    zIndex: 20,
   },
   menuHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: Colors.light.border,
+    backgroundColor: 'white',
+    ...Shadows.sm,
   },
   menuTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#111827',
+    color: Colors.light.text,
+  },
+  closeBtn: {
+    padding: Spacing.xs,
   },
   menuList: {
     flex: 1,
   },
   moduleItem: {
-    paddingVertical: 12,
+    paddingVertical: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: Colors.light.border,
   },
   moduleTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    color: '#6B7280',
-    paddingHorizontal: 16,
-    marginBottom: 8,
+    color: Colors.light.textMuted,
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.sm,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   lessonItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    gap: 12,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    gap: Spacing.md,
   },
   lessonItemActive: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Colors.light.secondary,
     borderLeftWidth: 3,
-    borderLeftColor: '#2563EB',
+    borderLeftColor: Colors.light.primary,
   },
   lessonItemText: {
     fontSize: 15,
-    color: '#374151',
+    color: Colors.light.text,
+    flex: 1,
   },
   lessonItemTextActive: {
-    color: '#2563EB',
-    fontWeight: '500',
+    color: Colors.light.primary,
+    fontWeight: '600',
+  },
+  offlineBanner: {
+    backgroundColor: Colors.light.warning,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  offlineText: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'Inter_600SemiBold',
   },
 });

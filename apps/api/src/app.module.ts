@@ -24,6 +24,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { MailModule } from './modules/mail/mail.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { LearningPathsModule } from './modules/learning-paths/learning-paths.module';
+import { CertificatesModule } from './modules/certificates/certificates.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -67,6 +68,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     MailModule,
     AnalyticsModule,
     LearningPathsModule,
+    CertificatesModule,
   ],
 })
 export class AppModule {}

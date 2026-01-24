@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { Text } from '@/components/ui/Text';
+import { Colors, Spacing, Shadows, BorderRadius } from '@/constants/theme';
+import { Button } from '@/components/ui/Button';
 
 interface QuizQuestion {
   id: string;
@@ -88,8 +91,10 @@ export function QuizView({ data, onComplete }: Props) {
         </Text>
         
         {!passed && (
-            <TouchableOpacity 
-                style={[styles.button, styles.retryButton]}
+            <Button 
+                variant="outline"
+                title="Retry Quiz"
+                fullWidth
                 onPress={() => {
                     setCurrentQuestionIndex(0);
                     setSelectedOption(null);
@@ -98,16 +103,14 @@ export function QuizView({ data, onComplete }: Props) {
                     setScore(0);
                     setCompleted(false);
                 }}
-            >
-                <Text style={styles.retryButtonText}>Retry Quiz</Text>
-            </TouchableOpacity>
+            />
         )}
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <View style={styles.container}>
       <View style={styles.progressContainer}>
         <Text style={styles.progressText}>
           Question {currentQuestionIndex + 1} of {data.questions.length}
@@ -130,7 +133,7 @@ export function QuizView({ data, onComplete }: Props) {
           const isCorrect = option.id === currentQuestion.correctOptionId;
           const showCorrectness = showResult && (isSelected || isCorrect);
           
-          let optionStyle = styles.option;
+          let optionStyle: any = styles.option;
           if (isSelected) optionStyle = { ...optionStyle, ...styles.optionSelected };
           if (showResult && isCorrect) optionStyle = { ...optionStyle, ...styles.optionCorrect };
           if (showResult && isSelected && !isCorrect) optionStyle = { ...optionStyle, ...styles.optionWrong };
@@ -146,11 +149,11 @@ export function QuizView({ data, onComplete }: Props) {
                 <View style={[styles.radio, isSelected && styles.radioSelected]}>
                   {isSelected && <View style={styles.radioInner} />}
                 </View>
-                <Text style={styles.optionText}>{option.text}</Text>
+                <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>{option.text}</Text>
               </View>
               
-              {showResult && isCorrect && <Feather name="check-circle" size={20} color="#059669" />}
-              {showResult && isSelected && !isCorrect && <Feather name="x-circle" size={20} color="#EF4444" />}
+              {showResult && isCorrect && <Feather name="check-circle" size={20} color={Colors.light.success} />}
+              {showResult && isSelected && !isCorrect && <Feather name="x-circle" size={20} color={Colors.light.destructive} />}
             </TouchableOpacity>
           );
         })}
@@ -165,84 +168,112 @@ export function QuizView({ data, onComplete }: Props) {
 
       <View style={styles.footer}>
         {!showResult ? (
-          <TouchableOpacity
-            style={[styles.button, !selectedOption && styles.buttonDisabled]}
+          <Button
+            title="Check Answer"
             onPress={handleCheckAnswer}
             disabled={!selectedOption}
-          >
-            <Text style={styles.buttonText}>Check Answer</Text>
-          </TouchableOpacity>
+            fullWidth
+          />
         ) : (
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>
-              {isLastQuestion ? 'Finish Quiz' : 'Next Question'}
-            </Text>
-            <Feather name="arrow-right" size={20} color="white" />
-          </TouchableOpacity>
+          <Button
+            title={isLastQuestion ? 'Finish Quiz' : 'Next Question'}
+            onPress={handleNext}
+            icon={<Feather name="arrow-right" size={20} color="white" />}
+            fullWidth
+          />
         )}
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    width: '100%',
   },
-  content: {
-    padding: 24,
-    paddingBottom: 100,
+  resultContainer: {
+    padding: Spacing.xl,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scoreCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: Colors.light.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.xl,
+    borderWidth: 4,
+    borderColor: Colors.light.primary,
+  },
+  scoreText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.light.primary,
+  },
+  resultTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+    marginBottom: Spacing.sm,
+  },
+  resultSubtitle: {
+    fontSize: 16,
+    color: Colors.light.textMuted,
+    textAlign: 'center',
+    marginBottom: Spacing.xl,
   },
   progressContainer: {
-    marginBottom: 24,
+    marginBottom: Spacing.xl,
   },
   progressText: {
     fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 8,
+    color: Colors.light.textMuted,
+    marginBottom: Spacing.sm,
   },
   progressBar: {
-    height: 4,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 2,
+    height: 6,
+    backgroundColor: Colors.light.secondary,
+    borderRadius: BorderRadius.full,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#2563EB',
+    backgroundColor: Colors.light.primary,
+    borderRadius: BorderRadius.full,
   },
   questionText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 24,
+    color: Colors.light.text,
+    marginBottom: Spacing.xl,
     lineHeight: 28,
   },
   optionsContainer: {
-    marginBottom: 24,
+    marginBottom: Spacing.xl,
   },
   option: {
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
+    borderColor: Colors.light.border,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   optionSelected: {
-    borderColor: '#2563EB',
-    backgroundColor: '#EFF6FF',
+    borderColor: Colors.light.primary,
+    backgroundColor: Colors.light.secondary,
   },
   optionCorrect: {
-    borderColor: '#059669',
+    borderColor: Colors.light.success,
     backgroundColor: '#ECFDF5',
   },
   optionWrong: {
-    borderColor: '#EF4444',
+    borderColor: Colors.light.destructive,
     backgroundColor: '#FEF2F2',
   },
   optionContent: {
@@ -252,108 +283,48 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    color: '#374151',
-    marginLeft: 12,
+    color: Colors.light.text,
+    marginLeft: Spacing.md,
     flex: 1,
+  },
+  optionTextSelected: {
+    fontWeight: '600',
+    color: Colors.light.primary,
   },
   radio: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#D1D5DB',
+    borderColor: Colors.light.textMuted,
     justifyContent: 'center',
     alignItems: 'center',
   },
   radioSelected: {
-    borderColor: '#2563EB',
+    borderColor: Colors.light.primary,
   },
   radioInner: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#2563EB',
+    backgroundColor: Colors.light.primary,
   },
   explanationBox: {
-    backgroundColor: '#F3F4F6',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 24,
+    backgroundColor: Colors.light.secondary,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    marginBottom: Spacing.xl,
   },
   explanationTitle: {
     fontWeight: '600',
-    color: '#111827',
-    marginBottom: 4,
+    color: Colors.light.text,
+    marginBottom: Spacing.xs,
   },
   explanationText: {
-    color: '#4B5563',
+    color: Colors.light.textSecondary,
     lineHeight: 20,
   },
   footer: {
-    marginTop: 'auto',
+    marginTop: Spacing.md,
   },
-  button: {
-    backgroundColor: '#2563EB',
-    height: 50,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: '#9CA3AF',
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  resultContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
-  },
-  scoreCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#EFF6FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderWidth: 4,
-    borderColor: '#2563EB',
-  },
-  scoreText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#2563EB',
-  },
-  resultTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
-  },
-  resultSubtitle: {
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  retryButton: {
-    width: '100%',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-  },
-  retryButtonText: {
-    color: '#374151',
-    fontSize: 16,
-    fontWeight: '600',
-  }
 });

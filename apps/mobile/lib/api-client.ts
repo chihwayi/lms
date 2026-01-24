@@ -27,13 +27,17 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
     });
   }
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
 
+  if (options.body instanceof FormData) {
+    delete headers['Content-Type'];
+  }
+
   if (accessToken) {
-    (headers as any)['Authorization'] = `Bearer ${accessToken}`;
+    headers['Authorization'] = `Bearer ${accessToken}`;
   }
 
   const response = await fetch(url.toString(), {

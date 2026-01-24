@@ -1,6 +1,8 @@
-import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
+
+import { View, StyleSheet, FlatList, RefreshControl, StatusBar } from 'react-native';
+import { Text } from '@/components/ui/Text';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/theme';
+import { Colors, Spacing, Shadows, BorderRadius } from '@/constants/theme';
 import { Card } from '@/components/ui/Card';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
@@ -11,6 +13,7 @@ import * as Network from 'expo-network';
 import { offlineStorage } from '@/lib/offline-storage';
 import { useOfflineCourse } from '@/hooks/use-offline-course';
 import { Button } from '@/components/ui/Button';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CoursesScreen() {
   const router = useRouter();
@@ -90,69 +93,100 @@ export default function CoursesScreen() {
     return (
       <Card 
         style={styles.courseCard} 
+        variant="elevated"
         onPress={() => router.push(`/(app)/courses/${item.id}/learn`)}
       >
-        <View style={styles.courseHeader}>
-          <View style={styles.courseIcon}>
-            <Feather name="book" size={24} color={Colors.light.primary} />
+        <View style={styles.cardInner}>
+          <View style={styles.courseHeader}>
+            <View style={styles.iconContainer}>
+              <Feather name="book" size={24} color={Colors.light.primary} />
+            </View>
+            <View style={styles.headerText}>
+              <Text style={styles.courseTitle} numberOfLines={1}>{item.title}</Text>
+              <Text style={styles.courseCategory}>
+                {typeof item.category === 'object' ? (item.category?.name || 'General') : (item.category || 'General')}
+              </Text>
+            </View>
           </View>
-          <View style={styles.courseInfo}>
-            <Text style={styles.courseTitle} numberOfLines={1}>{item.title}</Text>
-            <Text style={styles.courseCategory}>
-              {typeof item.category === 'object' ? (item.category?.name || 'General') : (item.category || 'General')}
-            </Text>
+          
+          <Text style={styles.courseDesc} numberOfLines={2}>{item.description}</Text>
+          
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${item.progress || 0}%` }]} />
+            </View>
+            <Text style={styles.progressText}>{item.progress || 0}%</Text>
           </View>
-          {isOnline && (
+
+          <View style={styles.cardFooter}>
             <Button
-              title={isDownloaded ? "Saved" : isCurrentDownloading ? `${Math.round(downloadProgress)}%` : ""}
-              icon={<Feather name={isDownloaded ? "check" : "download"} size={16} color={isDownloaded ? Colors.light.success : Colors.light.primary} />}
-              onPress={() => !isDownloaded && !isDownloading && handleDownload(item.id)}
-              variant="ghost"
+              title={isOnline ? (isDownloaded ? "Available Offline" : "Download") : (isDownloaded ? "Available" : "Not Available")}
+              variant={isDownloaded ? "ghost" : "outline"}
               size="sm"
-              disabled={isDownloaded || isDownloading}
+              icon={<Feather name={isDownloaded ? "check-circle" : "download-cloud"} size={14} color={isDownloaded ? Colors.light.success : Colors.light.primary} />}
+              onPress={() => !isDownloaded && isOnline && !isDownloading && handleDownload(item.id)}
+              disabled={isDownloaded || isDownloading || !isOnline}
+              style={styles.downloadBtn}
             />
-          )}
+             {isCurrentDownloading && (
+                <Text style={styles.downloadingText}>Downloading... {Math.round(downloadProgress)}%</Text>
+             )}
+          </View>
         </View>
-        <Text style={styles.courseDesc} numberOfLines={2}>{item.description}</Text>
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: `${item.progress || 0}%` }]} />
-        </View>
-        <Text style={styles.progressText}>{item.progress || 0}% Complete</Text>
       </Card>
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>My Courses</Text>
-        <Button 
-            title={isOnline ? "Online" : "Offline"} 
-            variant={isOnline ? "ghost" : "destructive"} 
-            size="sm"
-            icon={<Feather name={isOnline ? "wifi" : "wifi-off"} size={14} color={isOnline ? Colors.light.success : "white"} />}
-            onPress={() => {}} 
-        />
-      </View>
-      <FlatList
-        data={courses}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); loadCourses(); }} />
-        }
-        ListEmptyComponent={
-          !loading ? (
-            <View style={styles.emptyState}>
-              <Feather name="book-open" size={48} color={Colors.light.textMuted} />
-              <Text style={styles.emptyText}>No courses found</Text>
-              <Button title="Browse Catalog" onPress={() => router.push('/(app)/dashboard')} variant="outline" style={{marginTop: 16}} />
-            </View>
-          ) : null
-        }
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <LinearGradient
+        colors={[Colors.light.gradientStart, Colors.light.gradientEnd]}
+        style={styles.headerBackground}
       />
-    </SafeAreaView>
+      
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <View style={styles.header}>
+          <Text style={styles.title}>My Courses</Text>
+          <View style={[styles.statusBadge, isOnline ? styles.statusOnline : styles.statusOffline]}>
+            <Feather name={isOnline ? "wifi" : "wifi-off"} size={12} color="white" />
+            <Text style={styles.statusText}>{isOnline ? "Online" : "Offline"}</Text>
+          </View>
+        </View>
+
+        <FlatList
+          data={courses}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={() => { setRefreshing(true); loadCourses(); }} 
+              tintColor="white"
+            />
+          }
+          ListEmptyComponent={
+            !loading ? (
+              <View style={styles.emptyState}>
+                <View style={styles.emptyIconBg}>
+                  <Feather name="book-open" size={48} color={Colors.light.primary} />
+                </View>
+                <Text style={styles.emptyTitle}>No courses found</Text>
+                <Text style={styles.emptyText}>You haven't enrolled in any courses yet.</Text>
+                <Button 
+                  title="Browse Catalog" 
+                  onPress={() => router.push('/(app)/dashboard')} 
+                  variant="primary" 
+                  style={{marginTop: Spacing.lg}} 
+                />
+              </View>
+            ) : null
+          }
+        />
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -161,83 +195,161 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.light.background,
   },
+  headerBackground: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 150,
+  },
+  safeArea: {
+    flex: 1,
+  },
   header: {
-    padding: 20,
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.lg,
+    paddingTop: Spacing.sm,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.light.background,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.light.border,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.text,
+    fontSize: 28,
+    fontWeight: '700',
+    color: 'white',
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 6,
+  },
+  statusOnline: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+  },
+  statusOffline: {
+    backgroundColor: Colors.light.destructive,
+  },
+  statusText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: '600',
   },
   listContent: {
-    padding: 20,
-    gap: 16,
+    padding: Spacing.lg,
+    paddingTop: Spacing.sm,
+    gap: Spacing.lg,
   },
   courseCard: {
-    marginBottom: 4,
+    padding: 0, // Reset default padding to handle inner layout
+    overflow: 'hidden',
+  },
+  cardInner: {
+    padding: Spacing.md,
   },
   courseHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: Spacing.sm,
   },
-  courseIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
     backgroundColor: Colors.light.secondary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: Spacing.md,
   },
-  courseInfo: {
+  headerText: {
     flex: 1,
   },
   courseTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: Colors.light.text,
+    marginBottom: 4,
   },
   courseCategory: {
-    fontSize: 12,
-    color: Colors.light.textSecondary,
+    fontSize: 14,
+    color: Colors.light.textMuted,
+    fontWeight: '500',
   },
   courseDesc: {
     fontSize: 14,
     color: Colors.light.textSecondary,
-    marginBottom: 16,
+    marginBottom: Spacing.md,
     lineHeight: 20,
   },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+    gap: Spacing.sm,
+  },
   progressBar: {
-    height: 6,
+    flex: 1,
+    height: 8,
     backgroundColor: Colors.light.secondary,
-    borderRadius: 3,
-    marginBottom: 8,
+    borderRadius: 4,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: Colors.light.primary,
-    borderRadius: 3,
+    borderRadius: 4,
   },
   progressText: {
     fontSize: 12,
+    fontWeight: '600',
     color: Colors.light.textMuted,
+    width: 40,
     textAlign: 'right',
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: Spacing.xs,
+    borderTopWidth: 1,
+    borderTopColor: Colors.light.border,
+    paddingTop: Spacing.md,
+  },
+  downloadBtn: {
+    height: 36,
+  },
+  downloadingText: {
+    fontSize: 12,
+    color: Colors.light.primary,
+    fontWeight: '500',
   },
   emptyState: {
     alignItems: 'center',
     padding: 40,
+    marginTop: 40,
+  },
+  emptyIconBg: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.light.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+    marginBottom: 8,
   },
   emptyText: {
-    marginTop: 16,
     color: Colors.light.textSecondary,
     fontSize: 16,
+    textAlign: 'center',
   },
 });

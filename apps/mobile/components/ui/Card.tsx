@@ -1,11 +1,11 @@
+
 import React from 'react';
 import { View, StyleSheet, ViewStyle, ViewProps, TouchableOpacity, StyleProp } from 'react-native';
-import { Colors } from '@/constants/theme';
-import { getShadow } from '@/lib/styles';
+import { Colors, Shadows, BorderRadius } from '@/constants/theme';
 
 interface CardProps extends ViewProps {
   style?: StyleProp<ViewStyle>;
-  variant?: 'default' | 'flat' | 'outlined';
+  variant?: 'default' | 'flat' | 'outlined' | 'elevated';
   onPress?: () => void;
 }
 
@@ -15,7 +15,15 @@ export function Card({ children, style, variant = 'default', onPress, ...props }
       case 'default':
         return {
           backgroundColor: Colors.light.card,
-          ...getShadow(Colors.light.text, { width: 0, height: 1 }, 0.05, 2, 2)
+          borderWidth: 1,
+          borderColor: Colors.light.border,
+          ...Shadows.sm
+        };
+      case 'elevated':
+        return {
+          backgroundColor: Colors.light.card,
+          borderWidth: 0,
+          ...Shadows.md
         };
       case 'flat':
         return {
@@ -23,7 +31,7 @@ export function Card({ children, style, variant = 'default', onPress, ...props }
         };
       case 'outlined':
         return {
-          backgroundColor: Colors.light.card,
+          backgroundColor: 'transparent',
           borderWidth: 1,
           borderColor: Colors.light.border,
         };
@@ -51,7 +59,8 @@ export function Card({ children, style, variant = 'default', onPress, ...props }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    borderRadius: BorderRadius.lg,
     padding: 16,
+    overflow: 'visible', // Needed for shadows on iOS
   },
 });

@@ -34,6 +34,7 @@ export class EnrollmentController {
     @Request() req,
     @Body() updateProgressDto: UpdateProgressDto,
   ) {
+    console.log('PATCH /enrollments/progress hit', req.user.id, updateProgressDto);
     return this.enrollmentService.updateProgress(req.user.id, updateProgressDto);
   }
 

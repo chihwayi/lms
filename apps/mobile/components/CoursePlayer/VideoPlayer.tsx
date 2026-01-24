@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
-import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { getOfflineVideoUrl, isVideoOffline } from '@/lib/offline-content';
 import { useAuthStore } from '@/stores/auth-store';
 import { useConfigStore } from '@/stores/config-store';
@@ -12,7 +12,6 @@ interface Props {
 }
 
 export function VideoPlayer({ fileId, onComplete, autoplay = false }: Props) {
-  const videoRef = useRef<Video>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,19 +58,19 @@ export function VideoPlayer({ fileId, onComplete, autoplay = false }: Props) {
     }
   };
 
-  const handlePlaybackStatusUpdate = (status: AVPlaybackStatus) => {
-    if (!status.isLoaded) {
-      if (status.error) {
-        console.error('Video Playback Error:', status.error);
-        setError('Playback Error');
-      }
-      return;
+  const player = useVideoPlayer(videoUrl, player => {
+    player.loop = false;
+    if (autoplay) {
+      player.play();
     }
+  });
 
-    if (status.didJustFinish && onComplete) {
-      onComplete();
-    }
-  };
+  useEffect(() => {
+    const subscription = player.addListener('playToEnd', () => {
+      onComplete?.();
+    });
+    return () => subscription.remove();
+  }, [player, onComplete]);
 
   if (loading) {
     return (
@@ -99,15 +98,11 @@ export function VideoPlayer({ fileId, onComplete, autoplay = false }: Props) {
 
   return (
     <View style={styles.container}>
-      <Video
-        ref={videoRef}
+      <VideoView
+        player={player}
         style={styles.video}
-        source={{ uri: videoUrl }}
-        useNativeControls
-        resizeMode={ResizeMode.CONTAIN}
-        isLooping={false}
-        onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
-        shouldPlay={autoplay}
+        allowsFullscreen
+        allowsPictureInPicture
       />
     </View>
   );

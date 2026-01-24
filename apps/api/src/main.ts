@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000', 'http://localhost:8081'],
     credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   });
   
   app.useGlobalPipes(new ValidationPipe({

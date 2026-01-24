@@ -132,13 +132,33 @@ export class EnrollmentService implements OnModuleInit {
   async updateProgress(userId: string, updateProgressDto: UpdateProgressDto): Promise<Enrollment> {
     const { courseId, lessonId, completed } = updateProgressDto;
 
-    const enrollment = await this.enrollmentRepository.findOne({
+    let enrollment = await this.enrollmentRepository.findOne({
       where: { userId, courseId },
       relations: ['course', 'course.modules', 'course.modules.lessons'],
     });
 
     if (!enrollment) {
-      throw new NotFoundException('Enrollment not found');
+      // Auto-enroll if not found (lazy enrollment for progress tracking)
+      const course = await this.courseRepository.findOne({ 
+        where: { id: courseId },
+        relations: ['modules', 'modules.lessons'] 
+      });
+      
+      if (!course) {
+        throw new NotFoundException('Course not found');
+      }
+
+      enrollment = this.enrollmentRepository.create({
+        userId,
+        courseId,
+        course, // Attach relation for progress calc below
+        status: EnrollmentStatus.ENROLLED,
+        progress: 0,
+        completedLessons: [],
+        lastAccessedAt: new Date(),
+      });
+      
+      enrollment = await this.enrollmentRepository.save(enrollment);
     }
 
     enrollment.lastAccessedAt = new Date();

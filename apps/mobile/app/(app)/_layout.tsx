@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
-import { Colors } from '@/constants/theme';
+import { Colors, Fonts } from '@/constants/theme';
 import { Platform } from 'react-native';
 
 export default function AppLayout() {
@@ -14,13 +14,14 @@ export default function AppLayout() {
           borderTopWidth: 1,
           borderTopColor: Colors.light.border,
           backgroundColor: Colors.light.background,
-          height: Platform.OS === 'ios' ? 88 : 60,
-          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          height: Platform.OS === 'ios' ? 88 : 70,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 12,
           paddingTop: 8,
         },
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '500',
+          fontFamily: Fonts.medium,
         },
       }}>
       <Tabs.Screen
@@ -31,6 +32,13 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color }) => <Feather name="compass" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="courses"
         options={{
           title: 'My Courses',
@@ -38,10 +46,36 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="settings"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <Feather name="user" size={24} color={color} />,
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <Feather name="settings" size={24} color={color} />,
+        }}
+      />
+      
+      {/* Hidden Routes */}
+      <Tabs.Screen
+        name="profile/index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="profile/edit"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="certificates/index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="certificates/[id]"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
