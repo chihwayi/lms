@@ -18,6 +18,8 @@ export enum LessonContentType {
   QUIZ = 'quiz',
   INTERACTIVE = 'interactive',
   SCORM = 'scorm',
+  DRAWING = 'drawing',
+  VOICE = 'voice',
 }
 
 @Entity('course_lessons')

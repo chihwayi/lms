@@ -598,6 +598,7 @@ export default function CourseLearnPage() {
                               We keep this inline to avoid additional state; it's recomputed on render, which is fine.
                             */}
                             <LessonContentRenderer 
+                                lessonId={currentLesson.id}
                                 blocks={currentLesson.content_data.blocks}
                                 content={currentLesson.content_data?.html || currentLesson.content}
                                 videoStartAtSeconds={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? undefined}

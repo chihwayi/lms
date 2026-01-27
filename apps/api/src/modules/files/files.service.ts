@@ -165,6 +165,42 @@ export class FilesService {
     });
   }
 
+  async uploadStudentSubmission(
+    file: Express.Multer.File,
+    userId: string,
+  ): Promise<{ url: string; filename: string }> {
+    // Validate file size (10MB limit for drawings/audio)
+    if (file.size > 10 * 1024 * 1024) {
+      throw new BadRequestException('File size exceeds 10MB limit');
+    }
+
+    // Generate unique filename for submission
+    const timestamp = Date.now();
+    const fileName = `submissions/${userId}/${timestamp}_${file.originalname.replace(/\s+/g, '_')}`;
+
+    try {
+      // Upload to MinIO
+      await this.minioClient.putObject(
+        this.bucketName,
+        fileName,
+        file.buffer,
+        file.size,
+        { 'Content-Type': file.mimetype }
+      );
+
+      // Generate Public URL
+      const fileUrl = `http://localhost:9000/${this.bucketName}/${fileName}`;
+      
+      return {
+        url: fileUrl,
+        filename: fileName
+      };
+    } catch (error) {
+      this.logger.error('Submission upload failed:', error);
+      throw new BadRequestException('Submission upload failed');
+    }
+  }
+
   async deleteFile(id: string, userId: string): Promise<void> {
     const file = await this.getFile(id);
     

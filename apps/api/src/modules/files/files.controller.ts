@@ -40,6 +40,18 @@ export class FilesController {
     );
   }
 
+  @Post('student/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadStudentSubmission(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req,
+  ) {
+    return this.filesService.uploadStudentSubmission(
+      file,
+      req.user.id,
+    );
+  }
+
   @Delete(':id')
   @RequirePermissions('manage_courses')
   async deleteFile(@Param('id') id: string, @Request() req) {

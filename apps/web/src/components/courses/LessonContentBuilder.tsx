@@ -20,7 +20,9 @@ import {
   Loader2,
   Paperclip,
   Pencil,
-  Check
+  Check,
+  Palette,
+  Mic
 } from 'lucide-react';
 import {
   Select,
@@ -32,7 +34,7 @@ import {
 
 interface ContentBlock {
   id: string;
-  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz';
+  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice';
   content?: string;
   fileId?: string;
   fileName?: string;
@@ -181,6 +183,7 @@ export function LessonContentBuilder({
       case 'video': return <Video className="w-4 h-4" />;
       case 'audio': return <Music className="w-4 h-4" />;
       case 'document': return <FileText className="w-4 h-4" />;
+      case 'drawing': return <Palette className="w-4 h-4" />;
       default: return <Paperclip className="w-4 h-4" />;
     }
   };
@@ -271,6 +274,38 @@ export function LessonContentBuilder({
                       </div>
                     </div>
                   )}
+                </div>
+              ) : block.type === 'drawing' ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600">
+                    This block will display a drawing canvas for students to submit their work.
+                  </p>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Assignment Title</label>
+                    <input
+                      type="text"
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                      value={block.title || ''}
+                      onChange={(e) => updateBlock(block.id, { title: e.target.value })}
+                      placeholder="e.g. Draw a picture of your family"
+                    />
+                  </div>
+                </div>
+              ) : block.type === 'voice' ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600">
+                    This block will display a voice recorder for students to submit audio answers.
+                  </p>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Assignment Title</label>
+                    <input
+                      type="text"
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                      value={block.title || ''}
+                      onChange={(e) => updateBlock(block.id, { title: e.target.value })}
+                      placeholder="e.g. Record yourself saying the alphabet"
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -379,6 +414,14 @@ export function LessonContentBuilder({
           <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-green-50 hover:text-green-600 hover:border-green-200" onClick={() => addBlock('document')}>
             <FileText className="w-5 h-5" />
             <span>Add Document</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-pink-50 hover:text-pink-600 hover:border-pink-200" onClick={() => addBlock('drawing')}>
+            <Palette className="w-5 h-5" />
+            <span>Add Drawing</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-red-50 hover:text-red-600 hover:border-red-200" onClick={() => addBlock('voice')}>
+            <Mic className="w-5 h-5" />
+            <span>Add Voice</span>
           </Button>
         </div>
       </div>

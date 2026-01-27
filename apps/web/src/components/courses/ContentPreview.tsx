@@ -40,6 +40,7 @@ export function ContentPreview({ isOpen, onClose, content }: ContentPreviewProps
         
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50/50">
           <LessonContentRenderer 
+            lessonId={content.id}
             blocks={blocks}
             content={content.data?.html || content.data?.content} // Legacy text content
             contentType={content.fileType}
