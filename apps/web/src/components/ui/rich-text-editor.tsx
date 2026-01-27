@@ -5,8 +5,9 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Button } from './button';
-import { Bold, Italic, List, ListOrdered, Heading1, Heading2, Link as LinkIcon, Undo, Redo } from 'lucide-react';
+import { Bold, Italic, List, ListOrdered, Heading1, Heading2, Link as LinkIcon, Undo, Redo, Sigma } from 'lucide-react';
 import { useEffect } from 'react';
+import { Mathematics } from '@/lib/tiptap-math-extension';
 
 interface RichTextEditorProps {
   content: string;
@@ -19,6 +20,7 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Mathematics,
       Link.configure({
         openOnClick: false,
       }),
@@ -132,6 +134,21 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
           type="button"
         >
           <LinkIcon className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => {
+            const content = window.prompt('Enter LaTeX equation (without $):');
+            if (content) {
+              editor.chain().focus().insertContent({ type: 'mathematics', attrs: { content } }).run();
+            }
+          }}
+          className={editor.isActive('mathematics') ? 'bg-gray-200' : ''}
+          type="button"
+          title="Insert Math"
+        >
+          <Sigma className="w-4 h-4" />
         </Button>
         <div className="flex-1" />
         <Button

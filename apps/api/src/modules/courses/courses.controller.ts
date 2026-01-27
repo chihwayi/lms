@@ -32,6 +32,12 @@ export class CoursesController {
     return this.coursesService.create(createCourseDto, req.user.id);
   }
 
+  @Post('seed-math')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  seedMath(@Request() req) {
+    return this.coursesService.seedMathCourse(req.user.id);
+  }
+
   @Get()
   findAll(@Query() query: any) {
     return this.coursesService.findAll(query);

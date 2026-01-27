@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Course, CourseStatus } from './entities/course.entity';
+import { Course, CourseStatus, CourseLevel, CourseVisibility } from './entities/course.entity';
 import { Category } from './entities/category.entity';
 import { CourseModule } from './entities/course-module.entity';
-import { CourseLesson } from './entities/course-lesson.entity';
+import { CourseLesson, LessonContentType } from './entities/course-lesson.entity';
 import { CourseFile } from './entities/course-file.entity';
 import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto } from './dto/course.dto';
 
@@ -615,5 +615,148 @@ export class CoursesService {
         previewLessons,
       },
     };
+  }
+
+  async seedMathCourse(instructorId: string) {
+    // 1. Create Course
+    const course = this.courseRepository.create({
+      title: 'Mathematics: Analytical Geometry',
+      description: 'A comprehensive guide to Analytical Geometry, covering gradients, straight lines, parallel and perpendicular lines.',
+      short_description: 'Master the fundamentals of Analytical Geometry including gradients and straight line equations.',
+      level: CourseLevel.INTERMEDIATE,
+      status: CourseStatus.PUBLISHED,
+      visibility: CourseVisibility.PUBLIC,
+      created_by: instructorId,
+      language: 'en',
+      price: 0,
+      thumbnail_url: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb',
+    });
+    const savedCourse = await this.courseRepository.save(course);
+
+    // Module 1: Gradient and Straight Line
+    const module1 = this.moduleRepository.create({
+      course_id: savedCourse.id,
+      title: 'Module 12: Equation of a Straight Line',
+      description: 'Understanding the form y = mx + c',
+      order_index: 0,
+      is_published: true,
+    });
+    const savedModule1 = await this.moduleRepository.save(module1);
+
+    const lesson1_1 = this.lessonRepository.create({
+      module_id: savedModule1.id,
+      title: 'Gradient and y-intercept',
+      description: 'Identifying gradient and y-intercept from equations',
+      content_type: LessonContentType.TEXT,
+      order_index: 0,
+      is_published: true,
+      duration_minutes: 10,
+      content_data: {
+        text: `
+          <h2>Equation of a straight line of the form $y = mx + c$</h2>
+          <p>In the equation $y = mx + c$:</p>
+          <ul>
+            <li>$m$ represents the <strong>gradient</strong></li>
+            <li>$c$ is the <strong>y-intercept</strong></li>
+          </ul>
+          <h3>Example 2</h3>
+          <p>Find the gradient and coordinates of y-axis for the following equations:</p>
+          <p>(a) $y = 2x + 3$</p>
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Gradient $m = 2$</li>
+            <li>y-intercept $(0; 3)$</li>
+          </ul>
+          <p>(b) $3x + 4y = 12$</p>
+          <p><strong>Solution:</strong></p>
+          <p>Make $y$ the subject of the formula:</p>
+          <p>$$3x + 4y = 12$$</p>
+          <p>$$4y = -3x + 12$$</p>
+          <p>$$y = \\frac{-3}{4}x + \\frac{12}{4}$$</p>
+          <p>$$y = -\\frac{3}{4}x + 3$$</p>
+          <ul>
+            <li>Gradient $m = -\\frac{3}{4}$</li>
+            <li>y-intercept $(0; 3)$</li>
+          </ul>
+        `
+      }
+    });
+    await this.lessonRepository.save(lesson1_1);
+
+    // Module 2: Finding Equation
+    const module2 = this.moduleRepository.create({
+      course_id: savedCourse.id,
+      title: 'Module 13: Finding Equation of a Straight Line',
+      description: 'How to determine the equation given points or gradient',
+      order_index: 1,
+      is_published: true,
+    });
+    const savedModule2 = await this.moduleRepository.save(module2);
+
+    const lesson2_1 = this.lessonRepository.create({
+      module_id: savedModule2.id,
+      title: 'Given a Point and Gradient',
+      description: 'Finding equation using y = mx + c',
+      content_type: LessonContentType.TEXT,
+      order_index: 0,
+      is_published: true,
+      duration_minutes: 15,
+      content_data: {
+        text: `
+          <h2>Finding Equation of a Straight Line</h2>
+          <p>Equation of a straight line can be given in the form:</p>
+          <ol>
+            <li>$y = mx + c$</li>
+            <li>$ax + by + c = 0$</li>
+          </ol>
+          <h3>Example 3</h3>
+          <p>Find the equation of a straight line passing through point $(-4; 1)$ with gradient $2$.</p>
+          <p><strong>Solution:</strong></p>
+          <p>Using $y = mx + c$ with $m=2$:</p>
+          <p>$$1 = 2(-4) + c$$</p>
+          <p>$$1 = -8 + c$$</p>
+          <p>$$1 + 8 = c$$</p>
+          <p>$$c = 9$$</p>
+          <p>So the equation is: $y = 2x + 9$</p>
+        `
+      }
+    });
+    await this.lessonRepository.save(lesson2_1);
+
+    // Module 3: Parallel and Perpendicular Lines
+    const module3 = this.moduleRepository.create({
+      course_id: savedCourse.id,
+      title: 'Module 14: Parallel and Perpendicular Lines',
+      description: 'Relationships between gradients of lines',
+      order_index: 2,
+      is_published: true,
+    });
+    const savedModule3 = await this.moduleRepository.save(module3);
+
+    const lesson3_1 = this.lessonRepository.create({
+      module_id: savedModule3.id,
+      title: 'Parallel Lines',
+      description: 'Lines with the same gradient',
+      content_type: LessonContentType.TEXT,
+      order_index: 0,
+      is_published: true,
+      duration_minutes: 10,
+      content_data: {
+        text: `
+          <h2>Parallel Lines</h2>
+          <p>Parallel lines have the <strong>same gradient</strong>.</p>
+          <p>$$m_1 = m_2$$</p>
+          <h3>Example</h3>
+          <p>Find the equation of the line parallel to the line with equation $y = 3x - 4$ which passes through the point $(0; 6)$.</p>
+          <p><strong>Solution:</strong></p>
+          <p>Since parallel lines have the same gradient, $m = 3$.</p>
+          <p>The point $(0; 6)$ gives the y-intercept directly ($c = 6$).</p>
+          <p>So the equation is: $y = 3x + 6$</p>
+        `
+      }
+    });
+    await this.lessonRepository.save(lesson3_1);
+
+    return savedCourse;
   }
 }

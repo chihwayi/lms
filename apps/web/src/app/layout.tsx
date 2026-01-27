@@ -1,4 +1,5 @@
 import './globals.css'
+import 'katex/dist/katex.min.css';
 import AuthWrapper from '@/components/AuthWrapper';
 import { ChatProvider } from '@/context/ChatContext';
 import { ChatWidget } from '@/components/chat/ChatWidget';
