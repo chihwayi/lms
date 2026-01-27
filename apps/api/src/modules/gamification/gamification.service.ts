@@ -102,6 +102,7 @@ export class GamificationService {
             type: 'XP_GAIN',
             amount, 
             reason, 
+            sourceId,
             currentXp: user.xp 
         }
       });
@@ -175,7 +176,7 @@ export class GamificationService {
     // Award XP bonus if badge has it
     const badge = await this.badgeRepository.findOneBy({ id: badgeId });
     if (badge && badge.xpBonus > 0) {
-      await this.awardXP(userId, badge.xpBonus, 'badge_earned', badge.id);
+      await this.awardXP(userId, badge.xpBonus, 'badge_earned');
     }
 
     return saved;

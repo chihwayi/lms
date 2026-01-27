@@ -10,7 +10,9 @@ import * as bcrypt from 'bcrypt';
 
 describe('AuthService', () => {
   let service: AuthService;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let userRepository: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let refreshTokenRepository: any;
 
   beforeEach(async () => {

@@ -13,10 +13,11 @@ interface VideoPlayerProps {
   fileId: string;
   poster?: string;
   title?: string;
+  startAt?: number;
   onProgress?: (currentTime: number, duration: number) => void;
 }
 
-export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerProps) {
+export function VideoPlayer({ fileId, poster, title, startAt = 0, onProgress }: VideoPlayerProps) {
   const { accessToken: token } = useAuthStore();
   const { instanceUrl } = useConfigStore();
   const [isLoading, setIsLoading] = useState(true);
@@ -98,6 +99,12 @@ export function VideoPlayer({ fileId, poster, title, onProgress }: VideoPlayerPr
 
     const updateDuration = () => {
       setDuration(video.duration);
+      // Seek to last position when metadata is ready
+      if (startAt > 0 && !isNaN(startAt)) {
+        try {
+          video.currentTime = Math.min(startAt, video.duration || startAt);
+        } catch {}
+      }
     };
 
     video.addEventListener('timeupdate', updateTime);

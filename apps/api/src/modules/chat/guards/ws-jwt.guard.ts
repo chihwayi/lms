@@ -19,7 +19,7 @@ export class WsJwtGuard implements CanActivate {
       // Assign the user to the socket object so we can access it in handlers
       client['user'] = payload;
       return true;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid authentication token');
     }
   }

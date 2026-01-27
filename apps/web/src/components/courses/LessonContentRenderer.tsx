@@ -25,9 +25,11 @@ interface LessonContentRendererProps {
   content?: string;
   contentType?: string;
   contentData?: any;
+  videoStartAtSeconds?: number;
+  onVideoProgress?: (currentTime: number, duration: number) => void;
 }
 
-export function LessonContentRenderer({ blocks, content, contentType, contentData }: LessonContentRendererProps) {
+export function LessonContentRenderer({ blocks, content, contentType, contentData, videoStartAtSeconds, onVideoProgress }: LessonContentRendererProps) {
   const { accessToken: token } = useAuthStore();
   const { instanceUrl } = useConfigStore();
   const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -54,7 +56,12 @@ export function LessonContentRenderer({ blocks, content, contentType, contentDat
       case 'video':
         return block.fileId ? (
           <div key={block.id} className="mb-6">
-            <VideoPlayer fileId={block.fileId} title={block.title} />
+            <VideoPlayer 
+              fileId={block.fileId} 
+              title={block.title} 
+              startAt={videoStartAtSeconds}
+              onProgress={onVideoProgress}
+            />
           </div>
         ) : null;
       case 'audio':

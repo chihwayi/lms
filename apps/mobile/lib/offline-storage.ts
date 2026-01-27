@@ -189,6 +189,67 @@ class OfflineStorageService {
     return data ? JSON.parse(data) : undefined;
   }
 
+  // --- Offline Lesson Notes Queue ---
+  async saveNoteOffline(lessonId: string, content: string) {
+    const key = `note_${lessonId}`;
+    const record = {
+      lessonId,
+      content,
+      synced: false,
+      updatedAt: Date.now(),
+    };
+    await AsyncStorage.setItem(key, JSON.stringify(record));
+  }
+
+  async getNoteOffline(lessonId: string) {
+    const key = `note_${lessonId}`;
+    const data = await AsyncStorage.getItem(key);
+    return data ? JSON.parse(data) : undefined;
+  }
+
+  async getPendingNotes() {
+    const keys = await AsyncStorage.getAllKeys();
+    const noteKeys = keys.filter(k => k.startsWith('note_'));
+    const items = await AsyncStorage.multiGet(noteKeys);
+    const pending: Array<{ lessonId: string; content: string }> = [];
+    for (const [, value] of items) {
+      if (value) {
+        const parsed = JSON.parse(value);
+        if (!parsed.synced) {
+          pending.push({ lessonId: parsed.lessonId, content: parsed.content });
+        }
+      }
+    }
+    return pending;
+  }
+
+  async markNoteSynced(lessonId: string) {
+    const key = `note_${lessonId}`;
+    const data = await AsyncStorage.getItem(key);
+    if (data) {
+      const parsed = JSON.parse(data);
+      parsed.synced = true;
+      await AsyncStorage.setItem(key, JSON.stringify(parsed));
+    }
+  }
+
+  // --- PDF Scroll Resume ---
+  async savePdfScrollProgress(lessonId: string, ratio: number) {
+    const key = `pdf_scroll_${lessonId}`;
+    const record = {
+      lessonId,
+      ratio,
+      updatedAt: Date.now(),
+    };
+    await AsyncStorage.setItem(key, JSON.stringify(record));
+  }
+
+  async getPdfScrollProgress(lessonId: string) {
+    const key = `pdf_scroll_${lessonId}`;
+    const data = await AsyncStorage.getItem(key);
+    return data ? JSON.parse(data) : undefined;
+  }
+
   async clearAllContent() {
     if (Platform.OS === 'web') {
       const keys = await AsyncStorage.getAllKeys();

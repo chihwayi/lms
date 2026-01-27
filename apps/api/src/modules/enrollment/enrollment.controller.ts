@@ -45,7 +45,7 @@ export class EnrollmentController {
     @Request() req,
     @Param('enrollmentId') enrollmentId: string,
     @Param('lessonId') lessonId: string,
-    @Body() answers: any,
+    @Body() answers: Record<string, string>,
   ) {
     return this.enrollmentService.submitQuiz(req.user.id, enrollmentId, lessonId, answers);
   }

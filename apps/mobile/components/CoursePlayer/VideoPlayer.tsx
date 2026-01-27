@@ -9,9 +9,11 @@ interface Props {
   fileId: string;
   onComplete?: () => void;
   autoplay?: boolean;
+  startAt?: number;
+  onProgress?: (currentTime: number, duration: number) => void;
 }
 
-export function VideoPlayer({ fileId, onComplete, autoplay = false }: Props) {
+export function VideoPlayer({ fileId, onComplete, autoplay = false, startAt = 0, onProgress }: Props) {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,13 +65,36 @@ export function VideoPlayer({ fileId, onComplete, autoplay = false }: Props) {
     if (autoplay) {
       player.play();
     }
+    if (startAt && startAt > 0) {
+      try {
+        // Seek to last known position
+        (player as any).seek?.(startAt);
+      } catch (e) {
+        // ignore
+      }
+    }
   });
 
   useEffect(() => {
     const subscription = player.addListener('playToEnd', () => {
       onComplete?.();
     });
-    return () => subscription.remove();
+    // Progress reporting (throttled)
+    let lastSentAt = 0;
+    const progressSub = player.addListener('timeUpdate', (payload: any) => {
+      const now = Date.now();
+      if (now - lastSentAt > 10000) {
+        // payload may contain currentTime and duration depending on expo-video version
+        const current = payload?.currentTime ?? (player as any)?.currentTime ?? 0;
+        const duration = payload?.duration ?? (player as any)?.duration ?? 0;
+        onProgress?.(Math.floor(current), Math.floor(duration));
+        lastSentAt = now;
+      }
+    });
+    return () => {
+      subscription.remove();
+      progressSub.remove();
+    };
   }, [player, onComplete]);
 
   if (loading) {

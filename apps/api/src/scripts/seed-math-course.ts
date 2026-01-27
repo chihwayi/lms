@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
 import { CoursesService } from '../modules/courses/courses.service';
 import { UsersService } from '../modules/users/users.service';
-import { CourseLevel, CourseStatus, CourseVisibility } from '../modules/courses/entities/course.entity';
+import { CourseLevel, CourseVisibility } from '../modules/courses/entities/course.entity';
 import { LessonContentType } from '../modules/courses/entities/course-lesson.entity';
 import { Logger } from '@nestjs/common';
 

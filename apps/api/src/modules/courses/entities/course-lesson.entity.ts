@@ -44,7 +44,7 @@ export class CourseLesson {
   content_url: string;
 
   @Column('jsonb', { nullable: true })
-  content_data: any;
+  content_data: Record<string, unknown>;
 
   @Column({ default: 0 })
   duration_minutes: number;

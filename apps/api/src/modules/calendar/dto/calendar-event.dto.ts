@@ -7,5 +7,5 @@ export class CalendarEventDto {
   allDay: boolean;
   type: 'milestone' | 'assignment' | 'quiz' | 'mentorship' | 'live-session';
   status?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }

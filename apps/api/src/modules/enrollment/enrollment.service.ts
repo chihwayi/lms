@@ -4,7 +4,6 @@ import { Repository, DataSource } from 'typeorm';
 import { Enrollment, EnrollmentStatus } from './entities/enrollment.entity';
 import { QuizSubmission } from './entities/quiz-submission.entity';
 import { Course } from '../courses/entities/course.entity';
-import { CourseLesson } from '../courses/entities/course-lesson.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
@@ -61,6 +60,16 @@ export class EnrollmentService implements OnModuleInit {
     
     if (hasLastLesson.length === 0) {
       await this.dataSource.query(`ALTER TABLE "enrollments" ADD COLUMN "last_lesson_id" uuid`);
+    }
+
+    const hasLessonProgress = await this.dataSource.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name='enrollments' AND column_name='lesson_progress';
+    `);
+    
+    if (hasLessonProgress.length === 0) {
+      await this.dataSource.query(`ALTER TABLE "enrollments" ADD COLUMN "lesson_progress" jsonb DEFAULT '{}'`);
     }
   }
 
@@ -130,7 +139,7 @@ export class EnrollmentService implements OnModuleInit {
   }
 
   async updateProgress(userId: string, updateProgressDto: UpdateProgressDto): Promise<Enrollment> {
-    const { courseId, lessonId, completed } = updateProgressDto;
+    const { courseId, lessonId, completed, lastPosition, totalDuration } = updateProgressDto;
 
     let enrollment = await this.enrollmentRepository.findOne({
       where: { userId, courseId },
@@ -155,6 +164,7 @@ export class EnrollmentService implements OnModuleInit {
         status: EnrollmentStatus.ENROLLED,
         progress: 0,
         completedLessons: [],
+        lesson_progress: {},
         lastAccessedAt: new Date(),
       });
       
@@ -163,6 +173,34 @@ export class EnrollmentService implements OnModuleInit {
 
     enrollment.lastAccessedAt = new Date();
     enrollment.lastLessonId = lessonId;
+
+    // Update granular progress
+    if (!enrollment.lesson_progress) {
+      enrollment.lesson_progress = {};
+    }
+    
+    // Ensure lesson_progress is an object (sometimes DB returns it as null if column default wasn't applied)
+    if (typeof enrollment.lesson_progress !== 'object') {
+      enrollment.lesson_progress = {};
+    }
+
+    const existingProgress = enrollment.lesson_progress[lessonId] || { 
+      completed: false, 
+      lastPosition: 0, 
+      totalDuration: 0, 
+      lastUpdated: new Date() 
+    };
+
+    // Determine completion status
+    const isCompleted = completed !== undefined ? completed : existingProgress.completed;
+
+    enrollment.lesson_progress[lessonId] = {
+      ...existingProgress,
+      lastPosition: lastPosition !== undefined ? lastPosition : existingProgress.lastPosition,
+      totalDuration: totalDuration !== undefined ? totalDuration : existingProgress.totalDuration,
+      completed: isCompleted,
+      lastUpdated: new Date()
+    };
 
     if (completed) {
       if (!enrollment.completedLessons) {
@@ -194,10 +232,15 @@ export class EnrollmentService implements OnModuleInit {
       await this.gamificationService.checkAndUnlockAchievement(userId, 'first-course-completed');
     }
 
+    // Force TypeORM to detect jsonb change if only deep property changed
+    // However, since we are reassigning the whole object property enrollment.lesson_progress[lessonId], it might not be enough for TypeORM
+    // Best practice is to clone the object
+    enrollment.lesson_progress = { ...enrollment.lesson_progress };
+
     return this.enrollmentRepository.save(enrollment);
   }
 
-  async submitQuiz(userId: string, enrollmentId: string, lessonId: string, answers: any): Promise<QuizSubmission> {
+  async submitQuiz(userId: string, enrollmentId: string, lessonId: string, answers: Record<string, string>): Promise<QuizSubmission> {
     const enrollment = await this.enrollmentRepository.findOne({
       where: { id: enrollmentId, userId },
       relations: ['course', 'course.modules', 'course.modules.lessons'],
@@ -293,7 +336,7 @@ export class EnrollmentService implements OnModuleInit {
       try {
         const enrollment = await this.enroll(userId, { courseId });
         enrollments.push(enrollment);
-      } catch (error) {
+      } catch {
         // Skip if already enrolled or other error, but maybe log it
         // For bulk, we usually want to succeed for valid ones
       }

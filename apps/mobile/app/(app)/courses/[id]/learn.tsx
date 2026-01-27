@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCourseProgress } from '@/hooks/use-course-progress';
 import { CompletionModal } from '@/components/CoursePlayer/CompletionModal';
+import { LessonNotesModal } from '@/components/CoursePlayer/LessonNotesModal';
 import { PdfViewer } from '@/components/CoursePlayer/PdfViewer';
 
 export default function CourseLearnScreen() {
@@ -27,9 +28,11 @@ export default function CourseLearnScreen() {
   const { markLessonComplete, syncOfflineProgress } = useCourseProgress();
   
   const [course, setCourse] = useState<any>(null);
+  const [enrollment, setEnrollment] = useState<any>(null);
   const [currentLesson, setCurrentLesson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notesModalVisible, setNotesModalVisible] = useState(false);
   const [isOfflineMode, setIsOfflineMode] = useState(false);
   const [completionModalVisible, setCompletionModalVisible] = useState(false);
   const [isLastLesson, setIsLastLesson] = useState(false);
@@ -38,6 +41,26 @@ export default function CourseLearnScreen() {
     loadCourse();
     // Try to sync any offline progress when entering the course
     syncOfflineProgress();
+    // Sync any offline notes queued
+    (async () => {
+      try {
+        const status = await Network.getNetworkStateAsync();
+        const online = !!status.isConnected && !!status.isInternetReachable;
+        if (!online) return;
+        const pending = await offlineStorage.getPendingNotes();
+        for (const item of pending) {
+          try {
+            const res = await apiClient(`/lessons/${item.lessonId}/note`, {
+              method: 'PUT',
+              body: JSON.stringify({ content: item.content }),
+            });
+            if (res.ok) {
+              await offlineStorage.markNoteSynced(item.lessonId);
+            }
+          } catch {}
+        }
+      } catch {}
+    })();
   }, [id]);
 
   const loadCourse = async () => {
@@ -49,12 +72,21 @@ export default function CourseLearnScreen() {
       const online = !!status.isConnected && !!status.isInternetReachable;
       
       let courseData = null;
+      let enrollmentData = null;
 
       if (online && accessToken) {
         try {
             const res = await apiClient(`/courses/${id}`);
             if (res.ok) {
                 courseData = await res.json();
+            }
+            // Fetch enrollment for resume info
+            const enrollRes = await apiClient(`/enrollments/${id}/check`);
+            if (enrollRes.ok) {
+              const data = await enrollRes.json();
+              if (data.isEnrolled) {
+                enrollmentData = data.enrollment;
+              }
             }
         } catch (e) {
             console.log('Online fetch failed, trying offline');
@@ -73,10 +105,24 @@ export default function CourseLearnScreen() {
       }
 
       setCourse(courseData);
+      if (enrollmentData) {
+        setEnrollment(enrollmentData);
+      }
       
-      // Set initial lesson (first one)
-      if (courseData.modules?.[0]?.lessons?.[0]) {
-          await loadLesson(courseData.modules[0].lessons[0].id, courseData);
+      // Set initial lesson: prefer lastLessonId, else first incomplete, else first
+      const allLessons = courseData.modules?.flatMap((m: any) => m.lessons) || [];
+      let initialLessonId: string | null = null;
+      if (enrollmentData?.lastLessonId) {
+        initialLessonId = enrollmentData.lastLessonId;
+      } else if (enrollmentData?.completedLessons?.length) {
+        const completedSet = new Set(enrollmentData.completedLessons);
+        const firstIncomplete = allLessons.find((l: any) => !completedSet.has(l.id));
+        initialLessonId = firstIncomplete?.id || allLessons?.[0]?.id || null;
+      } else {
+        initialLessonId = allLessons?.[0]?.id || null;
+      }
+      if (initialLessonId) {
+        await loadLesson(initialLessonId, courseData);
       }
     } catch (error) {
       console.error(error);
@@ -232,9 +278,16 @@ export default function CourseLearnScreen() {
               <Feather name="chevron-left" size={24} color="white" />
           </TouchableOpacity>
           <Text style={styles.headerTitle} numberOfLines={1}>{course?.title}</Text>
-          <TouchableOpacity onPress={() => setMenuOpen(!menuOpen)} style={styles.headerBtn}>
-              <Feather name="menu" size={24} color="white" />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            {!isOfflineMode && (
+                <TouchableOpacity onPress={() => setNotesModalVisible(true)} style={styles.headerBtn}>
+                    <Feather name="edit-3" size={24} color="white" />
+                </TouchableOpacity>
+            )}
+            <TouchableOpacity onPress={() => setMenuOpen(!menuOpen)} style={styles.headerBtn}>
+                <Feather name="menu" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.contentContainer}>
@@ -267,6 +320,26 @@ export default function CourseLearnScreen() {
                                                   <View key={block.id} style={styles.blockWrapper}>
                                                       <VideoPlayer 
                                                           fileId={block.fileId} 
+                                                          startAt={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? 0}
+                                                          onProgress={async (pos, dur) => {
+                                                            if (!accessToken || isOfflineMode) return;
+                                                            const now = Date.now();
+                                                            const lastSent = (global as any).__mobileLastProgressSent || 0;
+                                                            if (now - lastSent > 10000) {
+                                                              try {
+                                                                await apiClient('/enrollments/progress', {
+                                                                  method: 'PATCH',
+                                                                  body: JSON.stringify({
+                                                                    courseId: id,
+                                                                    lessonId: currentLesson.id,
+                                                                    lastPosition: pos,
+                                                                    totalDuration: dur,
+                                                                  }),
+                                                                });
+                                                                (global as any).__mobileLastProgressSent = now;
+                                                              } catch {}
+                                                            }
+                                                          }}
                                                           // Only trigger completion if it's the only block or specific logic needed
                                                           // For now, we leave onComplete undefined to avoid premature completion
                                                       />
@@ -278,6 +351,26 @@ export default function CourseLearnScreen() {
                                                       <AudioPlayer 
                                                           fileId={block.fileId} 
                                                           title={block.title}
+                                                          startAt={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? 0}
+                                                          onProgress={async (pos, dur) => {
+                                                            if (!accessToken || isOfflineMode) return;
+                                                            const now = Date.now();
+                                                            const lastSent = (global as any).__mobileLastProgressSent || 0;
+                                                            if (now - lastSent > 10000) {
+                                                              try {
+                                                                await apiClient('/enrollments/progress', {
+                                                                  method: 'PATCH',
+                                                                  body: JSON.stringify({
+                                                                    courseId: id,
+                                                                    lessonId: currentLesson.id,
+                                                                    lastPosition: pos,
+                                                                    totalDuration: dur,
+                                                                  }),
+                                                                });
+                                                                (global as any).__mobileLastProgressSent = now;
+                                                              } catch {}
+                                                            }
+                                                          }}
                                                       />
                                                   </View>
                                               ) : null;
@@ -298,6 +391,26 @@ export default function CourseLearnScreen() {
                                   <View style={styles.videoContainer}>
                                     <VideoPlayer 
                                         fileId={currentLesson.content_data.fileId} 
+                                        startAt={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? 0}
+                                        onProgress={async (pos, dur) => {
+                                          if (!accessToken || isOfflineMode) return;
+                                          const now = Date.now();
+                                          const lastSent = (global as any).__mobileLastProgressSent || 0;
+                                          if (now - lastSent > 10000) {
+                                            try {
+                                              await apiClient('/enrollments/progress', {
+                                                method: 'PATCH',
+                                                body: JSON.stringify({
+                                                  courseId: id,
+                                                  lessonId: currentLesson.id,
+                                                  lastPosition: pos,
+                                                  totalDuration: dur,
+                                                }),
+                                              });
+                                              (global as any).__mobileLastProgressSent = now;
+                                            } catch {}
+                                          }
+                                        }}
                                         onComplete={handleLessonComplete}
                                     />
                                   </View>
@@ -305,7 +418,7 @@ export default function CourseLearnScreen() {
 
                               {(currentLesson.content_type === 'pdf' || currentLesson.content_type === 'document') && currentLesson.content_data?.fileId && (
                                   <View style={styles.videoContainer}>
-                                    <PdfViewer fileId={currentLesson.content_data.fileId} />
+                                    <PdfViewer fileId={currentLesson.content_data.fileId} lessonId={currentLesson.id} />
                                   </View>
                               )}
 
@@ -367,6 +480,12 @@ export default function CourseLearnScreen() {
                               <Text style={styles.moduleTitle}>{module.title}</Text>
                               {module.lessons.map((lesson: any) => {
                                   const isActive = currentLesson?.id === lesson.id;
+                                  const lessonProgress = enrollment?.lesson_progress?.[lesson.id];
+                                  const isCompleted = enrollment?.completedLessons?.includes(lesson.id);
+                                  const resumeTime = !isCompleted && lessonProgress && lessonProgress.lastPosition > 0 
+                                      ? new Date(lessonProgress.lastPosition * 1000).toISOString().substr(14, 5) 
+                                      : null;
+
                                   return (
                                       <TouchableOpacity 
                                           key={lesson.id} 
@@ -380,12 +499,19 @@ export default function CourseLearnScreen() {
                                           ) : (
                                               <Feather name="file-text" size={16} color={isActive ? Colors.light.primary : Colors.light.textMuted} />
                                           )}
-                                          <Text 
-                                              style={[styles.lessonItemText, isActive && styles.lessonItemTextActive]} 
-                                              numberOfLines={1}
-                                          >
-                                              {lesson.title}
-                                          </Text>
+                                          <View style={{ flex: 1 }}>
+                                              <Text 
+                                                  style={[styles.lessonItemText, isActive && styles.lessonItemTextActive]} 
+                                                  numberOfLines={1}
+                                              >
+                                                  {lesson.title}
+                                              </Text>
+                                              {resumeTime && (
+                                                  <Text style={{ fontSize: 11, color: Colors.light.primary, marginTop: 2, fontWeight: '500' }}>
+                                                      Resume {resumeTime}
+                                                  </Text>
+                                              )}
+                                          </View>
                                       </TouchableOpacity>
                                   );
                               })}
@@ -402,6 +528,15 @@ export default function CourseLearnScreen() {
             onClose={() => setCompletionModalVisible(false)}
             isLastLesson={isLastLesson}
           />
+
+          {/* Notes Modal */}
+          {currentLesson && (
+            <LessonNotesModal
+              visible={notesModalVisible}
+              onClose={() => setNotesModalVisible(false)}
+              lessonId={currentLesson.id}
+            />
+          )}
 
         </View>
       </SafeAreaView>

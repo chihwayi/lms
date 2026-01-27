@@ -149,7 +149,7 @@ export class CreateLessonDto {
   content_url?: string;
 
   @IsOptional()
-  content_data?: any;
+  content_data?: Record<string, unknown>;
 
   @IsOptional()
   @IsNumber()

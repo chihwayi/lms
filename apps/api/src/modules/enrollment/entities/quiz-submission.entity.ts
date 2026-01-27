@@ -22,7 +22,7 @@ export class QuizSubmission {
   lesson: CourseLesson;
 
   @Column('jsonb')
-  answers: any; // { questionId: answerValue }
+  answers: Record<string, string>; // { questionId: answerValue }
 
   @Column('float')
   score: number; // Percentage 0-100

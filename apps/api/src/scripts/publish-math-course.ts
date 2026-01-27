@@ -1,14 +1,14 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
-import { CoursesService } from '../modules/courses/courses.service';
+// import { CoursesService } from '../modules/courses/courses.service';
 import { DataSource } from 'typeorm';
 import { Course } from '../modules/courses/entities/course.entity';
 import { CourseStatus } from '../modules/courses/entities/course.entity';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
-  const coursesService = app.get(CoursesService);
+  // const coursesService = app.get(CoursesService);
   const dataSource = app.get(DataSource);
   const courseRepo = dataSource.getRepository(Course);
 

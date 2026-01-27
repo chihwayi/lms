@@ -27,16 +27,16 @@ export function useOfflineCourse() {
 
       // Calculate total items to download for progress tracking
       let totalItems = 1; // Course itself
-      course.modules.forEach((module: any) => {
-        totalItems += module.lessons.length;
+      course.modules.forEach((courseModule: any) => {
+        totalItems += courseModule.lessons.length;
       });
 
       let processedItems = 1;
       setDownloadProgress((processedItems / totalItems) * 100);
 
       // 2. Fetch Lessons and Content
-      for (const module of course.modules) {
-        for (const lesson of module.lessons) {
+      for (const courseModule of course.modules) {
+        for (const lesson of courseModule.lessons) {
           // Fetch full lesson details (content, quiz config, etc.)
           const lessonResponse = await apiClient(`/courses/${courseId}/lessons/${lesson.id}`);
           if (lessonResponse.ok) {

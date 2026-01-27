@@ -18,7 +18,7 @@ export class WsJwtGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token);
       client['user'] = payload;
       return true;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid authentication token');
     }
   }

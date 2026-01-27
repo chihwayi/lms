@@ -24,7 +24,7 @@ export class UserActivity {
   type: ActivityType;
 
   @Column({ type: 'jsonb', nullable: true })
-  metadata: any;
+  metadata: Record<string, unknown>;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

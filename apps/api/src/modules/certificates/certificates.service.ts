@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CertificateTemplate, CertificateElement } from './entities/certificate-template.entity';
+import { CertificateTemplate } from './entities/certificate-template.entity';
 import { CreateCertificateTemplateDto } from './dto/create-certificate-template.dto';
 import { User } from '../users/entities/user.entity';
 import { Enrollment } from '../enrollment/entities/enrollment.entity';

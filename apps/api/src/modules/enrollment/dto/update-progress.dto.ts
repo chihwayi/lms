@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Min, Max, IsUUID, IsOptional, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsUUID, IsOptional, IsBoolean } from 'class-validator';
 
 export class UpdateProgressDto {
   @IsNotEmpty()
@@ -12,4 +12,12 @@ export class UpdateProgressDto {
   @IsOptional()
   @IsBoolean()
   completed?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  lastPosition?: number;
+
+  @IsOptional()
+  @IsNumber()
+  totalDuration?: number;
 }

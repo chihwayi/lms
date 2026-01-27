@@ -12,7 +12,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { SetMetadata } from '@nestjs/common';
-import { CoursesService } from './courses.service';
+import { CoursesService, CourseQuery, SearchCoursesQuery } from './courses.service';
 import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, UpdateLessonDto } from './dto/course.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
@@ -39,12 +39,12 @@ export class CoursesController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: CourseQuery) {
     return this.coursesService.findAll(query);
   }
 
   @Get('search')
-  searchCourses(@Query() query: any) {
+  searchCourses(@Query() query: SearchCoursesQuery) {
     return this.coursesService.searchCourses(query);
   }
 

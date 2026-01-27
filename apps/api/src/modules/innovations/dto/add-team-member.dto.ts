@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional } from 'class-validator';
 import { TeamRole } from '../entities/innovation-member.entity';
 
 export class AddTeamMemberDto {

@@ -15,9 +15,11 @@ interface Props {
   url?: string; // Direct URL support
   title?: string;
   onComplete?: () => void;
+  startAt?: number;
+  onProgress?: (currentTime: number, duration: number) => void;
 }
 
-export function AudioPlayer({ fileId, url, title, onComplete }: Props) {
+export function AudioPlayer({ fileId, url, title, onComplete, startAt = 0, onProgress }: Props) {
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const { accessToken } = useAuthStore();
   const { instanceUrl } = useConfigStore();
@@ -56,17 +58,38 @@ export function AudioPlayer({ fileId, url, title, onComplete }: Props) {
 
   const player = useVideoPlayer(sourceUrl, (player) => {
     player.loop = false;
-    player.play(); // Auto-play when loaded? Maybe better not.
-    // player.pause();
+    if (startAt && startAt > 0) {
+      try {
+        (player as any).seek?.(startAt);
+      } catch {
+        (player as any).seekTo?.(startAt);
+      }
+    }
   });
 
   const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
   const { status } = useEvent(player, 'statusChange', { status: player.status });
   
-  // Progress tracking
-  // Note: expo-video doesn't always expose easy progress hooks in the same way, 
-  // but we can poll or use timeUpdate if available (it is).
-  // For simplicity in this first pass, we'll just have Play/Pause.
+  // Progress tracking via timeUpdate events
+  useEffect(() => {
+    let lastSentAt = 0;
+    const progressSub = player.addListener('timeUpdate', (payload: any) => {
+      const now = Date.now();
+      if (now - lastSentAt > 10000) {
+        const current = payload?.currentTime ?? (player as any)?.currentTime ?? 0;
+        const duration = payload?.duration ?? (player as any)?.duration ?? 0;
+        onProgress?.(Math.floor(current), Math.floor(duration));
+        lastSentAt = now;
+      }
+    });
+    const endSub = player.addListener('playToEnd', () => {
+      onComplete?.();
+    });
+    return () => {
+      progressSub.remove();
+      endSub.remove();
+    };
+  }, [player, onComplete, onProgress]);
 
   useEffect(() => {
     const subscription = player.addListener('playToEnd', () => {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Request, Query } from '@nestjs/common';
 import { MentorshipService } from './mentorship.service';
 import { CreateMentorProfileDto } from './dto/create-mentor-profile.dto';
 import { UpdateMentorProfileDto } from './dto/update-mentor-profile.dto';
@@ -6,8 +6,6 @@ import { CreateMentorshipRequestDto } from './dto/create-mentorship-request.dto'
 import { UpdateMentorshipRequestDto } from './dto/update-mentorship-request.dto';
 import { CreateSessionDto } from './dto/session.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../rbac/guards/roles.guard';
-import { Roles } from '../rbac/decorators/roles.decorator';
 
 import { SubmitFeedbackDto } from './dto/submit-feedback.dto';
 
@@ -40,7 +38,7 @@ export class MentorshipController {
   @UseGuards(JwtAuthGuard)
   @Get('sessions')
   getSessions(@Request() req) {
-    return this.mentorshipService.getSessions(req.user.id, req.user.role);
+    return this.mentorshipService.getSessions(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)

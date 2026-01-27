@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 
 @Injectable()
 export class AiService {
   private genAI: GoogleGenerativeAI;
-  private model: any;
+  private model: GenerativeModel;
   private readonly logger = new Logger(AiService.name);
 
   constructor(private configService: ConfigService) {
@@ -40,7 +40,7 @@ export class AiService {
     }
   }
 
-  async generateQuiz(topic: string, difficulty: string, count: number = 3): Promise<any> {
+  async generateQuiz(topic: string, difficulty: string, count: number = 3): Promise<Record<string, unknown>> {
     if (!this.model) {
       return this.mockGenerateQuiz(topic, difficulty, count);
     }
@@ -87,7 +87,7 @@ export class AiService {
     };
   }
 
-  private async mockGenerateQuiz(topic: string, difficulty: string, count: number): Promise<any> {
+  private async mockGenerateQuiz(topic: string, difficulty: string, count: number): Promise<Record<string, unknown>> {
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     return {

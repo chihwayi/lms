@@ -25,7 +25,10 @@ export class NotificationsService {
     const savedNotification = await this.notificationRepository.save(notification);
 
     // Send real-time notification
-    this.notificationsGateway.sendNotificationToUser(createNotificationDto.userId, savedNotification);
+    this.notificationsGateway.sendNotificationToUser(
+      createNotificationDto.userId, 
+      { ...savedNotification } as unknown as Record<string, unknown>
+    );
 
     return savedNotification;
   }

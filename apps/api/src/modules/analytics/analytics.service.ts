@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, LessThan } from 'typeorm';
+import { Repository, LessThan } from 'typeorm';
 import { UserActivity, ActivityType } from './entities/user-activity.entity';
 import { Enrollment, EnrollmentStatus } from '../enrollment/entities/enrollment.entity';
 import { QuizSubmission } from '../enrollment/entities/quiz-submission.entity';
@@ -70,7 +70,7 @@ export class AnalyticsService {
     }
   }
 
-  async logActivity(userId: string, type: ActivityType, metadata?: any) {
+  async logActivity(userId: string, type: ActivityType, metadata?: Record<string, unknown>) {
     const activity = this.activityRepository.create({
       user_id: userId,
       type,

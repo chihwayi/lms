@@ -7,7 +7,9 @@ import { FilesService } from '../files/files.service';
 
 describe('UsersService', () => {
   let service: UsersService;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let userRepository: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let filesService: any;
 
   beforeEach(async () => {
@@ -61,7 +63,7 @@ describe('UsersService', () => {
 
   describe('uploadAvatar', () => {
     it('should upload avatar and update user', async () => {
-      const file = { buffer: Buffer.from('test') } as any;
+      const file = { buffer: Buffer.from('test') } as unknown as Express.Multer.File;
       const fileName = 'avatar.jpg';
       filesService.uploadAvatar.mockResolvedValue(fileName);
       userRepository.update.mockResolvedValue({ affected: 1 });

@@ -3,13 +3,10 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  SubscribeMessage,
-  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { WsJwtGuard } from './guards/ws-jwt.guard';
 
 @WebSocketGateway({
   cors: {
@@ -76,7 +73,7 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
     return undefined;
   }
 
-  sendNotificationToUser(userId: string, notification: any) {
+  sendNotificationToUser(userId: string, notification: Record<string, unknown>) {
     const sockets = this.userSockets.get(userId);
     if (sockets) {
       sockets.forEach(socketId => {

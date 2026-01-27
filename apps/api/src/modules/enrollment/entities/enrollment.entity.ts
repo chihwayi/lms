@@ -47,4 +47,7 @@ export class Enrollment {
 
   @Column({ name: 'completed_at', nullable: true })
   completedAt: Date;
+
+  @Column({ type: 'jsonb', nullable: true, default: {} })
+  lesson_progress: Record<string, { lastPosition: number; totalDuration: number; completed: boolean; lastUpdated: Date }>;
 }

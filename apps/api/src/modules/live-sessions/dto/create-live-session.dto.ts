@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID, IsDateString } from 'class-validator';
-import { SessionPlatform, SessionStatus } from '../entities/live-session.entity';
+import { SessionPlatform } from '../entities/live-session.entity';
 
 export class CreateLiveSessionDto {
   @IsUUID()

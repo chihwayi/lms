@@ -12,6 +12,7 @@ import { ChevronLeft, ChevronRight, PlayCircle, CheckCircle, FileText, Lock, Cir
 import { VideoPlayer } from '@/components/courses/VideoPlayer';
 import { QuizRunner, QuizData } from '@/components/courses/QuizRunner';
 import { LessonContentRenderer, ContentBlock } from '@/components/courses/LessonContentRenderer';
+import { LessonNotes } from '@/components/courses/LessonNotes';
 import { AiAssistantButton } from '@/components/ai/AiAssistantButton';
 import { ScrollArea } from '../../../../components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '../../../../components/ui/sheet';
@@ -49,6 +50,8 @@ interface Enrollment {
   progress: number;
   completedLessons: string[] | null;
   status: string;
+  lastLessonId?: string | null;
+  lesson_progress?: Record<string, { lastPosition: number; totalDuration: number; completed: boolean; lastUpdated: string }>;
 }
 
 import { apiClient } from '@/lib/api-client';
@@ -142,14 +145,18 @@ export default function CourseLearnPage() {
         if (fetchedEnrollment) {
           setEnrollment(fetchedEnrollment);
           
-          // Set initial lesson (first incomplete or first overall)
           const allLessons = fetchedCourse.modules.flatMap((m: Module) => m.lessons);
           const completed = fetchedEnrollment.completedLessons || [];
-          
-          // If we already have a current lesson (e.g. from state preservation), keep it, else find first incomplete
+
           if (!currentLesson) {
-              const firstIncomplete = allLessons.find((l: Lesson) => !completed.includes(l.id));
-              setCurrentLesson(firstIncomplete || allLessons[0]);
+            let initial: Lesson | undefined;
+            if (fetchedEnrollment.lastLessonId) {
+              initial = allLessons.find((l: Lesson) => l.id === fetchedEnrollment.lastLessonId);
+            }
+            if (!initial) {
+              initial = allLessons.find((l: Lesson) => !completed.includes(l.id)) || allLessons[0];
+            }
+            setCurrentLesson(initial || allLessons[0]);
           }
         } else if (!isOfflineMode) {
              // Only redirect if online and not enrolled
@@ -213,6 +220,29 @@ export default function CourseLearnPage() {
 
     // Only update progress every 10% or so to avoid spamming
     const progressPercent = (currentTime / duration) * 100;
+    // Throttle by 10 seconds and 10% increments
+    const now = Date.now();
+    const lastSent = (window as any).__lastProgressSent || 0;
+    const lastPercent = (window as any).__lastProgressPercent || 0;
+    const shouldSend =
+      now - lastSent > 10000 || Math.abs(progressPercent - lastPercent) >= 10;
+    if (shouldSend && accessToken && !isOfflineMode) {
+      try {
+        const res = await apiClient('/enrollments/progress', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            courseId: course?.id,
+            lessonId: currentLesson.id,
+            lastPosition: Math.floor(currentTime),
+            totalDuration: Math.floor(duration),
+          }),
+        });
+        if (res.ok) {
+          (window as any).__lastProgressSent = now;
+          (window as any).__lastProgressPercent = progressPercent;
+        }
+      } catch {}
+    }
     
     // If progress > 90%, mark as complete automatically for videos
     if (progressPercent > 90 && !enrollment.completedLessons?.includes(currentLesson.id)) {
@@ -431,6 +461,11 @@ export default function CourseLearnPage() {
                   const isCompleted = isLessonCompleted(lesson.id);
                   const Icon = lesson.content_type === 'video' ? PlayCircle : FileText;
 
+                  const lessonProgress = enrollment?.lesson_progress?.[lesson.id];
+                  const resumeTime = !isCompleted && lessonProgress && lessonProgress.lastPosition > 0 
+                      ? new Date(lessonProgress.lastPosition * 1000).toISOString().substr(14, 5) 
+                      : null;
+
                   return (
                     <button
                       key={lesson.id}
@@ -448,7 +483,15 @@ export default function CourseLearnPage() {
                           <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-gray-400'}`} />
                         )}
                       </div>
-                      <span className="flex-1 text-left line-clamp-1">{lesson.title}</span>
+                      <div className="flex-1 text-left overflow-hidden">
+                          <div className="line-clamp-1">{lesson.title}</div>
+                          {resumeTime && (
+                              <div className="text-[10px] text-blue-600 font-medium flex items-center gap-1 mt-0.5">
+                                  <div className="w-1 h-1 rounded-full bg-blue-500" />
+                                  Resume {resumeTime}
+                              </div>
+                          )}
+                      </div>
                       {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
                     </button>
                   );
@@ -547,9 +590,18 @@ export default function CourseLearnPage() {
                     {currentLesson.content_data?.blocks && currentLesson.content_data.blocks.length > 0 ? (
                         <div className="p-4 md:p-8">
                             <h1 className="text-2xl md:text-3xl font-bold mb-6">{currentLesson.title}</h1>
+                            {/* Derive resume position from enrollment.lesson_progress for this lesson */}
+                            {/*
+                              Note: lesson_progress is stored on the server. If present, we pass the lastPosition to the video blocks for resume.
+                            */}
+                            {/*
+                              We keep this inline to avoid additional state; it's recomputed on render, which is fine.
+                            */}
                             <LessonContentRenderer 
                                 blocks={currentLesson.content_data.blocks}
                                 content={currentLesson.content_data?.html || currentLesson.content}
+                                videoStartAtSeconds={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? undefined}
+                                onVideoProgress={handleProgress}
                             />
                             {currentLesson.description && (
                                 <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
@@ -565,6 +617,7 @@ export default function CourseLearnPage() {
                              <VideoPlayer
                                 fileId={currentLesson.content_data?.fileId || ''}
                                 title={currentLesson.title}
+                                startAt={enrollment?.lesson_progress?.[currentLesson.id]?.lastPosition ?? 0}
                                 onProgress={handleProgress}
                              />
                         </div>
@@ -629,6 +682,12 @@ export default function CourseLearnPage() {
                             )}
                         </div>
                     )}
+                </CardContent>
+              </Card>
+
+              <Card className="overflow-hidden bg-white shadow-sm border-0">
+                <CardContent className="p-4 md:p-8">
+                    <LessonNotes lessonId={currentLesson.id} />
                 </CardContent>
               </Card>
 

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, IsNumber, IsOptional, IsUrl, IsBoolean, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsNumber, IsOptional, IsUrl, Min } from 'class-validator';
 
 export class CreateMentorProfileDto {
   @IsString()

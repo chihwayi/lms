@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional, IsBoolean, IsObject, IsUUID } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsObject, IsUUID } from 'class-validator';
 import { NotificationType } from '../entities/notification.entity';
 
 export class CreateNotificationDto {
@@ -17,5 +17,5 @@ export class CreateNotificationDto {
 
   @IsObject()
   @IsOptional()
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }

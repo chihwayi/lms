@@ -18,7 +18,7 @@ export class Badge {
   xpBonus: number;
 
   @Column({ type: 'simple-json', nullable: true })
-  criteria: Record<string, any>;
+  criteria: Record<string, unknown>;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

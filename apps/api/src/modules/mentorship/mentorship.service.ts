@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike, ArrayContains, Between } from 'typeorm';
+import { Repository } from 'typeorm';
 import { MentorProfile } from './entities/mentor-profile.entity';
 import { MentorshipRequest, MentorshipRequestStatus } from './entities/mentorship-request.entity';
 import { MentorshipSession, SessionStatus } from './entities/mentorship-session.entity';
@@ -161,7 +161,7 @@ export class MentorshipService {
     return this.sessionRepository.save(session);
   }
 
-  async getSessions(userId: string, role: string) {
+  async getSessions(userId: string) {
     // If mentor, find sessions where they are the mentor
     // If student, find sessions where they are the mentee
     
@@ -173,7 +173,7 @@ export class MentorshipService {
     
     const mentorProfile = await this.mentorProfileRepository.findOne({ where: { userId } });
     
-    const whereConditions: any[] = [{ menteeId: userId }];
+    const whereConditions: Record<string, unknown>[] = [{ menteeId: userId }];
     if (mentorProfile) {
         whereConditions.push({ mentorId: mentorProfile.id });
     }
@@ -198,8 +198,6 @@ export class MentorshipService {
     if (tags.size === 0) {
         return []; 
     }
-
-    const tagArray = Array.from(tags);
 
     // 3. Find Mentors with overlapping expertise
     const mentors = await this.mentorProfileRepository.createQueryBuilder('mentor')

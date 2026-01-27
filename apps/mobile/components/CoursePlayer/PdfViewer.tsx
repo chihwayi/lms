@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
@@ -9,20 +9,24 @@ import { useConfigStore } from '@/stores/config-store';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { Button } from '@/components/ui/Button';
 import { getOfflineFileUrl, isFileOffline } from '@/lib/offline-content';
+import { offlineStorage } from '@/lib/offline-storage';
 
 interface Props {
   fileId: string;
+  lessonId?: string;
 }
 
-export function PdfViewer({ fileId }: Props) {
+export function PdfViewer({ fileId, lessonId }: Props) {
   const { accessToken } = useAuthStore();
   const { instanceUrl } = useConfigStore();
+  const webviewRef = useRef<WebView>(null);
   
   const baseUrl = instanceUrl?.replace(/\/$/, '');
   const onlineUrl = `${baseUrl}/api/v1/files/${fileId}/stream?token=${accessToken}`;
 
   const [loading, setLoading] = useState(true);
   const [localUrl, setLocalUrl] = useState<string | null>(null);
+  const [resumeRatio, setResumeRatio] = useState<number | null>(null);
 
   useEffect(() => {
     const checkOffline = async () => {
@@ -37,6 +41,17 @@ export function PdfViewer({ fileId }: Props) {
     };
     checkOffline();
   }, [fileId]);
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      if (!lessonId) return;
+      const rec = await offlineStorage.getPdfScrollProgress(lessonId);
+      if (rec?.ratio != null) {
+        setResumeRatio(rec.ratio);
+      }
+    };
+    fetchResume();
+  }, [lessonId]);
 
   const pdfUrl = localUrl || onlineUrl;
 
@@ -89,6 +104,7 @@ export function PdfViewer({ fileId }: Props) {
   return (
     <View style={styles.container}>
       <WebView
+        ref={webviewRef}
         source={{ uri: pdfUrl }}
         style={styles.webview}
         startInLoadingState
@@ -97,7 +113,46 @@ export function PdfViewer({ fileId }: Props) {
                <ActivityIndicator size="small" color={Colors.light.primary} />
            </View>
         )}
-        onLoadEnd={() => setLoading(false)}
+        onLoadEnd={async () => {
+          setLoading(false);
+          if (lessonId && resumeRatio != null && webviewRef.current) {
+            const js = `
+              (function() {
+                var h = document.body.scrollHeight - window.innerHeight;
+                var y = h > 0 ? h * ${resumeRatio} : 0;
+                window.scrollTo(0, y);
+              })();
+              true;
+            `;
+            webviewRef.current.injectJavaScript(js);
+          }
+        }}
+        injectedJavaScript={`
+          (function() {
+            function sendRatio() {
+              var h = document.body.scrollHeight - window.innerHeight;
+              var y = window.scrollY || window.pageYOffset || 0;
+              var r = h > 0 ? (y / h) : 0;
+              window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'scrollRatio', value: r }));
+            }
+            window.addEventListener('scroll', function() {
+              if (typeof requestAnimationFrame !== 'undefined') {
+                requestAnimationFrame(sendRatio);
+              } else {
+                setTimeout(sendRatio, 250);
+              }
+            }, { passive: true });
+          })();
+          true;
+        `}
+        onMessage={async (event) => {
+          try {
+            const data = JSON.parse(event.nativeEvent.data);
+            if (data?.type === 'scrollRatio' && typeof data.value === 'number' && lessonId) {
+              await offlineStorage.savePdfScrollProgress(lessonId, data.value);
+            }
+          } catch {}
+        }}
         originWhitelist={['*']}
         allowFileAccess={true}
         allowFileAccessFromFileURLs={true}

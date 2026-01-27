@@ -25,11 +25,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly chatService: ChatService) {}
 
-  handleConnection(client: Socket) {
+  handleConnection() {
     // console.log('Client connected:', client.id);
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect() {
     // console.log('Client disconnected:', client.id);
   }
 

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { Innovation, InnovationStatus } from './entities/innovation.entity';
 import { InnovationMilestone } from './entities/innovation-milestone.entity';
 import { InnovationMember, TeamRole } from './entities/innovation-member.entity';
@@ -54,9 +54,9 @@ export class InnovationsService {
     }
 
     if (role === 'admin' || role === 'instructor' || role === 'educator') {
-      const where: any = {};
+      const where: FindOptionsWhere<Innovation> = {};
       if (status) {
-        where.status = status;
+        where.status = status as InnovationStatus;
       }
       return this.innovationRepository.find({
         where,

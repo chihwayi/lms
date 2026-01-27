@@ -6,7 +6,41 @@ import { Category } from './entities/category.entity';
 import { CourseModule } from './entities/course-module.entity';
 import { CourseLesson, LessonContentType } from './entities/course-lesson.entity';
 import { CourseFile } from './entities/course-file.entity';
+import { LessonNote } from './entities/lesson-note.entity';
 import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, UpdateLessonDto } from './dto/course.dto';
+
+export interface CourseQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+  level?: CourseLevel;
+  status?: CourseStatus;
+  instructorId?: string;
+}
+
+export interface SearchCoursesQuery {
+  q?: string;
+  categories?: string[];
+  levels?: CourseLevel[];
+  minPrice?: number;
+  maxPrice?: number;
+  language?: string;
+  featured?: boolean | string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'ASC' | 'DESC';
+}
+
+export interface PublishingStatus {
+  canPublish: boolean;
+  validationErrors: string[];
+  status: CourseStatus;
+  publishedAt: Date;
+  moduleCount: number;
+  lessonCount: number;
+}
 
 @Injectable()
 export class CoursesService {
@@ -21,6 +55,8 @@ export class CoursesService {
     private lessonRepository: Repository<CourseLesson>,
     @InjectRepository(CourseFile)
     private fileRepository: Repository<CourseFile>,
+    @InjectRepository(LessonNote)
+    private noteRepository: Repository<LessonNote>,
   ) {}
 
   async create(createCourseDto: CreateCourseDto, userId: string): Promise<Course> {
@@ -31,7 +67,7 @@ export class CoursesService {
     return this.courseRepository.save(course);
   }
 
-  async findAll(query: any = {}): Promise<{ courses: Course[]; total: number }> {
+  async findAll(query: CourseQuery = {}): Promise<{ courses: Course[]; total: number }> {
     const { page = 1, limit = 10, search, category, level, status, instructorId } = query;
     const queryBuilder = this.courseRepository
       .createQueryBuilder('course')
@@ -105,6 +141,29 @@ export class CoursesService {
     }
 
     await this.courseRepository.remove(course);
+  }
+
+  // Lesson Notes
+  async getLessonNote(lessonId: string, userId: string): Promise<LessonNote | null> {
+    return this.noteRepository.findOne({
+      where: { lessonId, userId },
+    });
+  }
+
+  async saveLessonNote(lessonId: string, userId: string, content: string): Promise<LessonNote> {
+    let note = await this.getLessonNote(lessonId, userId);
+
+    if (note) {
+      note.content = content;
+    } else {
+      note = this.noteRepository.create({
+        lessonId,
+        userId,
+        content,
+      });
+    }
+
+    return this.noteRepository.save(note);
   }
 
   async publish(id: string, userId: string): Promise<Course> {
@@ -347,7 +406,7 @@ export class CoursesService {
     return this.lessonRepository.save(lesson);
   }
 
-  async getLessonContent(lessonId: string): Promise<any> {
+  async getLessonContent(lessonId: string): Promise<Record<string, unknown>> {
     const lesson = await this.lessonRepository.findOne({
       where: { id: lessonId },
       relations: ['files'],
@@ -397,7 +456,7 @@ export class CoursesService {
     return this.courseRepository.save(course);
   }
 
-  async getPublishingStatus(courseId: string): Promise<any> {
+  async getPublishingStatus(courseId: string): Promise<PublishingStatus> {
     const course = await this.findOne(courseId);
     
     const validationErrors = [];
@@ -421,7 +480,7 @@ export class CoursesService {
   }
 
   // Enhanced search
-  async searchCourses(query: any): Promise<{ courses: Course[]; total: number; filters: any }> {
+  async searchCourses(query: SearchCoursesQuery): Promise<{ courses: Course[]; total: number; filters: Record<string, unknown> }> {
     try {
       const { 
         q = '', 
@@ -438,7 +497,7 @@ export class CoursesService {
       } = query;
 
       let whereClause = "WHERE c.status = 'published'";
-      const params: any[] = [];
+      const params: unknown[] = [];
       let paramIndex = 1;
 
       if (q) {
@@ -521,7 +580,7 @@ export class CoursesService {
     }
   }
 
-  async getFeaturedCourses(): Promise<any[]> {
+  async getFeaturedCourses(): Promise<Record<string, unknown>[]> {
     try {
       const result = await this.courseRepository.query(
         `SELECT c.id, c.title, c.description, c.short_description, c.level, c.price, 
@@ -564,7 +623,7 @@ export class CoursesService {
     });
   }
 
-  async getCoursePreview(id: string): Promise<any> {
+  async getCoursePreview(id: string): Promise<Record<string, unknown>> {
     const course = await this.courseRepository.findOne({
       where: { id, status: CourseStatus.PUBLISHED },
       relations: ['instructor', 'category', 'modules', 'modules.lessons'],
