@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { apiClient } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Play, Clock, Users, Star, BookOpen } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { Play, Clock, Users, Star, BookOpen, Eye } from 'lucide-react';
 
 interface CoursePreviewProps {
   courseId: string;
@@ -14,6 +16,7 @@ interface CoursePreviewProps {
 export function CoursePreview({ courseId, onEnroll }: CoursePreviewProps) {
   const [course, setCourse] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedLesson, setSelectedLesson] = useState<any>(null);
 
   useEffect(() => {
     fetchCoursePreview();
@@ -57,6 +60,15 @@ export function CoursePreview({ courseId, onEnroll }: CoursePreviewProps) {
       </Card>
     );
   }
+
+  const processContent = (content: string) => {
+    if (!content) return '';
+    // Replace $...$ with <span data-type="mathematics" data-content="..."></span>
+    // This ensures Tiptap parses them as math nodes
+    return content.replace(/\$([^$]+)\$/g, (match, equation) => {
+      return `<span data-type="mathematics" data-content="${equation.replace(/"/g, '&quot;')}"></span>`;
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -180,9 +192,15 @@ export function CoursePreview({ courseId, onEnroll }: CoursePreviewProps) {
                           {lessonIndex + 1}. {lesson.title}
                         </span>
                         {lesson.is_preview && (
-                          <span className="px-2 py-1 text-xs font-bold bg-green-100 text-green-800 rounded-full">
-                            FREE
-                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="bg-green-100 text-green-800 hover:bg-green-200"
+                            onClick={() => setSelectedLesson(lesson)}
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            Preview
+                          </Button>
                         )}
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -197,6 +215,43 @@ export function CoursePreview({ courseId, onEnroll }: CoursePreviewProps) {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={!!selectedLesson} onOpenChange={(open) => !open && setSelectedLesson(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">{selectedLesson?.title}</DialogTitle>
+            <div className="text-sm text-gray-500">
+               {selectedLesson?.is_preview ? 'Free Preview' : 'Course Content'}
+            </div>
+          </DialogHeader>
+          
+          <div className="mt-4">
+            {(selectedLesson?.content_data?.content || selectedLesson?.content_data?.text) ? (
+              <RichTextEditor 
+                content={processContent(selectedLesson.content_data.content || selectedLesson.content_data.text)} 
+                readOnly={true} 
+              />
+            ) : selectedLesson?.description ? (
+              <p className="text-gray-700">{selectedLesson.description}</p>
+            ) : (
+              <p className="text-gray-500 italic">No content available for preview.</p>
+            )}
+          </div>
+          
+          {/* Debug info for development */}
+          {process.env.NODE_ENV === 'development' && (
+               <div className="mt-8 pt-4 border-t text-xs text-gray-400">
+                  <p>Debug Info:</p>
+                  <p>Lesson ID: {selectedLesson?.id}</p>
+                  <p>Has Content: {selectedLesson?.content_data ? 'Yes' : 'No'}</p>
+               </div>
+          )}
+
+          <DialogFooter>
+            <Button onClick={() => setSelectedLesson(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -12,13 +12,14 @@ export async function ensureVideoDir() {
   }
 }
 
-export async function saveVideoForOffline(
+export async function saveFileForOffline(
     fileId: string, 
     token: string, 
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number) => void,
+    extension: string = 'mp4'
 ): Promise<string> {
     if (Platform.OS === 'web') {
-        console.warn('Offline video download not supported on web');
+        console.warn('Offline download not supported on web');
         return '';
     }
     await ensureVideoDir();
@@ -27,7 +28,7 @@ export async function saveVideoForOffline(
     // Remove trailing slash if exists
     const baseUrl = instanceUrl?.replace(/\/$/, '') || '';
     const url = `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}`;
-    const fileUri = VIDEO_DIR + `${fileId}.mp4`; // Assuming mp4 for now
+    const fileUri = VIDEO_DIR + `${fileId}.${extension}`;
 
     const downloadResumable = FileSystem.createDownloadResumable(
         url,
@@ -53,9 +54,17 @@ export async function saveVideoForOffline(
     }
 }
 
-export async function getOfflineVideoUrl(fileId: string): Promise<string | null> {
+export async function saveVideoForOffline(
+    fileId: string, 
+    token: string, 
+    onProgress?: (progress: number) => void
+): Promise<string> {
+    return saveFileForOffline(fileId, token, onProgress, 'mp4');
+}
+
+export async function getOfflineFileUrl(fileId: string, extension: string = 'mp4'): Promise<string | null> {
     if (Platform.OS === 'web') return null;
-    const fileUri = VIDEO_DIR + `${fileId}.mp4`;
+    const fileUri = VIDEO_DIR + `${fileId}.${extension}`;
     const info = await FileSystem.getInfoAsync(fileUri);
     if (info.exists) {
         return fileUri;
@@ -63,18 +72,30 @@ export async function getOfflineVideoUrl(fileId: string): Promise<string | null>
     return null;
 }
 
-export async function isVideoOffline(fileId: string): Promise<boolean> {
+export async function getOfflineVideoUrl(fileId: string): Promise<string | null> {
+    return getOfflineFileUrl(fileId, 'mp4');
+}
+
+export async function isFileOffline(fileId: string, extension: string = 'mp4'): Promise<boolean> {
     if (Platform.OS === 'web') return false;
-    const fileUri = VIDEO_DIR + `${fileId}.mp4`;
+    const fileUri = VIDEO_DIR + `${fileId}.${extension}`;
     const info = await FileSystem.getInfoAsync(fileUri);
     return info.exists;
 }
 
-export async function removeOfflineVideo(fileId: string): Promise<void> {
+export async function isVideoOffline(fileId: string): Promise<boolean> {
+    return isFileOffline(fileId, 'mp4');
+}
+
+export async function removeOfflineFile(fileId: string, extension: string = 'mp4'): Promise<void> {
     if (Platform.OS === 'web') return;
-    const fileUri = VIDEO_DIR + `${fileId}.mp4`;
+    const fileUri = VIDEO_DIR + `${fileId}.${extension}`;
     const info = await FileSystem.getInfoAsync(fileUri);
     if (info.exists) {
         await FileSystem.deleteAsync(fileUri);
     }
+}
+
+export async function removeOfflineVideo(fileId: string): Promise<void> {
+    return removeOfflineFile(fileId, 'mp4');
 }

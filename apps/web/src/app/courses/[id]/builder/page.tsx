@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { CourseBuilder } from '@/components/courses/CourseBuilder';
 import { apiClient } from '@/lib/api-client';
+import { useAuthStore } from '@/lib/auth-store';
 import Link from 'next/link';
 
 export default function CourseBuilderPage() {
@@ -17,27 +18,46 @@ export default function CourseBuilderPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCourse = async (courseId: string) => {
+    const init = async () => {
       try {
-        const response = await apiClient(`/courses/${courseId}`);
+        // 1. Validate Session (ensure token is valid on backend)
+        await apiClient('/users/profile');
 
-        if (response.ok) {
-          const courseData = await response.json();
-          setCourse(courseData);
-        } else {
-          toast.error('Failed to load course');
-          router.push('/courses');
+        // 2. Fetch Course
+        if (params.id) {
+          const response = await apiClient(`/courses/${params.id}`);
+
+          if (response.ok) {
+            const courseData = await response.json();
+            
+            // 3. Check Ownership
+            const { user } = useAuthStore.getState();
+            const isInstructor = courseData.instructor?.id === user?.id || courseData.created_by === user?.id;
+            const isAdmin = user?.role === 'admin';
+
+            if (!isInstructor && !isAdmin) {
+              toast.error('You do not have permission to edit this course');
+              router.push('/dashboard');
+              return;
+            }
+
+            setCourse(courseData);
+          } else {
+            toast.error('Failed to load course');
+            router.push('/courses');
+          }
         }
       } catch (error) {
-        toast.error('Failed to load course');
+        console.error('Builder initialization failed:', error);
+        // If it was a 401, apiClient handles logout.
+        // If other error, we might want to redirect.
+        if (loading) router.push('/dashboard');
       } finally {
         setLoading(false);
       }
     };
 
-    if (params.id) {
-      fetchCourse(params.id as string);
-    }
+    init();
   }, [params.id, router]);
 
   if (loading) {

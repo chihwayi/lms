@@ -6,7 +6,7 @@ import { Category } from './entities/category.entity';
 import { CourseModule } from './entities/course-module.entity';
 import { CourseLesson, LessonContentType } from './entities/course-lesson.entity';
 import { CourseFile } from './entities/course-file.entity';
-import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto } from './dto/course.dto';
+import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, UpdateLessonDto } from './dto/course.dto';
 
 @Injectable()
 export class CoursesService {
@@ -263,23 +263,36 @@ export class CoursesService {
     return await this.lessonRepository.save(lesson);
   }
 
-  async updateLesson(moduleId: string, lessonId: string, updateLessonDto: CreateLessonDto, userId: string): Promise<CourseLesson> {
-    const module = await this.moduleRepository.findOne({
-      where: { id: moduleId },
-      relations: ['course'],
+  async updateLesson(moduleId: string, lessonId: string, updateLessonDto: UpdateLessonDto, userId: string): Promise<CourseLesson> {
+    const lesson = await this.lessonRepository.findOne({
+      where: { id: lessonId, module_id: moduleId },
+      relations: ['module', 'module.course'],
     });
 
-    if (!module) {
-      throw new NotFoundException('Module not found');
+    if (!lesson) {
+      throw new NotFoundException('Lesson not found');
     }
 
-    if (module.course.created_by !== userId) {
+    if (lesson.module.course.created_by !== userId) {
       throw new ForbiddenException('You can only update lessons in your own courses');
     }
 
-    const lesson = await this.lessonRepository.findOne({ where: { id: lessonId, module_id: moduleId } });
+    Object.assign(lesson, updateLessonDto);
+    return this.lessonRepository.save(lesson);
+  }
+
+  async updateLessonDirectly(lessonId: string, updateLessonDto: UpdateLessonDto, userId: string): Promise<CourseLesson> {
+    const lesson = await this.lessonRepository.findOne({
+      where: { id: lessonId },
+      relations: ['module', 'module.course'],
+    });
+
     if (!lesson) {
       throw new NotFoundException('Lesson not found');
+    }
+
+    if (lesson.module.course.created_by !== userId) {
+      throw new ForbiddenException('You can only update lessons in your own courses');
     }
 
     Object.assign(lesson, updateLessonDto);
@@ -585,9 +598,11 @@ export class CoursesService {
           lessons: {
             id: true,
             title: true,
+            description: true,
             duration_minutes: true,
             is_preview: true,
             content_type: true,
+            content_data: true,
           },
         },
       },
@@ -595,6 +610,19 @@ export class CoursesService {
 
     if (!course) {
       throw new NotFoundException('Course not found or not published');
+    }
+
+    // Filter content for non-preview lessons
+    if (course.modules) {
+      course.modules.forEach(module => {
+        if (module.lessons) {
+          module.lessons.forEach(lesson => {
+            if (!lesson.is_preview) {
+              lesson.content_data = null;
+            }
+          });
+        }
+      });
     }
 
     // Calculate totals

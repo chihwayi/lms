@@ -3,6 +3,14 @@ import { format } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { MessageSquare, Reply, Trash2 } from 'lucide-react';
 import { InnovationComment } from './InnovationCard';
@@ -20,6 +28,7 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
   const handleSubmit = async (parentId?: string, content?: string) => {
     const text = content || newComment;
@@ -48,11 +57,15 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
     }
   };
 
-  const handleDelete = async (commentId: string) => {
-    if (!confirm('Are you sure you want to delete this comment?')) return;
+  const handleDelete = (commentId: string) => {
+    setCommentToDelete(commentId);
+  };
+
+  const confirmDelete = async () => {
+    if (!commentToDelete) return;
 
     try {
-      const res = await apiClient(`/innovations/comments/${commentId}`, {
+      const res = await apiClient(`/innovations/comments/${commentToDelete}`, {
         method: 'DELETE',
       });
 
@@ -62,6 +75,8 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
       onUpdate();
     } catch (error) {
       toast.error('Failed to delete comment');
+    } finally {
+      setCommentToDelete(null);
     }
   };
 
@@ -184,6 +199,21 @@ export function CommentSection({ innovationId, comments, onUpdate }: CommentSect
           <CommentItem key={comment.id} comment={comment} />
         ))}
       </div>
+
+      <Dialog open={!!commentToDelete} onOpenChange={(open) => !open && setCommentToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Comment</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this comment? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCommentToDelete(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ActivityIndicator, Text, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
 import { Feather } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/auth-store';
 import { useConfigStore } from '@/stores/config-store';
 import { Colors, Spacing, BorderRadius } from '@/constants/theme';
 import { Button } from '@/components/ui/Button';
+import { getOfflineFileUrl, isFileOffline } from '@/lib/offline-content';
 
 interface Props {
   fileId: string;
@@ -17,9 +19,26 @@ export function PdfViewer({ fileId }: Props) {
   const { instanceUrl } = useConfigStore();
   
   const baseUrl = instanceUrl?.replace(/\/$/, '');
-  const pdfUrl = `${baseUrl}/api/v1/files/${fileId}/stream?token=${accessToken}`;
+  const onlineUrl = `${baseUrl}/api/v1/files/${fileId}/stream?token=${accessToken}`;
 
   const [loading, setLoading] = useState(true);
+  const [localUrl, setLocalUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkOffline = async () => {
+        try {
+            if (await isFileOffline(fileId, 'pdf')) {
+                const path = await getOfflineFileUrl(fileId, 'pdf');
+                setLocalUrl(path);
+            }
+        } catch (e) {
+            console.log('Error checking offline PDF', e);
+        }
+    };
+    checkOffline();
+  }, [fileId]);
+
+  const pdfUrl = localUrl || onlineUrl;
 
   if (Platform.OS === 'android') {
     return (
@@ -30,12 +49,28 @@ export function PdfViewer({ fileId }: Props) {
           </View>
           <Text style={styles.text}>PDF Document</Text>
           <Text style={styles.subtext}>
-            To view this document, please open it in your device's PDF viewer.
+            {localUrl ? 'Document is downloaded.' : 'To view this document, please open it in your device\'s PDF viewer.'}
           </Text>
           <Button 
-            title="Open PDF" 
-            onPress={() => WebBrowser.openBrowserAsync(pdfUrl)}
-            icon={<Feather name="external-link" size={18} color="white" />}
+            title={localUrl ? "Open Downloaded PDF" : "Open PDF"} 
+            onPress={async () => {
+                if (localUrl) {
+                    try {
+                        const canOpen = await Linking.canOpenURL(localUrl);
+                        if (canOpen) {
+                            await Linking.openURL(localUrl);
+                        } else {
+                            // Fallback or specific error
+                             Alert.alert('Info', 'Please locate the file in your downloads/files app.');
+                        }
+                    } catch (e) {
+                        Alert.alert('Error', 'Could not open file');
+                    }
+                } else {
+                    WebBrowser.openBrowserAsync(pdfUrl);
+                }
+            }}
+            icon={<Feather name={localUrl ? "file" : "external-link"} size={18} color="white" />}
             style={styles.button}
           />
         </View>
@@ -64,6 +99,9 @@ export function PdfViewer({ fileId }: Props) {
         )}
         onLoadEnd={() => setLoading(false)}
         originWhitelist={['*']}
+        allowFileAccess={true}
+        allowFileAccessFromFileURLs={true}
+        allowUniversalAccessFromFileURLs={true}
       />
     </View>
   );

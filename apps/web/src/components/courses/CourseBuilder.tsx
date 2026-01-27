@@ -9,7 +9,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Plus, Edit, Trash2, GripVertical, Video, FileText, Upload, Eye, CheckCircle, Settings, Users, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { FileUpload } from './FileUpload';
-import { ContentAssignment } from './ContentAssignment';
 import { ContentPreview } from './ContentPreview';
 import { PublishingStatus } from './PublishingStatus';
 import { ChunkedUpload } from './ChunkedUpload';
@@ -18,6 +17,7 @@ import { CourseSettings } from './CourseSettings';
 import { QuizData } from './QuizRunner';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { LessonAttachments } from './LessonAttachments';
+import { LessonContentBuilder } from './LessonContentBuilder';
 import { CourseEnrollments } from './CourseEnrollments';
 import { apiClient } from '@/lib/api-client';
 import {
@@ -722,20 +722,16 @@ export function CourseBuilder({ course, onCourseUpdate }: CourseBuilderProps) {
                             </div>
                           </div>
                           
-                          <ContentAssignment 
+                          <LessonContentBuilder 
                             lessonId={lesson.id}
                             courseId={course.id}
-                            currentContent={lesson}
-                            onPreview={previewContent}
-                            filesRefreshTrigger={filesRefreshTrigger}
-                            onContentAssigned={(updatedLesson: Lesson | null) => {
+                            initialContent={lesson}
+                            onUpdate={(updatedLesson: any) => {
                               const updatedModules = course.modules.map(m => 
                                 m.id === module.id 
                                   ? { ...m, lessons: m.lessons.map(l => {
                                       if (l.id !== lesson.id) return l;
-                                      if (updatedLesson) return updatedLesson;
-                                      // Handle removal (null case)
-                                      return { ...l, content_data: null, content_url: null, content_type: 'text' as const }; // Reset content type to a valid value
+                                      return updatedLesson;
                                     }) }
                                   : m
                               );

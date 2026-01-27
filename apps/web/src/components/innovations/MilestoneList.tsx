@@ -39,6 +39,7 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState<InnovationMilestone | null>(null);
   const [loading, setLoading] = useState(false);
+  const [milestoneToDelete, setMilestoneToDelete] = useState<string | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -105,11 +106,15 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
     }
   };
 
-  const handleDelete = async (milestoneId: string) => {
-    if (!confirm('Are you sure you want to delete this milestone?')) return;
+  const handleDelete = (milestoneId: string) => {
+    setMilestoneToDelete(milestoneId);
+  };
+
+  const confirmDelete = async () => {
+    if (!milestoneToDelete) return;
 
     try {
-      const res = await apiClient(`/innovations/${innovationId}/milestones/${milestoneId}`, {
+      const res = await apiClient(`/innovations/${innovationId}/milestones/${milestoneToDelete}`, {
         method: 'DELETE',
       });
 
@@ -119,6 +124,8 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
       onUpdate();
     } catch (error) {
       toast.error('Could not delete milestone');
+    } finally {
+      setMilestoneToDelete(null);
     }
   };
 
@@ -252,6 +259,21 @@ export function MilestoneList({ innovationId, milestones, canManage, onUpdate }:
               {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {editingMilestone ? 'Save Changes' : 'Add Milestone'}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!milestoneToDelete} onOpenChange={(open) => !open && setMilestoneToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Milestone</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this milestone? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMilestoneToDelete(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

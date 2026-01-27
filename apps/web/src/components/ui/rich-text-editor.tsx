@@ -6,18 +6,29 @@ import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Button } from './button';
 import { Bold, Italic, List, ListOrdered, Heading1, Heading2, Link as LinkIcon, Undo, Redo, Sigma } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Mathematics } from '@/lib/tiptap-math-extension';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface RichTextEditorProps {
   content: string;
-  onChange: (html: string) => void;
+  onChange?: (html: string) => void;
   placeholder?: string;
   className?: string;
+  readOnly?: boolean;
 }
 
-export function RichTextEditor({ content, onChange, placeholder = 'Start writing...', className = '' }: RichTextEditorProps) {
+export function RichTextEditor({ content, onChange, placeholder = 'Start writing...', className = '', readOnly = false }: RichTextEditorProps) {
+  const [linkUrl, setLinkUrl] = useState('');
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
+  const [mathEquation, setMathEquation] = useState('');
+  const [isMathDialogOpen, setIsMathDialogOpen] = useState(false);
+
   const editor = useEditor({
+    immediatelyRender: false,
+    editable: !readOnly,
     extensions: [
       StarterKit,
       Mathematics,
@@ -35,7 +46,7 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
       },
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      onChange?.(editor.getHTML());
     },
   });
 
@@ -44,26 +55,41 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content);
     }
-  }, [content, editor]);
+    editor?.setEditable(!readOnly);
+  }, [content, editor, readOnly]);
 
   if (!editor) {
     return null;
   }
 
+  if (readOnly) {
+    return (
+      <div className={`border rounded-lg overflow-hidden bg-white ${className}`}>
+         <EditorContent editor={editor} />
+      </div>
+    );
+  }
+
   const setLink = () => {
     const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
+    setLinkUrl(previousUrl || '');
+    setIsLinkDialogOpen(true);
+  };
 
-    if (url === null) {
-      return;
-    }
-
-    if (url === '') {
+  const handleSaveLink = () => {
+    if (linkUrl === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run();
-      return;
+    } else {
+      editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run();
     }
+    setIsLinkDialogOpen(false);
+  };
 
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  const handleSaveMath = () => {
+    if (mathEquation) {
+      editor.chain().focus().insertContent({ type: 'mathematics', attrs: { content: mathEquation } }).run();
+    }
+    setIsMathDialogOpen(false);
   };
 
   return (
@@ -139,10 +165,8 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
           variant="ghost"
           size="sm"
           onClick={() => {
-            const content = window.prompt('Enter LaTeX equation (without $):');
-            if (content) {
-              editor.chain().focus().insertContent({ type: 'mathematics', attrs: { content } }).run();
-            }
+            setMathEquation('');
+            setIsMathDialogOpen(true);
           }}
           className={editor.isActive('mathematics') ? 'bg-gray-200' : ''}
           type="button"
@@ -171,6 +195,68 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
         </Button>
       </div>
       <EditorContent editor={editor} />
+
+      <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insert Link</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="link-url" className="text-right">
+                URL
+              </Label>
+              <Input
+                id="link-url"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                className="col-span-3"
+                placeholder="https://example.com"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveLink();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsLinkDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveLink}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isMathDialogOpen} onOpenChange={setIsMathDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Insert Math Equation</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="math-equation">LaTeX Equation (without $)</Label>
+              <Input
+                id="math-equation"
+                value={mathEquation}
+                onChange={(e) => setMathEquation(e.target.value)}
+                placeholder="E = mc^2"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSaveMath();
+                  }
+                }}
+              />
+              <p className="text-sm text-gray-500">
+                Example: \sqrt{'{'}x^2 + y^2{'}'}
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsMathDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveMath}>Insert</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

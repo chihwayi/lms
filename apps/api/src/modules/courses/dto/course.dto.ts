@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsNumber, Min, IsBoolean, IsUUID } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 import { CourseLevel, CourseVisibility } from '../entities/course.entity';
 import { LessonContentType } from '../entities/course-lesson.entity';
 
@@ -167,3 +168,5 @@ export class CreateLessonDto {
   @IsBoolean()
   is_preview?: boolean;
 }
+
+export class UpdateLessonDto extends PartialType(CreateLessonDto) {}

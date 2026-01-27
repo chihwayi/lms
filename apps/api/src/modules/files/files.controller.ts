@@ -47,8 +47,13 @@ export class FilesController {
   }
 
   @Get(':id/stream')
-  async streamFile(@Param('id') id: string, @Res() res: Response) {
-    return this.filesService.streamFile(id, res);
+  async streamFile(
+    @Param('id') id: string, 
+    @Res() res: Response,
+    @Request() req,
+  ) {
+    const range = req.headers.range;
+    return this.filesService.streamFile(id, res, range);
   }
 
   @Get(':id/download')

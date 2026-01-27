@@ -75,7 +75,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
         dom.innerText = `$${content}$`
       }
 
-      // Add click listener to allow "editing" via prompt (simple version)
+      // Add click listener to allow "editing"
       dom.addEventListener('click', () => {
         // This is a hacky way to edit, but works for MVP
         // Ideally we would use a proper react node view

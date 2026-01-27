@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, PlayCircle, CheckCircle, FileText, Lock, Circle, Menu, Check, Download, Wifi, WifiOff, RefreshCw, Loader2 } from 'lucide-react';
 import { VideoPlayer } from '@/components/courses/VideoPlayer';
 import { QuizRunner, QuizData } from '@/components/courses/QuizRunner';
+import { LessonContentRenderer, ContentBlock } from '@/components/courses/LessonContentRenderer';
 import { AiAssistantButton } from '@/components/ai/AiAssistantButton';
 import { ScrollArea } from '../../../../components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '../../../../components/ui/sheet';
@@ -28,6 +29,7 @@ interface Lesson {
   content_url?: string;
   content_data?: any;
   description?: string;
+  content?: string;
 }
 
 interface Module {
@@ -542,7 +544,23 @@ export default function CourseLearnPage() {
 
               <Card className="overflow-hidden bg-white shadow-sm border-0">
                 <CardContent className="p-0">
-                    {currentLesson.content_type === 'video' && currentLesson.content_url ? (
+                    {currentLesson.content_data?.blocks && currentLesson.content_data.blocks.length > 0 ? (
+                        <div className="p-4 md:p-8">
+                            <h1 className="text-2xl md:text-3xl font-bold mb-6">{currentLesson.title}</h1>
+                            <LessonContentRenderer 
+                                blocks={currentLesson.content_data.blocks}
+                                content={currentLesson.content_data?.html || currentLesson.content}
+                            />
+                            {currentLesson.description && (
+                                <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-100">
+                                    <h4 className="font-semibold text-blue-900 mb-2">Lesson Notes</h4>
+                                    <p className="text-blue-800/80 leading-relaxed">
+                                        {currentLesson.description}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    ) : currentLesson.content_type === 'video' && currentLesson.content_url ? (
                         <div className="aspect-video bg-black">
                              <VideoPlayer
                                 fileId={currentLesson.content_data?.fileId || ''}

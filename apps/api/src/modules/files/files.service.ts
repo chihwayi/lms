@@ -188,7 +188,7 @@ export class FilesService {
     await this.fileRepository.remove(file);
   }
 
-  async streamFile(id: string, res: Response): Promise<void> {
+  async streamFile(id: string, res: Response, range?: string): Promise<void> {
     const file = await this.getFile(id);
     
     if (!file) {
@@ -197,15 +197,40 @@ export class FilesService {
 
     try {
       // Check if object exists
-      await this.minioClient.statObject(this.bucketName, file.file_name);
+      const stat = await this.minioClient.statObject(this.bucketName, file.file_name);
+      const fileSize = stat.size;
 
       res.setHeader('Content-Type', file.mime_type);
-      res.setHeader('Content-Length', file.file_size);
       res.setHeader('Content-Disposition', `inline; filename="${file.original_name}"`);
       res.setHeader('Accept-Ranges', 'bytes');
-      
-      const stream = await this.minioClient.getObject(this.bucketName, file.file_name);
-      stream.pipe(res);
+
+      if (range) {
+        const parts = range.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = end - start + 1;
+
+        if (start >= fileSize || end >= fileSize) {
+             res.status(416).header('Content-Range', `bytes */${fileSize}`).send();
+             return;
+        }
+
+        res.status(206);
+        res.setHeader('Content-Range', `bytes ${start}-${end}/${fileSize}`);
+        res.setHeader('Content-Length', chunksize);
+
+        const stream = await this.minioClient.getPartialObject(
+            this.bucketName, 
+            file.file_name, 
+            start, 
+            chunksize
+        );
+        stream.pipe(res);
+      } else {
+        res.setHeader('Content-Length', fileSize);
+        const stream = await this.minioClient.getObject(this.bucketName, file.file_name);
+        stream.pipe(res);
+      }
     } catch (error) {
       this.logger.error('Error streaming file:', error);
       throw new NotFoundException('File not found in storage');

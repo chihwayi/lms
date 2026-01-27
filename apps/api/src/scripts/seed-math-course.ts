@@ -61,6 +61,7 @@ async function bootstrap() {
       content_type: LessonContentType.TEXT,
       order_index: 0,
       is_published: true,
+      is_preview: true,
       content_data: {
         content: `
           <h2>The Distance Formula</h2>

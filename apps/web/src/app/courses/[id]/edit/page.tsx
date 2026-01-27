@@ -37,51 +37,63 @@ export default function CourseEditPage() {
   };
 
   useEffect(() => {
-    const fetchCourse = async (courseId: string) => {
-      try {
-        const response = await apiClient(`/courses/${courseId}`);
+    const init = async () => {
+      if (!accessToken) return;
 
-        if (response.ok) {
-          const courseData = await response.json();
-          setCourse(courseData);
-          setFormData({
-            title: courseData.title || '',
-            description: courseData.description || '',
-            short_description: courseData.short_description || '',
-            category_id: courseData.category_id || '',
-            level: courseData.level || 'beginner',
-            price: courseData.price || 0,
-            visibility: courseData.visibility || 'public',
-          });
-        } else {
-          toast.error('Failed to load course');
-          router.push('/courses');
+      try {
+        // 1. Validate Session
+        await apiClient('/users/profile');
+
+        // 2. Fetch Course
+        if (params.id) {
+          const response = await apiClient(`/courses/${params.id}`);
+
+          if (response.ok) {
+            const courseData = await response.json();
+            
+            // 3. Check Ownership
+            const isInstructor = courseData.instructor?.id === user?.id || courseData.created_by === user?.id;
+            const isAdmin = user?.role === 'admin';
+
+            if (!isInstructor && !isAdmin) {
+              toast.error('You do not have permission to edit this course');
+              router.push('/dashboard');
+              return;
+            }
+
+            setCourse(courseData);
+            setFormData({
+              title: courseData.title || '',
+              description: courseData.description || '',
+              short_description: courseData.short_description || '',
+              category_id: courseData.category_id || '',
+              level: courseData.level || 'beginner',
+              price: courseData.price || 0,
+              visibility: courseData.visibility || 'public',
+            });
+          } else {
+            toast.error('Failed to load course');
+            router.push('/courses');
+          }
         }
+
+        // 4. Fetch Categories
+        const categoriesRes = await apiClient('/courses/categories');
+        if (categoriesRes.ok) {
+           const data = await categoriesRes.json();
+           setCategories(data);
+        }
+
       } catch (error) {
-        toast.error('Failed to load course');
+        console.error('Edit page initialization failed:', error);
+        // If 401, apiClient handles logout
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchCategories = async () => {
-      try {
-        const response = await apiClient('/courses/categories');
-
-        if (response.ok) {
-          const data = await response.json();
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    if (params.id && accessToken) {
-      fetchCourse(params.id as string);
-      fetchCategories();
-    }
-  }, [params.id, router, accessToken]);
+    init();
+  }, [params.id, router, accessToken, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

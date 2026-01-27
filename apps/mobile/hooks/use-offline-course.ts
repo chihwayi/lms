@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { apiClient } from '@/lib/api-client';
 import { offlineStorage } from '@/lib/offline-storage';
-import { saveVideoForOffline } from '@/lib/offline-content';
+import { saveVideoForOffline, saveFileForOffline } from '@/lib/offline-content';
 import { useAuthStore } from '@/stores/auth-store';
 import { Alert } from 'react-native';
 
@@ -43,13 +43,32 @@ export function useOfflineCourse() {
             const lessonData = await lessonResponse.json();
             await offlineStorage.saveLesson(lessonData);
 
-            // 3. Download Video if exists
+            // 3. Download Content Files
+            
+            // Legacy Video
             if (lessonData.content_type === 'video' && lessonData.content_data?.fileId) {
                try {
                   await saveVideoForOffline(lessonData.content_data.fileId, accessToken);
                } catch (err) {
                   console.error(`Failed to download video for lesson ${lesson.id}`, err);
                }
+            }
+
+            // Multi-content blocks
+            if (lessonData.content_data?.blocks && Array.isArray(lessonData.content_data.blocks)) {
+                for (const block of lessonData.content_data.blocks) {
+                    if (block.fileId) {
+                        let ext = 'mp4';
+                        if (block.type === 'audio') ext = 'mp3';
+                        if (block.type === 'document') ext = 'pdf';
+                        
+                        try {
+                            await saveFileForOffline(block.fileId, accessToken, undefined, ext);
+                        } catch (err) {
+                            console.error(`Failed to download file for block ${block.id}`, err);
+                        }
+                    }
+                }
             }
           }
 

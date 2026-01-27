@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { SetMetadata } from '@nestjs/common';
 import { CoursesService } from './courses.service';
-import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto } from './dto/course.dto';
+import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, UpdateLessonDto } from './dto/course.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { RequirePermissions } from '../rbac/decorators/permissions.decorator';
@@ -136,8 +136,15 @@ export class CoursesController {
   @Put('modules/:moduleId/lessons/:lessonId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @RequirePermissions('create_courses')
-  updateLesson(@Param('moduleId') moduleId: string, @Param('lessonId') lessonId: string, @Body() updateLessonDto: CreateLessonDto, @Request() req) {
+  updateLesson(@Param('moduleId') moduleId: string, @Param('lessonId') lessonId: string, @Body() updateLessonDto: UpdateLessonDto, @Request() req) {
     return this.coursesService.updateLesson(moduleId, lessonId, updateLessonDto, req.user.id);
+  }
+
+  @Patch('lessons/:lessonId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequirePermissions('create_courses')
+  updateLessonDirectly(@Param('lessonId') lessonId: string, @Body() updateLessonDto: UpdateLessonDto, @Request() req) {
+    return this.coursesService.updateLessonDirectly(lessonId, updateLessonDto, req.user.id);
   }
 
   @Delete('modules/:moduleId/lessons/:lessonId')

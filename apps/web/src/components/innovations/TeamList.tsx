@@ -41,6 +41,7 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
   // Form State
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('member');
+  const [memberToDelete, setMemberToDelete] = useState<string | null>(null);
 
   const handleAddMember = async () => {
     if (!email) {
@@ -72,11 +73,15 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
     }
   };
 
-  const handleRemoveMember = async (memberId: string) => {
-    if (!confirm('Are you sure you want to remove this member?')) return;
+  const handleRemoveMember = (memberId: string) => {
+    setMemberToDelete(memberId);
+  };
+
+  const confirmDelete = async () => {
+    if (!memberToDelete) return;
 
     try {
-      const res = await apiClient(`/innovations/${innovationId}/team/${memberId}`, {
+      const res = await apiClient(`/innovations/${innovationId}/team/${memberToDelete}`, {
         method: 'DELETE',
       });
 
@@ -86,6 +91,8 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
       onUpdate();
     } catch (error) {
       toast.error('Could not remove member');
+    } finally {
+      setMemberToDelete(null);
     }
   };
 
@@ -186,6 +193,21 @@ export function TeamList({ innovationId, members, ownerId, isOwner, onUpdate }: 
               {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Add Member
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!memberToDelete} onOpenChange={(open) => !open && setMemberToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove Team Member</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to remove this member from the team? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMemberToDelete(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={confirmDelete}>Remove</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

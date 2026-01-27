@@ -3,6 +3,8 @@ import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../rbac/guards/roles.guard';
+import { RequirePermissions } from '../rbac/decorators/permissions.decorator';
 
 @Controller('enrollments')
 @UseGuards(JwtAuthGuard)
@@ -49,11 +51,15 @@ export class EnrollmentController {
   }
 
   @Get(':courseId/students')
+  @UseGuards(RolesGuard)
+  @RequirePermissions('manage_courses')
   getCourseStudents(@Param('courseId') courseId: string) {
     return this.enrollmentService.getCourseStudents(courseId);
   }
 
   @Get(':courseId/search-students')
+  @UseGuards(RolesGuard)
+  @RequirePermissions('manage_courses')
   searchPotentialStudents(
     @Param('courseId') courseId: string,
     @Query('q') query: string,
@@ -62,6 +68,8 @@ export class EnrollmentController {
   }
 
   @Post(':courseId/students')
+  @UseGuards(RolesGuard)
+  @RequirePermissions('manage_courses')
   enrollStudentByEmail(
     @Param('courseId') courseId: string,
     @Body('email') email: string,
@@ -70,6 +78,8 @@ export class EnrollmentController {
   }
 
   @Post(':courseId/bulk')
+  @UseGuards(RolesGuard)
+  @RequirePermissions('manage_courses')
   enrollBulk(
     @Param('courseId') courseId: string,
     @Body('userIds') userIds: string[],

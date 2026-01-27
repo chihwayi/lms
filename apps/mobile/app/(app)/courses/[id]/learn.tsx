@@ -6,6 +6,7 @@ import { apiClient } from '@/lib/api-client';
 import { offlineStorage } from '@/lib/offline-storage';
 import { VideoPlayer } from '@/components/CoursePlayer/VideoPlayer';
 import { LessonContent } from '@/components/CoursePlayer/LessonContent';
+import { AudioPlayer } from '@/components/CoursePlayer/AudioPlayer';
 import { QuizView } from '@/components/CoursePlayer/QuizView';
 import { Feather } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/auth-store';
@@ -249,23 +250,69 @@ export default function CourseLearnScreen() {
                   <View style={styles.lessonCard}>
                       <Text style={styles.lessonTitle}>{currentLesson.title}</Text>
                       
-                      {currentLesson.content_type === 'video' && currentLesson.content_data?.fileId && (
-                          <View style={styles.videoContainer}>
-                            <VideoPlayer 
-                                fileId={currentLesson.content_data.fileId} 
-                                onComplete={handleLessonComplete}
-                            />
+                      {currentLesson.content_data?.blocks && currentLesson.content_data.blocks.length > 0 ? (
+                          <View style={styles.blocksContainer}>
+                              {currentLesson.content_data.blocks
+                                  .sort((a: any, b: any) => a.order - b.order)
+                                  .map((block: any) => {
+                                      switch (block.type) {
+                                          case 'text':
+                                              return (
+                                                  <View key={block.id} style={styles.blockWrapper}>
+                                                      <LessonContent content={block.content || ''} />
+                                                  </View>
+                                              );
+                                          case 'video':
+                                              return block.fileId ? (
+                                                  <View key={block.id} style={styles.blockWrapper}>
+                                                      <VideoPlayer 
+                                                          fileId={block.fileId} 
+                                                          // Only trigger completion if it's the only block or specific logic needed
+                                                          // For now, we leave onComplete undefined to avoid premature completion
+                                                      />
+                                                  </View>
+                                              ) : null;
+                                          case 'audio':
+                                              return block.fileId ? (
+                                                  <View key={block.id} style={styles.blockWrapper}>
+                                                      <AudioPlayer 
+                                                          fileId={block.fileId} 
+                                                          title={block.title}
+                                                      />
+                                                  </View>
+                                              ) : null;
+                                          case 'document':
+                                              return block.fileId ? (
+                                                  <View key={block.id} style={styles.blockWrapper}>
+                                                      <PdfViewer fileId={block.fileId} />
+                                                  </View>
+                                              ) : null;
+                                          default:
+                                              return null;
+                                      }
+                                  })}
                           </View>
-                      )}
+                      ) : (
+                          <>
+                              {currentLesson.content_type === 'video' && currentLesson.content_data?.fileId && (
+                                  <View style={styles.videoContainer}>
+                                    <VideoPlayer 
+                                        fileId={currentLesson.content_data.fileId} 
+                                        onComplete={handleLessonComplete}
+                                    />
+                                  </View>
+                              )}
 
-                      {(currentLesson.content_type === 'pdf' || currentLesson.content_type === 'document') && currentLesson.content_data?.fileId && (
-                          <View style={styles.videoContainer}>
-                            <PdfViewer fileId={currentLesson.content_data.fileId} />
-                          </View>
-                      )}
+                              {(currentLesson.content_type === 'pdf' || currentLesson.content_type === 'document') && currentLesson.content_data?.fileId && (
+                                  <View style={styles.videoContainer}>
+                                    <PdfViewer fileId={currentLesson.content_data.fileId} />
+                                  </View>
+                              )}
 
-                      {currentLesson.content_type === 'text' && (
-                          <LessonContent content={currentLesson.content} />
+                              {currentLesson.content_type === 'text' && (
+                                  <LessonContent content={currentLesson.content} />
+                              )}
+                          </>
                       )}
 
                       {currentLesson.content_type === 'quiz' && currentLesson.content_data && (
@@ -434,6 +481,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#000',
     marginBottom: Spacing.lg,
+  },
+  blocksContainer: {
+    gap: Spacing.lg,
+  },
+  blockWrapper: {
+    marginBottom: Spacing.md,
   },
   description: {
     marginTop: Spacing.lg,
