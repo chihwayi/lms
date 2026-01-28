@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { Badge } from './entities/badge.entity';
 import { UserBadge } from './entities/user-badge.entity';
+import { Sticker } from './entities/sticker.entity';
+import { UserSticker } from './entities/user-sticker.entity';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../notifications/entities/notification.entity';
 
@@ -57,8 +59,60 @@ export class GamificationService {
     private badgeRepository: Repository<Badge>,
     @InjectRepository(UserBadge)
     private userBadgeRepository: Repository<UserBadge>,
+    @InjectRepository(Sticker)
+    private stickerRepository: Repository<Sticker>,
+    @InjectRepository(UserSticker)
+    private userStickerRepository: Repository<UserSticker>,
     private notificationsService: NotificationsService,
   ) {}
+
+  // Sticker Methods
+  async getAllStickers() {
+    return this.stickerRepository.find({ order: { rarity: 'ASC', name: 'ASC' } });
+  }
+
+  async getUserStickers(userId: string) {
+    const userStickers = await this.userStickerRepository.find({
+      where: { user_id: userId },
+      relations: ['sticker'],
+      order: { earned_at: 'DESC' },
+    });
+    return userStickers.map(us => ({
+      ...us.sticker,
+      earned_at: us.earned_at,
+    }));
+  }
+
+  async awardSticker(userId: string, stickerId?: string) {
+    // If no stickerId provided, pick a random one
+    let sticker: Sticker;
+    if (!stickerId) {
+      const allStickers = await this.stickerRepository.find();
+      if (allStickers.length === 0) return null; // No stickers in system
+      const randomIndex = Math.floor(Math.random() * allStickers.length);
+      sticker = allStickers[randomIndex];
+    } else {
+      sticker = await this.stickerRepository.findOneBy({ id: stickerId });
+    }
+
+    if (!sticker) return null;
+
+    // Check if user already has this sticker (allow duplicates? maybe for "level 2 sticker" but for now unique)
+    const existing = await this.userStickerRepository.findOne({
+      where: { user_id: userId, sticker_id: sticker.id }
+    });
+
+    if (existing) return { sticker, isNew: false };
+
+    const userSticker = this.userStickerRepository.create({
+      user_id: userId,
+      sticker_id: sticker.id,
+    });
+
+    await this.userStickerRepository.save(userSticker);
+
+    return { sticker, isNew: true };
+  }
 
   async awardXP(userId: string, amount: number, reason?: string, sourceId?: string) {
     const user = await this.userRepository.findOneBy({ id: userId });

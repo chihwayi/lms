@@ -5,7 +5,9 @@ import { DocumentViewer } from './DocumentViewer';
 import { AudioPlayer } from './AudioPlayer';
 import { DrawingCanvas } from '@/components/kids/DrawingCanvas';
 import { VoiceRecorder } from '@/components/kids/VoiceRecorder';
+import { InteractiveActivity } from '@/components/kids/InteractiveActivity';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/auth-store';
 import { useConfigStore } from '@/lib/config-store';
 import { apiClient } from '@/lib/api-client';
@@ -13,7 +15,7 @@ import { toast } from 'sonner';
 
 export interface ContentBlock {
   id: string;
-  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice';
+  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive';
   content?: string; // For text
   fileId?: string; // For media
   fileName?: string;
@@ -44,6 +46,15 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
     return html.replace(/\$([^$]+)\$/g, (match, equation) => {
       return `<span data-type="mathematics" data-content="${equation.replace(/"/g, '&quot;')}"></span>`;
     });
+  };
+
+  const speakText = (raw: string) => {
+    if (typeof window === 'undefined' || !raw) return;
+    const text = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleDrawingSave = async (dataUrl: string, blockId: string) => {
@@ -121,8 +132,30 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
         toast.success('Voice recording saved (preview mode)!');
       }
     } catch (error) {
-      console.error('Failed to save voice recording:', error);
-      toast.error('Failed to save voice recording. Please try again.');
+      console.error('Failed to save drawing:', error);
+      toast.error('Failed to save drawing. Please try again.');
+    }
+  };
+
+  const handleInteractiveSubmit = async (results: any, blockId: string) => {
+    try {
+      if (lessonId) {
+        await apiClient('lesson-submissions', {
+          method: 'POST',
+          body: JSON.stringify({
+            lessonId,
+            contentBlockId: blockId,
+            submissionType: 'interactive',
+            submissionData: results,
+          }),
+        });
+        toast.success('Activity progress saved!');
+      } else {
+        toast.success('Activity completed (preview mode)!');
+      }
+    } catch (error) {
+      console.error('Failed to save activity:', error);
+      toast.error('Failed to save activity progress.');
     }
   };
 
@@ -131,6 +164,15 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
       case 'text':
         return (
           <div key={block.id} className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+            <div className="flex justify-end px-3 pt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => speakText(block.content || '')}
+              >
+                Read to me
+              </Button>
+            </div>
             <RichTextEditor
               content={processContent(block.content || '')}
               readOnly={true}
@@ -189,6 +231,16 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
             />
           </div>
         );
+      case 'interactive':
+        return (
+          <div key={block.id} className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">{block.title || 'Interactive Activity'}</h3>
+            <InteractiveActivity 
+              data={block.data} 
+              onComplete={(results) => handleInteractiveSubmit(results, block.id)}
+            />
+          </div>
+        );
       default:
         return null;
     }
@@ -207,6 +259,15 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
   if (contentType === 'text' || (!contentType && content)) {
      return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+          <div className="flex justify-end px-3 pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => speakText(content || '')}
+            >
+              Read to me
+            </Button>
+          </div>
           <RichTextEditor
             content={processContent(content || '')}
             readOnly={true}

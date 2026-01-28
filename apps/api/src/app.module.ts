@@ -26,6 +26,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { LearningPathsModule } from './modules/learning-paths/learning-paths.module';
 import { CertificatesModule } from './modules/certificates/certificates.module';
 import { LessonSubmissionsModule } from './modules/lesson-submissions/lesson-submissions.module';
+import { KidsSettingsModule } from './modules/kids-settings/kids-settings.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -71,6 +72,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     LearningPathsModule,
     CertificatesModule,
     LessonSubmissionsModule,
+    KidsSettingsModule,
   ],
 })
 export class AppModule {}

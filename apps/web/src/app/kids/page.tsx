@@ -46,9 +46,24 @@ export default function KidsDashboard() {
               👋
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-black mb-1">Hi, {user?.name?.split(' ')[0] || 'Friend'}!</h1>
+              <h1 className="text-3xl md:text-4xl font-black mb-1">Hi, {user?.firstName || 'Friend'}!</h1>
               <p className="text-purple-100 font-medium text-lg">Ready to learn something new today?</p>
             </div>
+          </div>
+          <div className="flex gap-4 mt-6">
+            <Link 
+              href="/kids/stickers"
+              className="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 transition-all"
+            >
+              <Star className="w-6 h-6 fill-current text-yellow-300" />
+              My Stickers
+            </Link>
+            <Link 
+              href="/kids/parents"
+              className="bg-white/10 hover:bg-white/20 text-purple-100 px-4 py-3 rounded-2xl font-bold flex items-center gap-2 transition-all ml-auto text-sm"
+            >
+              For Parents
+            </Link>
           </div>
         </div>
 

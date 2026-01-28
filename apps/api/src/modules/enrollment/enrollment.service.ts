@@ -212,6 +212,8 @@ export class EnrollmentService implements OnModuleInit {
         
         // Award XP for completing a lesson
         await this.gamificationService.awardXP(userId, 5, 'lesson_completed', lessonId);
+        // Award a random sticker for lesson completion
+        await this.gamificationService.awardSticker(userId);
       }
     }
 
@@ -230,6 +232,8 @@ export class EnrollmentService implements OnModuleInit {
       await this.gamificationService.awardXP(userId, 100, 'course_completed', courseId);
       // Unlock achievement
       await this.gamificationService.checkAndUnlockAchievement(userId, 'first-course-completed');
+      // Award a celebratory sticker for course completion
+      await this.gamificationService.awardSticker(userId);
     }
 
     // Force TypeORM to detect jsonb change if only deep property changed
@@ -257,16 +261,18 @@ export class EnrollmentService implements OnModuleInit {
 
     // Calculate Score
     let correctCount = 0;
-    const questions = lesson.content_data?.questions || [];
+    const questions = (lesson.content_data?.questions as Array<any>) || [];
     
-    questions.forEach(q => {
+    for (const q of questions) {
       if (answers[q.id] === q.correctAnswer) {
         correctCount++;
       }
-    });
-
-    const score = questions.length > 0 ? (correctCount / questions.length) * 100 : 0;
-    const passed = score >= (lesson.content_data?.passingScore || 70);
+    }
+    
+    const total = questions.length || 0;
+    const score = total > 0 ? (correctCount / total) * 100 : 0;
+    const passingScore = (lesson.content_data?.passingScore as number) || 70;
+    const passed = score >= passingScore;
 
     const submission = this.quizSubmissionRepository.create({
       enrollment_id: enrollmentId,

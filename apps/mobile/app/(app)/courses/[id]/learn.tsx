@@ -19,6 +19,7 @@ import { useCourseProgress } from '@/hooks/use-course-progress';
 import { CompletionModal } from '@/components/CoursePlayer/CompletionModal';
 import { LessonNotesModal } from '@/components/CoursePlayer/LessonNotesModal';
 import { PdfViewer } from '@/components/CoursePlayer/PdfViewer';
+import { InteractiveActivity } from '@/components/CoursePlayer/InteractiveActivity';
 
 export default function CourseLearnScreen() {
   const { id: paramId } = useLocalSearchParams<{ id: string }>();
@@ -62,6 +63,27 @@ export default function CourseLearnScreen() {
       } catch {}
     })();
   }, [id]);
+
+  const handleInteractiveSubmit = async (results: any, blockId: string) => {
+    if (isOfflineMode || !accessToken) {
+        Alert.alert('Activity Completed', 'Your results have been saved locally.');
+        return;
+    }
+    
+    try {
+        await apiClient('/lesson-submissions', {
+            method: 'POST',
+            body: JSON.stringify({
+                lessonId: currentLesson.id,
+                contentBlockId: blockId,
+                submissionType: 'interactive',
+                submissionData: results,
+            }),
+        });
+    } catch (error) {
+        console.error('Failed to submit interactive results:', error);
+    }
+  };
 
   const loadCourse = async () => {
     try {
@@ -380,6 +402,15 @@ export default function CourseLearnScreen() {
                                                       <PdfViewer fileId={block.fileId} />
                                                   </View>
                                               ) : null;
+                                          case 'interactive':
+                                              return (
+                                                  <View key={block.id} style={styles.blockWrapper}>
+                                                      <InteractiveActivity 
+                                                          data={block.data} 
+                                                          onComplete={(results) => handleInteractiveSubmit(results, block.id)}
+                                                      />
+                                                  </View>
+                                              );
                                           default:
                                               return null;
                                       }

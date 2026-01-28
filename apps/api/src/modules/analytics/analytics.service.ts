@@ -4,6 +4,7 @@ import { Repository, LessThan } from 'typeorm';
 import { UserActivity, ActivityType } from './entities/user-activity.entity';
 import { Enrollment, EnrollmentStatus } from '../enrollment/entities/enrollment.entity';
 import { QuizSubmission } from '../enrollment/entities/quiz-submission.entity';
+import { LessonSubmission, SubmissionType } from '../lesson-submissions/entities/lesson-submission.entity';
 import { User } from '../users/entities/user.entity';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class AnalyticsService {
     private readonly enrollmentRepository: Repository<Enrollment>,
     @InjectRepository(QuizSubmission)
     private readonly quizSubmissionRepository: Repository<QuizSubmission>,
+    @InjectRepository(LessonSubmission)
+    private readonly lessonSubmissionRepository: Repository<LessonSubmission>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -53,16 +56,32 @@ export class AnalyticsService {
         .addSelect('COUNT(*)', 'attempts')
         .groupBy('lesson.id')
         .addGroupBy('lesson.title')
-        .orderBy('avg_score', 'ASC') // Show hardest quizzes first
-        .limit(10)
         .getRawMany();
 
-      return {
-        quizStats: quizStats.map(s => ({
+      // Average score per interactive activity
+      const interactiveStats = await this.lessonSubmissionRepository.createQueryBuilder('submission')
+        .leftJoin('submission.lesson', 'lesson')
+        .select('lesson.title', 'lessonTitle')
+        .addSelect('AVG(submission.grade)', 'avg_score')
+        .addSelect('COUNT(*)', 'attempts')
+        .where('submission.submission_type = :type', { type: SubmissionType.INTERACTIVE })
+        .andWhere('submission.grade IS NOT NULL')
+        .groupBy('lesson.id')
+        .addGroupBy('lesson.title')
+        .getRawMany();
+
+      // Merge and sort
+      const merged = [...quizStats, ...interactiveStats]
+        .map(s => ({
           lesson: s.lessonTitle,
           avgScore: parseFloat(parseFloat(s.avg_score).toFixed(1)),
           attempts: parseInt(s.attempts)
         }))
+        .sort((a, b) => a.avgScore - b.avgScore) // Show hardest first
+        .slice(0, 10);
+
+      return {
+        quizStats: merged
       };
     } catch (error) {
       console.error('Error getting quiz analytics:', error);

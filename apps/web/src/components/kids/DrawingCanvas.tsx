@@ -9,6 +9,7 @@ interface DrawingCanvasProps {
   height?: number;
   className?: string;
   onSave?: (dataUrl: string) => void;
+  backgroundImageUrl?: string;
 }
 
 const COLORS = [
@@ -27,7 +28,8 @@ export function DrawingCanvas({
   width = 800, 
   height = 600, 
   className,
-  onSave 
+  onSave,
+  backgroundImageUrl
 }: DrawingCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -46,11 +48,25 @@ export function DrawingCanvas({
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     
-    // Set white background initially
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    saveState();
-  }, []);
+    if (backgroundImageUrl) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = backgroundImageUrl;
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        saveState();
+      };
+      img.onerror = () => {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveState();
+      };
+    } else {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      saveState();
+    }
+  }, [backgroundImageUrl]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

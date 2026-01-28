@@ -22,7 +22,8 @@ import {
   Pencil,
   Check,
   Palette,
-  Mic
+  Mic,
+  Shapes
 } from 'lucide-react';
 import {
   Select,
@@ -34,12 +35,13 @@ import {
 
 interface ContentBlock {
   id: string;
-  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice';
+  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive';
   content?: string;
   fileId?: string;
   fileName?: string;
   mimeType?: string;
   title?: string;
+  data?: any;
   order: number;
 }
 
@@ -103,19 +105,18 @@ export function LessonContentBuilder({
   }, [initialContent]);
 
   useEffect(() => {
+    const fetchCourseFiles = async () => {
+      try {
+        const res = await apiClient(`/api/v1/files/course/${courseId}`);
+        if (res.ok) {
+          setAvailableFiles(await res.json());
+        }
+      } catch (error) {
+        console.error('Failed to fetch files', error);
+      }
+    };
     fetchCourseFiles();
   }, [courseId]);
-
-  const fetchCourseFiles = async () => {
-    try {
-      const res = await apiClient(`/api/v1/files/course/${courseId}`);
-      if (res.ok) {
-        setAvailableFiles(await res.json());
-      }
-    } catch (error) {
-      console.error('Failed to fetch files', error);
-    }
-  };
 
   const addBlock = (type: ContentBlock['type']) => {
     const newBlock: ContentBlock = {
@@ -307,6 +308,128 @@ export function LessonContentBuilder({
                     />
                   </div>
                 </div>
+              ) : block.type === 'interactive' ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Activity Title</label>
+                    <input
+                      type="text"
+                      className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                      value={block.title || ''}
+                      onChange={(e) => updateBlock(block.id, { title: e.target.value })}
+                      placeholder="e.g. Match the shapes"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-sm font-medium">Items</label>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const current = block.data?.items || [];
+                            const newItem = { id: crypto.randomUUID(), label: `Item ${current.length + 1}` };
+                            updateBlock(block.id, { data: { ...block.data, items: [...current, newItem], targets: block.data?.targets || [] } });
+                          }}
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Add
+                        </Button>
+                      </div>
+                      <div className="space-y-2">
+                        {(block.data?.items || []).map((item: any, idx: number) => (
+                          <div key={item.id} className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm"
+                              value={item.label}
+                              onChange={(e) => {
+                                const items = [...(block.data?.items || [])];
+                                items[idx] = { ...items[idx], label: e.target.value };
+                                updateBlock(block.id, { data: { ...block.data, items, targets: block.data?.targets || [] } });
+                              }}
+                            />
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="text-red-500"
+                              onClick={() => {
+                                const items = (block.data?.items || []).filter((i: any) => i.id !== item.id);
+                                updateBlock(block.id, { data: { ...block.data, items, targets: block.data?.targets || [] } });
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-sm font-medium">Targets</label>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const current = block.data?.targets || [];
+                            const newTarget = { id: crypto.randomUUID(), label: `Target ${current.length + 1}`, acceptsId: '' };
+                            updateBlock(block.id, { data: { ...block.data, targets: [...current, newTarget], items: block.data?.items || [] } });
+                          }}
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Add
+                        </Button>
+                      </div>
+                      <div className="space-y-2">
+                        {(block.data?.targets || []).map((target: any, idx: number) => (
+                          <div key={target.id} className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm"
+                              value={target.label}
+                              onChange={(e) => {
+                                const targets = [...(block.data?.targets || [])];
+                                targets[idx] = { ...targets[idx], label: e.target.value };
+                                updateBlock(block.id, { data: { ...block.data, targets, items: block.data?.items || [] } });
+                              }}
+                            />
+                            <Select
+                              value={target.acceptsId || ''}
+                              onValueChange={(val) => {
+                                const targets = [...(block.data?.targets || [])];
+                                targets[idx] = { ...targets[idx], acceptsId: val };
+                                updateBlock(block.id, { data: { ...block.data, targets, items: block.data?.items || [] } });
+                              }}
+                            >
+                              <SelectTrigger className="w-40">
+                                <SelectValue placeholder="Matches..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {(block.data?.items || []).length === 0 ? (
+                                  <SelectItem disabled value="__none">Add items first</SelectItem>
+                                ) : (
+                                  (block.data?.items || []).map((i: any) => (
+                                    <SelectItem key={i.id} value={i.id}>{i.label}</SelectItem>
+                                  ))
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="text-red-500"
+                              onClick={() => {
+                                const targets = (block.data?.targets || []).filter((t: any) => t.id !== target.id);
+                                updateBlock(block.id, { data: { ...block.data, targets, items: block.data?.items || [] } });
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
@@ -422,6 +545,10 @@ export function LessonContentBuilder({
           <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-red-50 hover:text-red-600 hover:border-red-200" onClick={() => addBlock('voice')}>
             <Mic className="w-5 h-5" />
             <span>Add Voice</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-yellow-50 hover:text-yellow-600 hover:border-yellow-200" onClick={() => addBlock('interactive')}>
+            <Shapes className="w-5 h-5" />
+            <span>Add Interactive</span>
           </Button>
         </div>
       </div>

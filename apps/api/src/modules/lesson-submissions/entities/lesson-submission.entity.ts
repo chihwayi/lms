@@ -13,6 +13,7 @@ import { CourseLesson } from '../../courses/entities/course-lesson.entity';
 export enum SubmissionType {
   DRAWING = 'drawing',
   VOICE = 'voice',
+  INTERACTIVE = 'interactive',
 }
 
 @Entity('lesson_submissions')
@@ -35,8 +36,12 @@ export class LessonSubmission {
   })
   submission_type: SubmissionType;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   submission_url: string;
+
+  @Column('jsonb', { nullable: true })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  submission_data: Record<string, any>;
 
   @Column('int', { nullable: true })
   grade: number;

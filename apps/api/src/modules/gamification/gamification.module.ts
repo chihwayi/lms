@@ -4,12 +4,14 @@ import { GamificationService } from './gamification.service';
 import { GamificationController } from './gamification.controller';
 import { Badge } from './entities/badge.entity';
 import { UserBadge } from './entities/user-badge.entity';
+import { Sticker } from './entities/sticker.entity';
+import { UserSticker } from './entities/user-sticker.entity';
 import { User } from '../users/entities/user.entity';
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Badge, UserBadge, User]),
+    TypeOrmModule.forFeature([Badge, UserBadge, Sticker, UserSticker, User]),
     NotificationsModule
   ],
   controllers: [GamificationController],

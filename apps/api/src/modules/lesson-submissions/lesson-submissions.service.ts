@@ -19,6 +19,8 @@ export class LessonSubmissionsService {
       content_block_id: createSubmissionDto.contentBlockId,
       submission_type: createSubmissionDto.submissionType,
       submission_url: createSubmissionDto.submissionUrl,
+      submission_data: createSubmissionDto.submissionData,
+      grade: createSubmissionDto.submissionData?.score,
     });
 
     return this.submissionsRepository.save(submission);

@@ -15,6 +15,10 @@ export class CreateSubmissionDto {
   submissionType: SubmissionType;
 
   @IsString()
-  @IsNotEmpty()
-  submissionUrl: string;
+  @IsOptional()
+  submissionUrl?: string;
+
+  @IsOptional()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  submissionData?: Record<string, any>;
 }

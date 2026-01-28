@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { GamificationService } from './gamification.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -20,5 +20,17 @@ export class GamificationController {
   @Get('badges')
   async getAllBadges() {
     return this.gamificationService.getAllBadges();
+  }
+
+  @Get('stickers')
+  async getStickers(@Request() req) {
+    // If query param 'all' is present, return all possible stickers, otherwise user's stickers
+    // For now, let's just have specific endpoints
+    return this.gamificationService.getUserStickers(req.user.id);
+  }
+
+  @Post('stickers/award')
+  async awardSticker(@Request() req, @Body() body: { stickerId?: string }) {
+    return this.gamificationService.awardSticker(req.user.id, body.stickerId);
   }
 }
