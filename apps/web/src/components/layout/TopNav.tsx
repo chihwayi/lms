@@ -221,7 +221,7 @@ export function TopNav() {
             <Link href="/profile" className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2 hover:bg-white/80 transition-colors cursor-pointer">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden relative">
                 {user?.avatar ? (
-                  <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
+                  <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || ''}/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
                 ) : (
                   <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
                 )}

@@ -15,9 +15,19 @@ export default function AuthWrapper({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     // Sanitize instanceUrl: If it points to the frontend (localhost:3000), reset it to API default
-    if (instanceUrl && (instanceUrl.includes('localhost:3000') || instanceUrl === '')) {
-        console.warn('Detected incorrect instanceUrl pointing to frontend. Resetting to default API port 3001.');
-        setInstanceUrl('http://localhost:3001');
+    // Also sanitize if it points to localhost:3001 but we are not on localhost (e.g. production)
+    if (instanceUrl) {
+      const isLocalhostDomain = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const pointsToLocalhost = instanceUrl.includes('localhost');
+      
+      if (
+        (instanceUrl.includes('localhost:3000')) || 
+        (instanceUrl === '') ||
+        (pointsToLocalhost && !isLocalhostDomain)
+      ) {
+          console.warn('Detected incorrect instanceUrl. Resetting to default API.');
+          setInstanceUrl(process.env.NEXT_PUBLIC_API_URL || '');
+      }
     }
 
     // 2. Check Token Validity

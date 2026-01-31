@@ -39,7 +39,7 @@ interface LessonContentRendererProps {
 export function LessonContentRenderer({ lessonId, blocks, content, contentType, contentData, videoStartAtSeconds, onVideoProgress }: LessonContentRendererProps) {
   const { accessToken: token } = useAuthStore();
   const { instanceUrl } = useConfigStore();
-  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
 
   const processContent = (html: string) => {
     if (!html) return '';

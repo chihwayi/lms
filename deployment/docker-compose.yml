@@ -18,6 +18,8 @@ services:
       - DATABASE_NAME=${DB_DATABASE}
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_URL=http://173.212.195.88:3006
+      - API_URL=http://173.212.195.88:3005
+      - CORS_ORIGIN=http://173.212.195.88:3006,http://localhost:3000,http://localhost:3006
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - MINIO_ENDPOINT=minio
@@ -36,13 +38,17 @@ services:
     build:
       context: ..
       dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ""
+        API_URL: http://api:3001
     container_name: eduflow_web
     restart: always
     ports:
       - "3006:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://173.212.195.88:3005
+      - NEXT_PUBLIC_API_URL=
+      - API_URL=http://api:3001
     depends_on:
       - api
 

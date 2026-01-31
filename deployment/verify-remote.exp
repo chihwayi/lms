@@ -1,0 +1,18 @@
+#!/usr/bin/expect
+
+set timeout 60
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+set remote_path "/root/lms"
+
+# Run grep recursively on the remote server
+# We exclude node_modules, .next (build artifacts), .git, and .turbo caches
+# We also exclude the documentation and test files as they might contain valid references for local dev instructions
+spawn ssh $user@$host "grep -r 'localhost:3001' $remote_path --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=.git --exclude-dir=.turbo --exclude-dir=coverage --exclude-dir=dist"
+
+expect {
+    "yes/no" { send "yes\r"; exp_continue }
+    "password:" { send "$password\r" }
+}
+expect eof

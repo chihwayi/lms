@@ -1,0 +1,24 @@
+#!/usr/bin/expect
+
+set timeout 60
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+set remote_path "/root/lms"
+
+# Update .env file on remote server using sed
+spawn ssh $user@$host "sed -i 's|API_URL=http://localhost:3001|API_URL=http://173.212.195.88:3005|g' $remote_path/.env"
+
+expect {
+    "yes/no" { send "yes\r"; exp_continue }
+    "password:" { send "$password\r" }
+}
+expect eof
+
+# Verify the change
+spawn ssh $user@$host "grep 'API_URL' $remote_path/.env"
+expect {
+    "yes/no" { send "yes\r"; exp_continue }
+    "password:" { send "$password\r" }
+}
+expect eof

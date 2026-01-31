@@ -54,7 +54,7 @@ export function VideoPlayer({ fileId, poster, title, startAt = 0, onProgress }: 
     checkOffline();
   }, [fileId, token]);
 
-  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
   const streamUrl = offlineUrl || (token ? `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}` : '');
   
   const handleDownload = async () => {

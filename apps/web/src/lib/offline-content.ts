@@ -9,7 +9,7 @@ export async function saveVideoForOffline(fileId: string, token: string, onProgr
 
   const cache = await caches.open(OFFLINE_CACHE_NAME);
   const instanceUrl = useConfigStore.getState().instanceUrl;
-  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
   const url = `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}`;
 
   // Fetch with progress tracking is tricky with standard fetch.
@@ -40,7 +40,7 @@ export async function getOfflineVideoUrl(fileId: string, token: string): Promise
   if (!('caches' in window)) return null;
 
   const instanceUrl = useConfigStore.getState().instanceUrl;
-  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
   const url = `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}`;
   const cache = await caches.open(OFFLINE_CACHE_NAME);
   const response = await cache.match(url);
@@ -63,7 +63,7 @@ export async function removeOfflineVideo(fileId: string, token: string): Promise
     if (!('caches' in window)) return;
     
     const instanceUrl = useConfigStore.getState().instanceUrl;
-    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
     const url = `${baseUrl}/api/v1/files/${fileId}/stream?token=${token}`;
     const cache = await caches.open(OFFLINE_CACHE_NAME);
     await cache.delete(url);

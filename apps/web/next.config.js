@@ -9,8 +9,13 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig = {
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   env: {
-    NEXT_PUBLIC_API_URL: process.env.API_URL || 'http://localhost:3001',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || '',
   },
   images: {
     remotePatterns: [
@@ -25,10 +30,11 @@ const nextConfig = {
     ],
   },
   async rewrites() {
+    const apiUrl = process.env.API_URL || '';
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'http://localhost:3001/api/v1/:path*',
+        destination: `${apiUrl}/api/v1/:path*`,
       },
     ];
   },

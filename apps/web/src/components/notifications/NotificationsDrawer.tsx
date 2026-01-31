@@ -37,11 +37,7 @@ export function NotificationsDrawer() {
     // Initial fetch
     fetchNotifications();
 
-    let baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    // Safety check: if baseUrl points to frontend port 3000, force it to 3001
-    if (baseUrl.includes('localhost:3000')) {
-        baseUrl = 'http://localhost:3001';
-    }
+    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
 
     // Socket connection
     console.log('Initializing notifications socket connection...');

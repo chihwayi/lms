@@ -13,7 +13,7 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
   // Construct full URL
   let fullUrl = endpoint;
   if (!endpoint.startsWith('http')) {
-    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
     
     // Clean up endpoint leading slash
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;

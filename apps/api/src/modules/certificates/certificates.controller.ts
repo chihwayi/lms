@@ -27,7 +27,7 @@ export class CertificatesController {
   }))
   uploadBackground(@UploadedFile() file: Express.Multer.File) {
     // Return the URL relative to the server
-    return { url: `${process.env.API_URL || 'http://localhost:3001'}/uploads/${file.filename}` };
+    return { url: `${process.env.API_URL}/uploads/${file.filename}` };
   }
 
   @Post('templates')

@@ -18,7 +18,7 @@ export default function SetupScreen() {
   const { instanceUrl, setInstanceUrl } = useConfigStore();
   const { initialize, accessToken } = useAuthStore();
   const { showToast } = useToast();
-  const [url, setUrl] = useState(__DEV__ ? 'http://localhost:3001' : '');
+  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
 

@@ -35,11 +35,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    let effectiveInstanceUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    // Safety check: if url points to frontend port 3000, force it to 3001
-    if (effectiveInstanceUrl.includes('localhost:3000')) {
-        effectiveInstanceUrl = 'http://localhost:3001';
-    }
+    const effectiveInstanceUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
 
     // Only connect if authenticated and token exists
     if (!isAuthenticated || !accessToken) {

@@ -30,6 +30,18 @@ export const useConfigStore = create<ConfigState>()(
           removeItem: () => {},
         };
       }),
+      onRehydrateStorage: () => (state) => {
+        // Sanitize instanceUrl on hydration
+        if (state?.instanceUrl) {
+           const isLocalhostDomain = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+           const pointsToLocalhost = state.instanceUrl.includes('localhost');
+           
+           if (pointsToLocalhost && !isLocalhostDomain) {
+               console.warn('Detected incorrect instanceUrl in storage. Clearing it.');
+               state.setInstanceUrl(process.env.NEXT_PUBLIC_API_URL || '');
+           }
+        }
+      },
     }
   )
 );

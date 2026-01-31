@@ -236,7 +236,7 @@ export default function ProfilePage() {
                 <div className="hidden sm:flex items-center space-x-2 bg-white/50 rounded-full px-4 py-2 border border-blue-200">
                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden relative">
                     {user?.avatar ? (
-                        <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
+                        <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || ''}/uploads/${user.avatar}`} alt="Avatar" fill className="object-cover" unoptimized />
                     ) : (
                         <span className="text-white text-sm font-bold">{user?.firstName?.[0] || 'U'}</span>
                     )}
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                     <div className="relative w-32 h-32 mx-auto mb-4 group">
                         <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-md bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center relative">
                             {user?.avatar ? (
-                                <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/uploads/${user.avatar}`} alt="Profile" fill className="object-cover" unoptimized />
+                                <Image src={`${instanceUrl || process.env.NEXT_PUBLIC_API_URL || ''}/uploads/${user.avatar}`} alt="Profile" fill className="object-cover" unoptimized />
                             ) : (
                                 <span className="text-4xl text-white font-bold">{user?.firstName?.[0] || 'U'}</span>
                             )}
