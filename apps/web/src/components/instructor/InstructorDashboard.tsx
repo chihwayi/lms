@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, AlertTriangle, UserX, TrendingDown, BookOpen, Users, Award, BrainCircuit, Activity } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
 import { Badge } from '@/components/ui/badge';
+import { SubmissionDetailsModal } from './SubmissionDetailsModal';
 
 interface DashboardStats {
   totalStudents: number;
@@ -44,22 +45,26 @@ export function InstructorDashboard() {
   const [atRisk, setAtRisk] = useState<AtRiskData | null>(null);
   const [insights, setInsights] = useState<CourseInsights | null>(null);
   const [quizStats, setQuizStats] = useState<QuizAnalytics | null>(null);
+  const [recentSubmissions, setRecentSubmissions] = useState<any[]>([]);
+  const [selectedSubmissionId, setSelectedSubmissionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsRes, atRiskRes, insightsRes, quizRes] = await Promise.all([
+        const [statsRes, atRiskRes, insightsRes, quizRes, submissionsRes] = await Promise.all([
           apiClient('/analytics/dashboard'),
           apiClient('/analytics/at-risk'),
           apiClient('/analytics/course-insights'),
-          apiClient('/analytics/quiz-analytics')
+          apiClient('/analytics/quiz-analytics'),
+          apiClient('/lesson-submissions?limit=5')
         ]);
 
         if (statsRes.ok) setStats(await statsRes.json());
         if (atRiskRes.ok) setAtRisk(await atRiskRes.json());
         if (insightsRes.ok) setInsights(await insightsRes.json());
         if (quizRes.ok) setQuizStats(await quizRes.json());
+        if (submissionsRes.ok) setRecentSubmissions(await submissionsRes.json());
       } catch (error) {
         console.error('Failed to fetch dashboard data', error);
       } finally {
@@ -397,6 +402,84 @@ export function InstructorDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Interactive Submissions */}
+      <Card className="border-none shadow-lg bg-white/80 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Activity className="h-5 w-5 text-blue-500" />
+            Recent Interactive Submissions
+          </CardTitle>
+          <CardDescription>Review detailed student performance on interactive activities</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-gray-500 uppercase bg-gray-50/50">
+                <tr>
+                  <th className="px-4 py-3">Student</th>
+                  <th className="px-4 py-3">Lesson</th>
+                  <th className="px-4 py-3">Type</th>
+                  <th className="px-4 py-3">Score</th>
+                  <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentSubmissions.length > 0 ? (
+                  recentSubmissions.map((submission) => (
+                    <tr key={submission.id} className="border-b last:border-0 hover:bg-gray-50/50 transition-colors">
+                      <td className="px-4 py-3 font-medium text-gray-900">
+                        {submission.student?.firstName} {submission.student?.lastName}
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">
+                        {submission.lesson?.title}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge variant="secondary" className="uppercase text-[10px]">
+                          {submission.submission_type}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge 
+                          className={submission.grade >= 80 ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}
+                        >
+                          {submission.grade}%
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-gray-500">
+                        {new Date(submission.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                          onClick={() => setSelectedSubmissionId(submission.id)}
+                        >
+                          View Details
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500 italic">
+                      No recent submissions found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <SubmissionDetailsModal 
+        submissionId={selectedSubmissionId}
+        isOpen={!!selectedSubmissionId}
+        onClose={() => setSelectedSubmissionId(null)}
+      />
     </div>
   );
 }

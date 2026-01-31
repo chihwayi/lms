@@ -62,12 +62,13 @@ export class CoursesService {
   async create(createCourseDto: CreateCourseDto, userId: string): Promise<Course> {
     const course = this.courseRepository.create({
       ...createCourseDto,
+      status: CourseStatus.DRAFT, // Enforce DRAFT on creation
       created_by: userId,
     });
     return this.courseRepository.save(course);
   }
 
-  async findAll(query: CourseQuery = {}): Promise<{ courses: Course[]; total: number }> {
+  async findAll(query: CourseQuery = {}, user?: any): Promise<{ courses: Course[]; total: number }> {
     const { page = 1, limit = 10, search, category, level, status, instructorId } = query;
     const queryBuilder = this.courseRepository
       .createQueryBuilder('course')
@@ -76,6 +77,27 @@ export class CoursesService {
       .leftJoinAndSelect('course.modules', 'modules')
       .loadRelationCountAndMap('course.enrollments_count', 'course.enrollments')
       .orderBy('course.created_at', 'DESC');
+
+    // Strict Visibility Rules
+    if (!user) {
+      // Guest: See nothing
+      return { courses: [], total: 0 };
+    }
+
+    const roles = user.roles?.map((r: any) => r.name) || [];
+    const isAdmin = roles.includes('admin');
+    const isInstructor = roles.includes('instructor');
+    const isStudent = roles.includes('student');
+
+    if (isAdmin) {
+      // Admin sees all, standard filters apply
+    } else if (isInstructor) {
+      // Instructor sees ONLY their own courses
+      queryBuilder.andWhere('course.created_by = :userId', { userId: user.id });
+    } else {
+      // Student (or others) sees ONLY enrolled courses
+      queryBuilder.innerJoin('course.enrollments', 'enrollment', 'enrollment.user_id = :userId', { userId: user.id });
+    }
 
     if (search) {
       queryBuilder.andWhere(
@@ -109,21 +131,46 @@ export class CoursesService {
     return { courses, total };
   }
 
-  async findOne(id: string): Promise<Course> {
+  // Internal helper to get course without access checks
+  private async findCourseById(id: string): Promise<Course> {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations: ['instructor', 'category', 'modules', 'modules.lessons'],
+      relations: ['instructor', 'category', 'modules', 'modules.lessons', 'enrollments'],
     });
 
     if (!course) {
       throw new NotFoundException('Course not found');
+    }
+    return course;
+  }
+
+  async findOne(id: string, user?: any): Promise<Course> {
+    const course = await this.findCourseById(id);
+
+    // Strict Access Control
+    if (!user) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    const roles = user.roles?.map((r: any) => r.name) || [];
+    const isAdmin = roles.includes('admin');
+    const isOwner = course.created_by === user.id;
+    const isEnrolled = course.enrollments?.some(e => e.userId === user.id);
+
+    if (!isAdmin && !isOwner && !isEnrolled) {
+      throw new ForbiddenException('You must be enrolled to view this course');
+    }
+
+    // Clean up sensitive data before returning if student
+    if (!isOwner && !isAdmin) {
+      delete course.enrollments;
     }
 
     return course;
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto, userId: string): Promise<Course> {
-    const course = await this.findOne(id);
+    const course = await this.findCourseById(id);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only update your own courses');
@@ -134,7 +181,7 @@ export class CoursesService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const course = await this.findOne(id);
+    const course = await this.findCourseById(id);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only delete your own courses');
@@ -196,7 +243,7 @@ export class CoursesService {
 
   // Module management
   async createModule(courseId: string, createModuleDto: CreateModuleDto, userId: string): Promise<CourseModule> {
-    const course = await this.findOne(courseId);
+    const course = await this.findCourseById(courseId);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only add modules to your own courses');
@@ -210,7 +257,7 @@ export class CoursesService {
   }
 
   async updateModule(courseId: string, moduleId: string, updateModuleDto: CreateModuleDto, userId: string): Promise<CourseModule> {
-    const course = await this.findOne(courseId);
+    const course = await this.findCourseById(courseId);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only update modules in your own courses');
@@ -226,7 +273,7 @@ export class CoursesService {
   }
 
   async deleteModule(courseId: string, moduleId: string, userId: string): Promise<void> {
-    const course = await this.findOne(courseId);
+    const course = await this.findCourseById(courseId);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only delete modules from your own courses');
@@ -241,7 +288,7 @@ export class CoursesService {
   }
 
   async reorderModules(courseId: string, moduleIds: string[], userId: string): Promise<CourseModule[]> {
-    const course = await this.findOne(courseId);
+    const course = await this.findCourseById(courseId);
     
     if (course.created_by !== userId) {
       throw new ForbiddenException('You can only reorder modules in your own courses');
@@ -480,7 +527,7 @@ export class CoursesService {
   }
 
   // Enhanced search
-  async searchCourses(query: SearchCoursesQuery): Promise<{ courses: Course[]; total: number; filters: Record<string, unknown> }> {
+  async searchCourses(query: SearchCoursesQuery, user?: any): Promise<{ courses: Course[]; total: number; filters: Record<string, unknown> }> {
     try {
       const { 
         q = '', 
@@ -496,9 +543,29 @@ export class CoursesService {
         sortOrder = 'DESC'
       } = query;
 
-      let whereClause = "WHERE c.status = 'published'";
+      if (!user) {
+        return { courses: [], total: 0, filters: {} };
+      }
+
+      let whereClause = "WHERE 1=1";
       const params: unknown[] = [];
       let paramIndex = 1;
+
+      const roles = user.roles?.map((r: any) => r.name) || [];
+      const isAdmin = roles.includes('admin');
+      const isInstructor = roles.includes('instructor');
+
+      if (isAdmin) {
+        whereClause += " AND c.status = 'published'";
+      } else if (isInstructor) {
+        whereClause += ` AND c.created_by = $${paramIndex}`;
+        params.push(user.id);
+        paramIndex++;
+      } else {
+        whereClause += ` AND EXISTS (SELECT 1 FROM enrollments e WHERE e.course_id = c.id AND e.user_id = $${paramIndex})`;
+        params.push(user.id);
+        paramIndex++;
+      }
 
       if (q) {
         whereClause += ` AND (c.title ILIKE $${paramIndex} OR c.description ILIKE $${paramIndex} OR c.short_description ILIKE $${paramIndex})`;

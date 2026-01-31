@@ -114,3 +114,5 @@ k8s/secrets/
 
 # Local development
 docker-compose.override.yml
+# Turbo cache
+.turbo

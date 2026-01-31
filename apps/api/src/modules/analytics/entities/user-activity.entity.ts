@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 export enum ActivityType {
@@ -14,6 +14,7 @@ export class UserActivity {
   id: string;
 
   @Column('uuid')
+  @Index()
   user_id: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
@@ -21,11 +22,13 @@ export class UserActivity {
   user: User;
 
   @Column({ type: 'enum', enum: ActivityType })
+  @Index()
   type: ActivityType;
 
   @Column({ type: 'jsonb', nullable: true })
   metadata: Record<string, unknown>;
 
   @CreateDateColumn({ name: 'created_at' })
+  @Index()
   createdAt: Date;
 }

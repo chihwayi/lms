@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn, Index } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Course } from '../../courses/entities/course.entity';
 
@@ -9,6 +9,7 @@ export enum EnrollmentStatus {
 }
 
 @Entity('enrollments')
+@Index(['userId', 'courseId']) // Composite index for frequent lookups
 export class Enrollment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -18,6 +19,7 @@ export class Enrollment {
   user: User;
 
   @Column({ name: 'user_id' })
+  @Index() // Filter by user
   userId: string;
 
   @ManyToOne(() => Course, { onDelete: 'CASCADE' })
@@ -25,6 +27,7 @@ export class Enrollment {
   course: Course;
 
   @Column({ name: 'course_id' })
+  @Index() // Filter by course
   courseId: string;
 
   @Column({ type: 'float', default: 0 })

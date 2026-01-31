@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { Role } from '../../rbac/entities/role.entity';
 import { Enrollment } from '../../enrollment/entities/enrollment.entity';
@@ -22,6 +22,7 @@ export class User {
   lastName: string;
 
   @Column({ default: 'learner' })
+  @Index()
   role: string;
 
   @Column({ name: 'email_verified', default: false })

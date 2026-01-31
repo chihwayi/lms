@@ -25,11 +25,11 @@ export class FilesService {
   ) {
     // Initialize MinIO Client
     this.minioClient = new Minio.Client({
-      endPoint: 'localhost',
-      port: 9000,
-      useSSL: false,
-      accessKey: 'minioadmin',
-      secretKey: 'minioadmin123',
+      endPoint: process.env.MINIO_ENDPOINT || 'localhost',
+      port: parseInt(process.env.MINIO_PORT) || 9000,
+      useSSL: process.env.MINIO_USE_SSL === 'true',
+      accessKey: process.env.MINIO_ACCESS_KEY || process.env.MINIO_ROOT_USER || 'minioadmin',
+      secretKey: process.env.MINIO_SECRET_KEY || process.env.MINIO_ROOT_PASSWORD || 'minioadmin',
     });
 
     this.ensureBucket();
@@ -94,9 +94,10 @@ export class FilesService {
         { 'Content-Type': file.mimetype }
       );
 
-      // Generate Public URL (assuming localhost:9000 is accessible)
+      // Generate Public URL
       // In production, this would be your CDN or S3 domain
-      const fileUrl = `http://localhost:9000/${this.bucketName}/${fileName}`;
+      const endpoint = process.env.MINIO_PUBLIC_ENDPOINT || 'http://localhost:9000';
+      const fileUrl = `${endpoint}/${this.bucketName}/${fileName}`;
 
       // Save file record to database
       const courseFile = this.fileRepository.create({

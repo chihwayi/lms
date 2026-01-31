@@ -17,6 +17,7 @@ import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, Upd
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { RequirePermissions } from '../rbac/decorators/permissions.decorator';
+import { KidsAccessGuard } from '../kids-settings/guards/kids-access.guard';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -39,13 +40,15 @@ export class CoursesController {
   }
 
   @Get()
-  findAll(@Query() query: CourseQuery) {
-    return this.coursesService.findAll(query);
+  @UseGuards(JwtAuthGuard)
+  findAll(@Query() query: CourseQuery, @Request() req) {
+    return this.coursesService.findAll(query, req.user);
   }
 
   @Get('search')
-  searchCourses(@Query() query: SearchCoursesQuery) {
-    return this.coursesService.searchCourses(query);
+  @UseGuards(JwtAuthGuard)
+  searchCourses(@Query() query: SearchCoursesQuery, @Request() req) {
+    return this.coursesService.searchCourses(query, req.user);
   }
 
   @Get('categories')
@@ -59,8 +62,9 @@ export class CoursesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(id);
+  @UseGuards(JwtAuthGuard, KidsAccessGuard)
+  findOne(@Param('id') id: string, @Request() req) {
+    return this.coursesService.findOne(id, req.user);
   }
 
   @Patch(':id')

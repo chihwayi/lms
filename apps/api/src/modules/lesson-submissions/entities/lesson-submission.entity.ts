@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { CourseLesson } from '../../courses/entities/course-lesson.entity';
@@ -22,9 +23,11 @@ export class LessonSubmission {
   id: string;
 
   @Column('uuid')
+  @Index()
   lesson_id: string;
 
   @Column('uuid')
+  @Index()
   student_id: string;
 
   @Column({ nullable: true })

@@ -15,6 +15,7 @@
     "type-check": "turbo run type-check",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "clean": "turbo run clean",
+    "start:prod": "cd apps/api && npm run start:prod",
     "db:migrate": "cd apps/api && npm run db:migrate",
     "db:seed": "cd apps/api && npm run db:seed",
     "db:reset": "cd apps/api && npm run db:reset",

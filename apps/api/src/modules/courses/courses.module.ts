@@ -12,6 +12,8 @@ import { LessonNote } from './entities/lesson-note.entity';
 import { UsersModule } from '../users/users.module';
 import { RbacModule } from '../rbac/rbac.module';
 import { CategoriesSeeder } from './categories.seeder';
+import { KidsSettingsModule } from '../kids-settings/kids-settings.module';
+import { KidsAccessGuard } from '../kids-settings/guards/kids-access.guard';
 
 @Module({
   imports: [
@@ -25,9 +27,10 @@ import { CategoriesSeeder } from './categories.seeder';
     ]),
     UsersModule,
     RbacModule,
+    KidsSettingsModule,
   ],
   controllers: [CoursesController, LessonsController],
-  providers: [CoursesService, CategoriesSeeder],
+  providers: [CoursesService, CategoriesSeeder, KidsAccessGuard],
   exports: [CoursesService],
 })
 export class CoursesModule {}
