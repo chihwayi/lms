@@ -258,7 +258,7 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
   // Fallback for legacy content
   if (contentType === 'text' || (!contentType && content)) {
      return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 text-gray-900">
           <div className="flex justify-end px-3 pt-3">
             <Button
               variant="outline"

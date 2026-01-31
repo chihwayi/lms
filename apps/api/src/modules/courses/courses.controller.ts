@@ -15,6 +15,7 @@ import { SetMetadata } from '@nestjs/common';
 import { CoursesService, CourseQuery, SearchCoursesQuery } from './courses.service';
 import { CreateCourseDto, UpdateCourseDto, CreateModuleDto, CreateLessonDto, UpdateLessonDto } from './dto/course.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/guards/optional-jwt-auth.guard';
 import { RolesGuard } from '../rbac/guards/roles.guard';
 import { RequirePermissions } from '../rbac/decorators/permissions.decorator';
 import { KidsAccessGuard } from '../kids-settings/guards/kids-access.guard';
@@ -40,13 +41,13 @@ export class CoursesController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   findAll(@Query() query: CourseQuery, @Request() req) {
     return this.coursesService.findAll(query, req.user);
   }
 
   @Get('search')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   searchCourses(@Query() query: SearchCoursesQuery, @Request() req) {
     return this.coursesService.searchCourses(query, req.user);
   }
@@ -185,8 +186,9 @@ export class CoursesController {
   }
 
   @Get(':id/publishing-status')
-  getPublishingStatus(@Param('id') id: string) {
-    return this.coursesService.getPublishingStatus(id);
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  getPublishingStatus(@Param('id') id: string, @Request() req) {
+    return this.coursesService.getPublishingStatus(id, req.user);
   }
 
 

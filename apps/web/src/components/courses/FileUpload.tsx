@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { generateUUID } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,7 +40,7 @@ export function FileUpload({
     if (!selectedFiles) return;
 
     const newFiles: UploadFile[] = Array.from(selectedFiles).map(file => ({
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       file,
       progress: 0,
       status: 'pending'

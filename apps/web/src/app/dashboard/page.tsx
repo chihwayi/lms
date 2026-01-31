@@ -96,12 +96,9 @@ export default function DashboardPage() {
           {isInstructor && (
             <div className="flex bg-white/50 backdrop-blur-sm p-1 rounded-xl border border-white/30 shadow-sm">
                 <button
-                    onClick={() => setActiveTab('learning')}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
-                        activeTab === 'learning' 
-                        ? 'bg-white shadow text-blue-600 font-semibold' 
-                        : 'text-gray-600 hover:bg-white/50'
-                    }`}
+                    disabled
+                    className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 opacity-50 cursor-not-allowed text-gray-400"
+                    title="Instructor view only"
                 >
                     <BookOpen className="w-4 h-4" />
                     <span>My Learning</span>
@@ -127,6 +124,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-2 space-y-6">
               <ContinueLearning />
               <RecommendedPathsWidget />
+              <EnrolledCourses />
             </div>
             <div className="space-y-8">
             <MentorshipStatsWidget />
@@ -141,7 +139,7 @@ export default function DashboardPage() {
         {/* Content */}
         <div className="min-h-[500px] relative z-0">
             {activeTab === 'learning' ? (
-                <EnrolledCourses />
+                null
             ) : (
                 isInstructor && (
                   <div className="space-y-8">

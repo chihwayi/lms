@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { generateUUID } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { apiClient } from '@/lib/api-client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
@@ -57,7 +58,7 @@ export function AiQuizGenerator({ onGenerate }: AiQuizGeneratorProps) {
       // Transform API data to Question format
       const newQuestions: Question[] = data.questions.map((q: any) => {
         const options = q.options.map((opt: string) => ({
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           text: opt,
         }));
         
@@ -65,7 +66,7 @@ export function AiQuizGenerator({ onGenerate }: AiQuizGeneratorProps) {
         const correctOptionId = options[q.correctAnswer]?.id || options[0].id;
 
         return {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           text: q.question,
           options,
           correctOptionId,

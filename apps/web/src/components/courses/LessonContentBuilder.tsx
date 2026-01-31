@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { cn, generateUUID } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
@@ -80,7 +81,7 @@ export function LessonContentBuilder({
       
       if (legacy.html || legacy.content) {
         newBlocks.push({
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'text',
           content: legacy.html || legacy.content,
           order: 0
@@ -89,7 +90,7 @@ export function LessonContentBuilder({
       
       if (legacy.fileId) {
         newBlocks.push({
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: legacy.fileType === 'video' ? 'video' : 'document', // Simplified mapping
           fileId: legacy.fileId,
           fileName: legacy.fileName,
@@ -120,13 +121,14 @@ export function LessonContentBuilder({
 
   const addBlock = (type: ContentBlock['type']) => {
     const newBlock: ContentBlock = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       type,
       content: '',
       order: blocks.length,
       title: type === 'text' ? 'Text Content' : `New ${type}`
     };
     setBlocks([...blocks, newBlock]);
+    setEditingBlockId(newBlock.id);
   };
 
   const updateBlock = (id: string, updates: Partial<ContentBlock>) => {
@@ -329,7 +331,7 @@ export function LessonContentBuilder({
                           variant="outline"
                           onClick={() => {
                             const current = block.data?.items || [];
-                            const newItem = { id: crypto.randomUUID(), label: `Item ${current.length + 1}` };
+                            const newItem = { id: generateUUID(), label: `Item ${current.length + 1}` };
                             updateBlock(block.id, { data: { ...block.data, items: [...current, newItem], targets: block.data?.targets || [] } });
                           }}
                         >
@@ -372,7 +374,7 @@ export function LessonContentBuilder({
                           variant="outline"
                           onClick={() => {
                             const current = block.data?.targets || [];
-                            const newTarget = { id: crypto.randomUUID(), label: `Target ${current.length + 1}`, acceptsId: '' };
+                            const newTarget = { id: generateUUID(), label: `Target ${current.length + 1}`, acceptsId: '' };
                             updateBlock(block.id, { data: { ...block.data, targets: [...current, newTarget], items: block.data?.items || [] } });
                           }}
                         >

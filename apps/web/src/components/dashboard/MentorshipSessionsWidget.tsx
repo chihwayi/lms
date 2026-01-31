@@ -45,10 +45,10 @@ export function MentorshipSessionsWidget() {
                 const res = await apiClient('/mentorship/sessions');
                 if (res.ok) {
                     const data = await res.json();
-                    // Filter only upcoming sessions and take top 3
+                    // Filter only upcoming sessions and take top 2
                     const upcoming = data
                         .filter((s: Session) => isFuture(new Date(s.endTime)))
-                        .slice(0, 3);
+                        .slice(0, 2);
                     setSessions(upcoming);
                 }
             } catch (error) {

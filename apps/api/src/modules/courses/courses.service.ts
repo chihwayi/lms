@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Brackets } from 'typeorm';
 import { Course, CourseStatus, CourseLevel, CourseVisibility } from './entities/course.entity';
 import { Category } from './entities/category.entity';
 import { CourseModule } from './entities/course-module.entity';
@@ -78,16 +78,10 @@ export class CoursesService {
       .loadRelationCountAndMap('course.enrollments_count', 'course.enrollments')
       .orderBy('course.created_at', 'DESC');
 
-    // Strict Visibility Rules
-    if (!user) {
-      // Guest: See nothing
-      return { courses: [], total: 0 };
-    }
-
-    const roles = user.roles?.map((r: any) => r.name) || [];
+    // Visibility Rules
+    const roles = user?.roles?.map((r: any) => r.name) || [];
     const isAdmin = roles.includes('admin');
     const isInstructor = roles.includes('instructor');
-    const isStudent = roles.includes('student');
 
     if (isAdmin) {
       // Admin sees all, standard filters apply
@@ -95,8 +89,23 @@ export class CoursesService {
       // Instructor sees ONLY their own courses
       queryBuilder.andWhere('course.created_by = :userId', { userId: user.id });
     } else {
-      // Student (or others) sees ONLY enrolled courses
-      queryBuilder.innerJoin('course.enrollments', 'enrollment', 'enrollment.user_id = :userId', { userId: user.id });
+      // Student or Guest: See Public+Published OR Enrolled (if user exists)
+      if (user) {
+        queryBuilder.leftJoin('course.enrollments', 'enrollment', 'enrollment.user_id = :userId', { userId: user.id });
+        queryBuilder.andWhere(
+          new Brackets(qb => {
+            qb.where('course.visibility = :publicVisibility AND course.status = :publishedStatus', { 
+              publicVisibility: CourseVisibility.PUBLIC, 
+              publishedStatus: CourseStatus.PUBLISHED 
+            })
+            .orWhere('enrollment.id IS NOT NULL');
+          })
+        );
+      } else {
+        // Guest: Only Public & Published
+        queryBuilder.andWhere('course.visibility = :publicVisibility', { publicVisibility: CourseVisibility.PUBLIC });
+        queryBuilder.andWhere('course.status = :publishedStatus', { publishedStatus: CourseStatus.PUBLISHED });
+      }
     }
 
     if (search) {
@@ -503,8 +512,8 @@ export class CoursesService {
     return this.courseRepository.save(course);
   }
 
-  async getPublishingStatus(courseId: string): Promise<PublishingStatus> {
-    const course = await this.findOne(courseId);
+  async getPublishingStatus(courseId: string, user: any): Promise<PublishingStatus> {
+    const course = await this.findOne(courseId, user);
     
     const validationErrors = [];
     
