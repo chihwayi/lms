@@ -108,7 +108,7 @@ export default function SetupScreen() {
               </View>
               <Text style={styles.title}>Connect to EduFlow</Text>
               <Text style={styles.subtitle}>
-                Enter your institution's URL to access your learning portal.
+                Enter your institution&apos;s URL to access your learning portal.
               </Text>
             </View>
 

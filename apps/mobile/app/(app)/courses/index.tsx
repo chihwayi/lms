@@ -174,7 +174,7 @@ export default function CoursesScreen() {
                   <Feather name="book-open" size={48} color={Colors.light.primary} />
                 </View>
                 <Text style={styles.emptyTitle}>No courses found</Text>
-                <Text style={styles.emptyText}>You haven't enrolled in any courses yet.</Text>
+                <Text style={styles.emptyText}>You haven&apos;t enrolled in any courses yet.</Text>
                 <Button 
                   title="Browse Catalog" 
                   onPress={() => router.push('/(app)/dashboard')} 
