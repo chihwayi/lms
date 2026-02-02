@@ -70,9 +70,11 @@ export const Mathematics = Node.create<MathematicsOptions>({
         katex.render(content, dom, {
           throwOnError: false,
           displayMode: false, // Inline math
+          output: 'html', // Avoid MathML deprecation warnings
         })
-      } catch (e) {
-        dom.innerText = `$${content}$`
+      } catch (e: any) {
+        console.error('KaTeX rendering error:', e);
+        dom.innerHTML = `<span class="text-red-500 font-mono text-xs p-1 border border-red-200 bg-red-50 rounded" title="${e.message}">Math Error</span> $${content}$`;
       }
 
       // Add click listener to allow "editing"

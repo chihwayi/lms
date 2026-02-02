@@ -61,8 +61,8 @@ export function LeaderboardWidget() {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
-        <ScrollArea className="h-[320px] pr-4 -mr-4">
-          <div className="space-y-3 pr-4">
+            <ScrollArea className="h-[180px] pr-4 -mr-4">
+              <div className="space-y-3 pr-4">
             {users.map((user, index) => (
               <div 
                 key={user.id} 

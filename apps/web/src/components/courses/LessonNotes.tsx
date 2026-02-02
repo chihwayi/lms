@@ -26,13 +26,26 @@ export function LessonNotes({ lessonId }: LessonNotesProps) {
     try {
       const res = await apiClient(`lessons/${lessonId}/note`);
       if (res.ok) {
-        const data = await res.json();
-        setNote(data?.content || '');
+        try {
+          // Handle empty response (no note found)
+          const text = await res.text();
+          console.log('Note response v2:', text, 'Length:', text.length);
+          if (!text || !text.trim()) {
+            setNote('');
+            return;
+          }
+          const data = JSON.parse(text);
+          setNote(data?.content || '');
+        } catch (e) {
+          console.warn('Failed to parse note response', e);
+          setNote('');
+        }
       } else {
         setNote('');
       }
     } catch (error) {
       console.error('Failed to load note', error);
+      setNote('');
     } finally {
       setLoading(false);
     }

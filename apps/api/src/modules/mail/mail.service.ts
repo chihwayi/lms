@@ -64,7 +64,7 @@ export class MailService {
         <p>You have received a new mentorship request from <strong>${menteeName}</strong>.</p>
         <p>Please log in to your dashboard to review and respond to this request.</p>
         <p>
-          <a href="${this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000'}/dashboard/mentorship" style="background-color: #2563EB; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+          <a href="${this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000'}/mentorship/dashboard" style="background-color: #2563EB; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
             View Request
           </a>
         </p>

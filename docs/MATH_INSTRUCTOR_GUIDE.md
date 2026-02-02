@@ -98,40 +98,48 @@ $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$
 
 ## 4. Graphs and Plotting
 
-**Current Capability:**
-Our platform focuses on rendering high-quality mathematical text. We **do not** currently have a built-in graphing calculator or plotter (like Desmos or GeoGebra) embedded directly in the text editor.
+We have integrated a powerful graphing engine that allows you to render interactive 2D function plots directly in your lessons. This is perfect for visualizing algebraic concepts, calculus functions, and systems of equations.
 
-**Recommended Workflow for Graphs:**
-To include graphs of functions, geometric figures, or statistical charts:
+### How to Add a Graph
 
-1.  **Create the Graph:** Use a specialized free tool:
-    *   **Desmos** (Best for functions/algebra): [www.desmos.com](https://www.desmos.com)
-    *   **GeoGebra** (Best for geometry): [www.geogebra.org](https://www.geogebra.org)
-2.  **Export as Image:**
-    *   Take a screenshot (Cmd+Shift+4 on Mac, Win+Shift+S on Windows).
-    *   Or use the "Export Image" feature within those tools.
-3.  **Upload to Lesson:**
-    *   In the Lesson Builder, use the **"Add Content Block"** feature.
-    *   Select **"Image"** (once image block support is enabled) or simply paste the image into the text area if supported.
-    *   *Note: Currently, we recommend adding images as separate content blocks if the text editor supports basic image pasting, otherwise ask your admin to enable Image Blocks.*
+1.  In the Course Builder, click the **"Add Graph"** button (Graph Icon) in the block menu.
+2.  A new Graph Editor block will appear.
 
----
+### Configuring Your Graph
 
-## 5. Advanced Tips for Instructors
+The Graph Editor has three main sections:
 
-*   **Clarity is Key:** Don't overuse symbols. Use text to explain the steps between formulas.
-*   **Spacing:** LaTeX ignores normal spaces.
-    *   To force a small space: `\,`
-    *   To force a medium space: `\;`
-    *   To force a large space: `\quad`
-*   **Text inside Formulas:** If you need to write normal words inside a formula, use `\text{...}`.
-    *   *Example:* `$x = 5 \text{ meters}$`
-*   **Preview:** Always use the "Preview" button in the Course Builder to see how your lesson looks to students.
+#### A. Graph Title
+*   Give your graph a descriptive title (e.g., "Intersection of Two Lines" or "Parabola").
 
----
+#### B. Axis Domains (Window Size)
+*   **X Axis Domain**: Set the minimum and maximum values for the horizontal axis (default: -10 to 10).
+*   **Y Axis Domain**: Set the minimum and maximum values for the vertical axis (default: -10 to 10).
+*   *Tip: Adjust these to "zoom in" or "zoom out" to show the most important features of your graph.*
 
-## 6. Need Help?
+#### C. Functions
+You can plot multiple functions on the same graph.
 
-If you are trying to write a specific formula and can't figure out the code:
-1.  Search Google for "LaTeX code for [symbol name]".
-2.  Use a visual editor like [CodeCogs](https://editor.codecogs.com/) to build it visually, then copy the LaTeX code into our platform.
+1.  Click **"Add Function"**.
+2.  **Equation**: Type your function in terms of `x`.
+    *   **Linear:** `2x + 1`
+    *   **Quadratic:** `x^2`
+    *   **Trigonometric:** `sin(x)`, `cos(x)`
+    *   **Exponential:** `exp(x)`
+    *   **Logarithmic:** `log(x)`
+    *   **Root:** `sqrt(x)`
+3.  **Color**: Choose a color for the line to distinguish it from others.
+
+### Example: Visualizing a System of Equations
+
+To show the solution to the system:
+*   $y = 2x + 1$
+*   $y = -x + 4$
+
+**Steps:**
+1.  Set **X Domain** to `-5` to `5`.
+2.  Set **Y Domain** to `-5` to `10`.
+3.  Add Function 1: `2x + 1` (Select Blue).
+4.  Add Function 2: `-x + 4` (Select Red).
+
+The graph will automatically render the intersection point at $(1, 3)$.

@@ -30,7 +30,10 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
     immediatelyRender: false,
     editable: !readOnly,
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // @ts-ignore
+        link: false,
+      }),
       Mathematics,
       Link.configure({
         openOnClick: false,

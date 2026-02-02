@@ -89,7 +89,7 @@ export function MentorshipSessionsWidget() {
                     </div>
                     Upcoming Sessions
                 </CardTitle>
-                <Link href="/dashboard/mentorship" className="text-xs text-indigo-600 hover:text-indigo-700 font-bold tracking-tight flex items-center gap-1 px-2 py-1 hover:bg-indigo-50 rounded-lg transition-colors">
+                <Link href="/mentorship/dashboard" className="text-xs text-indigo-600 hover:text-indigo-700 font-bold tracking-tight flex items-center gap-1 px-2 py-1 hover:bg-indigo-50 rounded-lg transition-colors">
                     View All <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
             </CardHeader>
@@ -100,7 +100,7 @@ export function MentorshipSessionsWidget() {
                             <Calendar className="w-8 h-8 text-indigo-400" />
                         </div>
                         <p className="text-sm font-medium text-slate-500 mb-4">No upcoming sessions</p>
-                        <Link href="/dashboard/mentorship">
+                        <Link href="/mentorship/dashboard">
                             <Button variant="outline" size="sm" className="w-full border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 font-bold">
                                 Find a Mentor
                             </Button>

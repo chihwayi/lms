@@ -63,7 +63,7 @@ export class CoursesController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, KidsAccessGuard)
+  @UseGuards(OptionalJwtAuthGuard, KidsAccessGuard)
   findOne(@Param('id') id: string, @Request() req) {
     return this.coursesService.findOne(id, req.user);
   }

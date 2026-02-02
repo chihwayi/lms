@@ -1,0 +1,22 @@
+#!/usr/bin/expect
+
+set timeout 300
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+set script_file "seed_courses.sql"
+set remotepath "/tmp"
+
+# Upload seed script
+spawn scp -o StrictHostKeyChecking=no $script_file $user@$host:$remotepath
+expect {
+    "password:" { send "$password\r"; exp_continue }
+    eof
+}
+
+# Execute seed script
+spawn ssh -o StrictHostKeyChecking=no $user@$host "docker exec -i eduflow_postgres psql -U eduflow -d eduflow_dev < /tmp/seed_courses.sql"
+expect {
+    "password:" { send "$password\r"; exp_continue }
+    eof
+}

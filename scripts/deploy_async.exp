@@ -1,0 +1,22 @@
+#!/usr/bin/expect
+
+set timeout 20
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+set compose_file "docker-compose.prod.yml"
+set remotepath "/root/lms"
+
+# Upload docker-compose
+send_user "Uploading docker-compose...\n"
+spawn scp -o StrictHostKeyChecking=no $compose_file $user@$host:$remotepath
+expect "password:"
+send "$password\r"
+expect eof
+
+# Deploy Async
+send_user "Starting deployment in background...\n"
+spawn ssh -o StrictHostKeyChecking=no $user@$host "cd $remotepath && nohup sh -c 'docker-compose -f docker-compose.prod.yml down && docker-compose -f docker-compose.prod.yml up -d --build' > deploy.log 2>&1 &"
+expect "password:"
+send "$password\r"
+expect eof

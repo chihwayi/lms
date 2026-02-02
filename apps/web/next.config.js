@@ -38,6 +38,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/dashboard/mentorship',
+        destination: '/mentorship/dashboard',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

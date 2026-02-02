@@ -1,0 +1,27 @@
+#!/usr/bin/expect -f
+set timeout -1
+set user "root"
+set host "173.212.195.88"
+set password "b-4wB:cpC2i"
+set local_file "update_code.tar.gz"
+set remote_dir "/root/lms"
+
+# Upload the file
+spawn scp -o StrictHostKeyChecking=no $local_file $user@$host:$remote_dir/
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}
+
+# SSH to extract and rebuild
+spawn ssh -o StrictHostKeyChecking=no $user@$host "cd $remote_dir && tar -xzf $local_file && docker-compose -f docker-compose.prod.yml up -d --build --force-recreate web"
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}

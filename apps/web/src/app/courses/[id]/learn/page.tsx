@@ -638,9 +638,13 @@ export default function CourseLearnPage() {
                                     title={currentLesson.title}
                                 />
                             ) : currentLesson.content_type === 'text' && currentLesson.content_data?.html ? (
-                                <div className="p-4 md:p-8 prose max-w-none">
+                                <div className="p-4 md:p-8">
                                     <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">{currentLesson.title}</h1>
-                                    <div dangerouslySetInnerHTML={{ __html: currentLesson.content_data.html }} />
+                                    <LessonContentRenderer 
+                                        lessonId={currentLesson.id}
+                                        content={currentLesson.content_data.html}
+                                        contentType="text"
+                                    />
                                     
                                     {currentLesson.description && (
                                         <div className="mt-6 md:mt-8 p-4 md:p-6 bg-blue-50 rounded-xl border border-blue-100 not-prose">

@@ -1,3 +1,4 @@
+'use client';
 
 import React from 'react';
 import { VideoPlayer } from './VideoPlayer';
@@ -12,10 +13,11 @@ import { useAuthStore } from '@/lib/auth-store';
 import { useConfigStore } from '@/lib/config-store';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
+import { MathGraphRenderer } from '@/components/courses/MathGraphRenderer';
 
 export interface ContentBlock {
   id: string;
-  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive';
+  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive' | 'graph';
   content?: string; // For text
   fileId?: string; // For media
   fileName?: string;
@@ -43,9 +45,28 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
 
   const processContent = (html: string) => {
     if (!html) return '';
-    return html.replace(/\$([^$]+)\$/g, (match, equation) => {
+    console.log('processContent input length:', html.length);
+    let processed = html;
+
+    // Handle \[ ... \] block math
+    processed = processed.replace(/\\\[([\s\S]+?)\\\]/g, (match, equation) => {
+      console.log('Found block math:', equation);
       return `<span data-type="mathematics" data-content="${equation.replace(/"/g, '&quot;')}"></span>`;
     });
+
+    // Handle \( ... \) inline math
+    processed = processed.replace(/\\\(([\s\S]+?)\\\)/g, (match, equation) => {
+      console.log('Found inline math \\( ... \\):', equation);
+      return `<span data-type="mathematics" data-content="${equation.replace(/"/g, '&quot;')}"></span>`;
+    });
+
+    // Handle $ ... $ inline math
+    processed = processed.replace(/\$([^$]+)\$/g, (match, equation) => {
+      console.log('Found inline math $ ... $:', equation);
+      return `<span data-type="mathematics" data-content="${equation.replace(/"/g, '&quot;')}"></span>`;
+    });
+
+    return processed;
   };
 
   const speakText = (raw: string) => {
@@ -163,20 +184,11 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
     switch (block.type) {
       case 'text':
         return (
-          <div key={block.id} className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
-            <div className="flex justify-end px-3 pt-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => speakText(block.content || '')}
-              >
-                Read to me
-              </Button>
-            </div>
+          <div key={block.id} className="mb-8">
             <RichTextEditor
               content={processContent(block.content || '')}
               readOnly={true}
-              className="bg-transparent"
+              className="bg-transparent border-0 p-0"
             />
           </div>
         );
@@ -233,11 +245,21 @@ export function LessonContentRenderer({ lessonId, blocks, content, contentType, 
         );
       case 'interactive':
         return (
-          <div key={block.id} className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">{block.title || 'Interactive Activity'}</h3>
-            <InteractiveActivity 
-              data={block.data} 
+          <div key={block.id} className="mb-8">
+            <InteractiveActivity
+              data={block.data}
               onComplete={(results) => handleInteractiveSubmit(results, block.id)}
+            />
+          </div>
+        );
+      case 'graph':
+        return (
+          <div key={block.id} className="mb-8 flex justify-center w-full">
+            <MathGraphRenderer 
+               functions={block.data?.functions || []}
+               title={block.title}
+               xDomain={block.data?.xDomain}
+               yDomain={block.data?.yDomain}
             />
           </div>
         );

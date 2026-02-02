@@ -24,7 +24,8 @@ import {
   Check,
   Palette,
   Mic,
-  Shapes
+  Shapes,
+  LineChart
 } from 'lucide-react';
 import {
   Select,
@@ -33,10 +34,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GraphBlockEditor } from './GraphBlockEditor';
 
 interface ContentBlock {
   id: string;
-  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive';
+  type: 'text' | 'video' | 'audio' | 'document' | 'image' | 'quiz' | 'drawing' | 'voice' | 'interactive' | 'graph';
   content?: string;
   fileId?: string;
   fileName?: string;
@@ -187,6 +189,7 @@ export function LessonContentBuilder({
       case 'audio': return <Music className="w-4 h-4" />;
       case 'document': return <FileText className="w-4 h-4" />;
       case 'drawing': return <Palette className="w-4 h-4" />;
+      case 'graph': return <LineChart className="w-4 h-4" />;
       default: return <Paperclip className="w-4 h-4" />;
     }
   };
@@ -432,6 +435,11 @@ export function LessonContentBuilder({
                     </div>
                   </div>
                 </div>
+              ) : block.type === 'graph' ? (
+                <GraphBlockEditor
+                  data={block.data || {}}
+                  onChange={(newData) => updateBlock(block.id, { data: newData })}
+                />
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
@@ -551,6 +559,10 @@ export function LessonContentBuilder({
           <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-yellow-50 hover:text-yellow-600 hover:border-yellow-200" onClick={() => addBlock('interactive')}>
             <Shapes className="w-5 h-5" />
             <span>Add Interactive</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200" onClick={() => addBlock('graph')}>
+            <LineChart className="w-5 h-5" />
+            <span>Add Graph</span>
           </Button>
         </div>
       </div>

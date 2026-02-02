@@ -15,7 +15,7 @@ export class KidsSettingsService {
     if (!settings) {
       settings = this.repo.create({
         user_id: userId,
-        screen_time_limit: true,
+        screen_time_limit: false,
         background_music: false,
         sound_effects: true,
       });

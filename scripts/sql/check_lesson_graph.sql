@@ -1,0 +1,1 @@
+SELECT id, title, content_data FROM course_lessons WHERE title ILIKE '%Graphical Method%';

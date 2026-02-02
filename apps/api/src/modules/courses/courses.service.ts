@@ -157,17 +157,36 @@ export class CoursesService {
     const course = await this.findCourseById(id);
 
     // Strict Access Control
-    if (!user) {
-      throw new ForbiddenException('Access denied');
-    }
+    // if (!user) {
+    //   throw new ForbiddenException('Access denied');
+    // }
 
-    const roles = user.roles?.map((r: any) => r.name) || [];
+    const roles = user?.roles?.map((r: any) => r.name) || [];
     const isAdmin = roles.includes('admin');
-    const isOwner = course.created_by === user.id;
-    const isEnrolled = course.enrollments?.some(e => e.userId === user.id);
+    const isOwner = user && course.created_by === user.id;
+    const isEnrolled = user && course.enrollments?.some(e => e.userId === user.id);
 
     if (!isAdmin && !isOwner && !isEnrolled) {
-      throw new ForbiddenException('You must be enrolled to view this course');
+      const isPublic = course.visibility === CourseVisibility.PUBLIC;
+      const isPublished = course.status === CourseStatus.PUBLISHED;
+
+      if (!isPublic || !isPublished) {
+        throw new ForbiddenException('You must be enrolled to view this course');
+      }
+
+      // For non-enrolled users, hide content unless it's a preview
+      if (course.modules) {
+        course.modules.forEach(module => {
+          if (module.lessons) {
+            module.lessons.forEach(lesson => {
+              if (!lesson.is_preview) {
+                lesson.content_url = null;
+                lesson.content_data = null;
+              }
+            });
+          }
+        });
+      }
     }
 
     // Clean up sensitive data before returning if student

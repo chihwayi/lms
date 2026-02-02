@@ -1,8 +1,8 @@
-import { useConfigStore } from './config-store';
 import { useAuthStore } from './auth-store';
+import { useConfigStore } from './config-store';
+import { getCleanBaseUrl } from './url-utils';
 
 interface FetchOptions extends RequestInit {
-  headers?: Record<string, string>;
   skipAuth?: boolean;
 }
 
@@ -10,10 +10,10 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
   const { instanceUrl } = useConfigStore.getState();
   const { accessToken } = useAuthStore.getState();
 
-  // Construct full URL
   let fullUrl = endpoint;
   if (!endpoint.startsWith('http')) {
-    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
+    const rawBaseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
+    const baseUrl = getCleanBaseUrl(rawBaseUrl);
     
     // Clean up endpoint leading slash
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
@@ -27,7 +27,7 @@ export async function apiClient(endpoint: string, options: FetchOptions = {}) {
   }
 
   const headers: Record<string, string> = {
-    ...options.headers,
+    ...(options.headers as Record<string, string> || {}),
   };
 
   if (!(options.body instanceof FormData) && !headers['Content-Type']) {

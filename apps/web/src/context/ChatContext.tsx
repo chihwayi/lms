@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '@/lib/auth-store';
 import { useConfigStore } from '@/lib/config-store';
+import { getCleanBaseUrl } from '@/lib/url-utils';
 
 export interface Message {
   id: string;
@@ -36,6 +37,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const effectiveInstanceUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
+    const cleanUrl = getCleanBaseUrl(effectiveInstanceUrl);
 
     // Only connect if authenticated and token exists
     if (!isAuthenticated || !accessToken) {
@@ -49,7 +51,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
 
     console.log('Initializing socket connection...');
-    const socketUrl = `${effectiveInstanceUrl}/chat`;
+    const socketUrl = `${cleanUrl}/chat`;
     console.log('Target Socket URL:', socketUrl);
     
     const newSocket = io(socketUrl, {

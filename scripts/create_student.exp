@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set timeout -1
+set user "root"
+set host "173.212.195.88"
+set password "b-4wB:cpC2i"
+set remote_dir "/root/lms"
+
+# We use single quotes for the SQL string to avoid shell expansion of $
+spawn ssh -o StrictHostKeyChecking=no $user@$host "docker exec eduflow_postgres psql -U eduflow -d eduflow_dev -c \"INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ('student@test.com', '\\\$2b\\\$10\\\$G3GuVzX.r8qfSsX1OKieVeKt.FVDXLkXz3vbZA/63DBBDESAFklkK', 'Test', 'Student', 'student');\""
+expect {
+    "password:" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}

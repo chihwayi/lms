@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+
+# Upload SQL file
+spawn scp -o StrictHostKeyChecking=no enroll_student.sql $user@$host:/root/lms/enroll_student.sql
+expect {
+  "password:" { send "$password\r"; exp_continue }
+  eof
+}
+
+# Execute SQL in postgres container
+spawn ssh -o StrictHostKeyChecking=no $user@$host "docker exec -i eduflow_postgres psql -U eduflow -d eduflow_dev < /root/lms/enroll_student.sql"
+expect {
+  "password:" { send "$password\r"; exp_continue }
+  eof
+}

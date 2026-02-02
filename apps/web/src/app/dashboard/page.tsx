@@ -120,19 +120,25 @@ export default function DashboardPage() {
 
         {/* Widgets Grid */}
         {activeTab === 'learning' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 relative z-10">
-            <div className="lg:col-span-2 space-y-6">
-              <ContinueLearning />
-              <RecommendedPathsWidget />
-              <EnrolledCourses />
+          <div className="space-y-6 mb-8 relative z-10">
+            {/* Top Overview Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <XPDisplay />
+              <MentorshipSessionsWidget />
             </div>
-            <div className="space-y-8">
-            <MentorshipStatsWidget />
-            <MentorshipSessionsWidget />
-            <XPDisplay />
-            <LeaderboardWidget />
-            <CalendarWidget />
-          </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <ContinueLearning />
+                <RecommendedPathsWidget />
+                <EnrolledCourses />
+              </div>
+              <div className="space-y-6">
+                <MentorshipStatsWidget />
+                <LeaderboardWidget />
+                <CalendarWidget />
+              </div>
+            </div>
           </div>
         )}
 

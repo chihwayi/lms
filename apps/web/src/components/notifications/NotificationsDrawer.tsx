@@ -7,6 +7,7 @@ import { Bell } from 'lucide-react';
 import { useAuthStore } from '@/lib/auth-store';
 import { useConfigStore } from '@/lib/config-store';
 import { apiClient } from '@/lib/api-client';
+import { getCleanBaseUrl } from '@/lib/url-utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { io, Socket } from 'socket.io-client';
 import { formatDistanceToNow } from 'date-fns';
@@ -37,7 +38,8 @@ export function NotificationsDrawer() {
     // Initial fetch
     fetchNotifications();
 
-    const baseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
+    const rawBaseUrl = instanceUrl || process.env.NEXT_PUBLIC_API_URL || '';
+    const baseUrl = getCleanBaseUrl(rawBaseUrl);
 
     // Socket connection
     console.log('Initializing notifications socket connection...');

@@ -38,28 +38,34 @@ const DB_NAME = 'eduflow-offline';
 const DB_VERSION = 2; // Increment version
 
 class OfflineStorageService {
-  private dbPromise: Promise<IDBPDatabase<EduFlowDB>>;
+  private _dbPromise: Promise<IDBPDatabase<EduFlowDB>> | null = null;
 
-  constructor() {
-    this.dbPromise = openDB<EduFlowDB>(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion, newVersion, transaction) {
-        if (!db.objectStoreNames.contains('courses')) {
-          db.createObjectStore('courses', { keyPath: 'id' });
-        }
-        if (!db.objectStoreNames.contains('lessons')) {
-          db.createObjectStore('lessons', { keyPath: 'id' });
-        }
-        if (!db.objectStoreNames.contains('quizzes')) {
-          db.createObjectStore('quizzes', { keyPath: 'id' });
-        }
-        if (!db.objectStoreNames.contains('progress')) {
-          db.createObjectStore('progress', { keyPath: 'lessonId' });
-        }
-        if (!db.objectStoreNames.contains('enrollments')) {
-            db.createObjectStore('enrollments', { keyPath: 'courseId' });
-        }
-      },
-    });
+  private get dbPromise(): Promise<IDBPDatabase<EduFlowDB>> {
+    if (!this._dbPromise) {
+      if (typeof window === 'undefined') {
+        return Promise.reject(new Error('IndexedDB is not available on server side'));
+      }
+      this._dbPromise = openDB<EduFlowDB>(DB_NAME, DB_VERSION, {
+        upgrade(db, oldVersion, newVersion, transaction) {
+          if (!db.objectStoreNames.contains('courses')) {
+            db.createObjectStore('courses', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('lessons')) {
+            db.createObjectStore('lessons', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('quizzes')) {
+            db.createObjectStore('quizzes', { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains('progress')) {
+            db.createObjectStore('progress', { keyPath: 'lessonId' });
+          }
+          if (!db.objectStoreNames.contains('enrollments')) {
+              db.createObjectStore('enrollments', { keyPath: 'courseId' });
+          }
+        },
+      });
+    }
+    return this._dbPromise;
   }
 
   async saveCourse(course: any) {

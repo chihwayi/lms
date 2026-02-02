@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: eduflow_postgres
+    restart: always
     ports:
       - "${DATABASE_PORT:-5432}:5432"
     environment:
@@ -16,6 +17,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: eduflow_redis
+    restart: always
     ports:
       - "${REDIS_PORT:-6379}:6379"
     volumes:
@@ -24,6 +26,7 @@ services:
   minio:
     image: minio/minio:latest
     container_name: eduflow_minio
+    restart: always
     ports:
       - "${MINIO_PORT:-9000}:9000"
       - "9001:9001"
@@ -38,6 +41,8 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+    container_name: eduflow_api
+    restart: always
     ports:
       - "3005:3001"
     environment:
@@ -48,20 +53,23 @@ services:
       - DATABASE_NAME=${DATABASE_NAME:-eduflow_dev}
       - DATABASE_URL=${DATABASE_URL:-postgresql://eduflow:password@postgres:5432/eduflow_dev}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
       - MINIO_ENDPOINT=${MINIO_ENDPOINT:-minio}
       - MINIO_PORT=${MINIO_PORT:-9000}
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minioadmin}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minioadmin}
-      - MINIO_PUBLIC_ENDPOINT=${MINIO_PUBLIC_ENDPOINT:-http://localhost:9000}
-      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
-      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3006,http://localhost:3000}
+      - MINIO_PUBLIC_ENDPOINT=${MINIO_PUBLIC_ENDPOINT}
+      - JWT_SECRET=${JWT_SECRET}
       - SENTRY_DSN=${SENTRY_DSN:-}
+      - PORT=3001
+      - CORS_ORIGIN=${CORS_ORIGIN}
       - MAIL_HOST=${MAIL_HOST:-smtp.ethereal.email}
       - MAIL_PORT=${MAIL_PORT:-587}
       - MAIL_USER=${MAIL_USER:-ethereal.user@ethereal.email}
       - MAIL_PASSWORD=${MAIL_PASSWORD:-ethereal_password}
       - MAIL_FROM=${MAIL_FROM:-"EduFlow" <noreply@eduflow.com>}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3006}
+      - FRONTEND_URL=${FRONTEND_URL}
     depends_on:
       - postgres
       - redis
@@ -72,15 +80,18 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3005}
-        API_URL: ${API_URL:-http://localhost:3005}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - API_URL=${API_URL}
+    container_name: eduflow_web
+    restart: always
     ports:
       - "3006:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3005}
-      - API_URL=${API_URL:-http://localhost:3005}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - API_URL=${API_URL}
     depends_on:
       - api
+      - postgres
 
 volumes:
   postgres_data:

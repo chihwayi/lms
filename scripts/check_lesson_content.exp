@@ -1,0 +1,13 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set host "173.212.195.88"
+set user "root"
+set password "b-4wB:cpC2i"
+
+# Execute the SQL by piping
+spawn ssh -o StrictHostKeyChecking=no $user@$host "cat /root/lms/check_lesson_graph.sql | docker exec -i eduflow_postgres psql -U eduflow -d eduflow_dev"
+expect {
+  "password:" { send "$password\r"; exp_continue }
+  eof
+}
